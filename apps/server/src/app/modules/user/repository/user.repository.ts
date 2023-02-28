@@ -1,8 +1,8 @@
+import { TYPES } from "@DI/types";
 import { User } from "@prisma/client";
+import { IPrismaService } from "@src/infra";
 import { inject, injectable } from "inversify";
 
-import { TYPES } from "../../../../DI/types";
-import { IPrismaService } from "../../../../infra";
 import { RegisterUserDto } from "../../auth/dto";
 
 export interface IUserRepository {

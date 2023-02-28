@@ -13,6 +13,7 @@
     "prisma:drop": "npm run prisma:drop --prefix apps/server",
     "prisma:migrate": "npm run prisma:migrate --prefix apps/server",
     "prisma:studio": "npm run prisma:studio --prefix apps/server",
+    "prisma:gen": "npm run prisma:gen --prefix apps/server",
     "server:lint-fix": "npm run lint:fix --prefix apps/server",
     "infra": "cd ./devops && docker-compose up"
   },

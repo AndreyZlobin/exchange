@@ -33,6 +33,17 @@ class Bootstrap {
       app.useGlobalFilters(new ValidationExceptionFilter(this.logger));
       app.setGlobalPrefix(`api/${prefix}/`);
       await app.listen(port);
+
+      // const data = await prismaService.client.log.findMany();
+      // const data = await prismaService.client.log.create({
+      //   data: {
+      //     action: "123123",
+      //     source: "123123",
+      //     created: Date.now(),
+      //     data: {},
+      //   },
+      // });
+
       this.logger.log(`[Server]: Server was started on PORT ${port} | http://localhost:${port}`);
     } catch (error) {
       this.logger.error("[Server]: Server can't be started", error);

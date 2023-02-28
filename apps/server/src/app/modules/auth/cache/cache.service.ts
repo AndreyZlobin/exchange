@@ -1,8 +1,7 @@
+import { TYPES } from "@DI/types";
+import { IRedisService } from "@src/infra";
+import { IJWTService } from "@src/services";
 import { inject, injectable } from "inversify";
-
-import { TYPES } from "../../../../DI/types";
-import { IRedisService } from "../../../../infra";
-import { IJWTService } from "../../../../services";
 
 export interface IAuthCacheService {
   getUserTokens(
