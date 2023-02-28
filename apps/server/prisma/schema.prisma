@@ -1,0 +1,167 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model BalanceChanges {
+  id                  String    @id @default(auto()) @map("_id") @db.ObjectId
+  order_id            Int?
+  claim_id            Int?
+  username            String?
+  balance             Float?
+  balance_dep         Float?
+  balance_current     Float?
+  balance_dep_current Float?
+  stage               String?
+  created             DateTime? @default(now())
+  height              Int?
+  tx_id               String?
+}
+
+model BlackList {
+  id      String    @id @default(auto()) @map("_id") @db.ObjectId
+  type    String?
+  value   String?
+  note    String?
+  created DateTime?
+}
+
+model ChatsQueue {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  type       String?
+  market     String?
+  partner    String?
+  message    String?
+  status     String?
+  attempts   Int       @default(0)
+  send_after DateTime?
+  is_service Boolean   @default(false)
+}
+
+model Claim {
+  id                String    @id @default(auto()) @map("_id") @db.ObjectId
+  uuid              String    @default(uuid())
+  order_id          Int?
+  order_status      String?
+  deal_id           Int?
+  fiat_amount       Float?
+  fiat_amount_order Float?
+  status            String?
+  error             String?
+  provider          String?
+  client_name       String?
+  handler           String?
+  payment_system    String?
+  created           DateTime?
+  images            Json?
+  savedImages       Json?
+  urls              Json?
+}
+
+model Deposit {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  username       String?
+  wallet         String?
+  height         Int?
+  btc_amount     Float?
+  need_to_handle Boolean? @default(false)
+  handled        Boolean? @default(false)
+  confirmed      Int?
+  created        Int?
+}
+
+model Log {
+  id      String  @id @default(auto()) @map("_id") @db.ObjectId
+  action  String?
+  source  String?
+  data    Json?
+  created Int?    @default(0)
+}
+
+model Order {
+  id                     String   @id @default(auto()) @map("_id") @db.ObjectId
+  uuid                   String   @default(uuid())
+  custom_id              Int
+  provider               String
+  status                 String?
+  fiat_amount            Int?
+  payment_system         String?
+  crypto_type            String?
+  rate_provider          Float?
+  crypto_amount_provider Float?
+  rate_deal              Float?
+  crypto_amount_deal     Float?
+  crypto_amount_broker   Float?
+  profit                 Float?
+  deal_id                Int?
+  callback_urls          Json?
+  requisites             String?
+  broker                 String?
+  client_name            String?
+  created                Float?
+  updated                Float?
+  timeout                Float?
+  status_history         Json?
+  notes                  Json?
+  finish_wallet          String?
+  finish_tx_after        Float?
+  finished_by            String?
+  finish_error           String?
+  cancel_reason          String?
+  max_claims_attempts    Boolean?
+  handler                String?
+}
+
+model Requisite {
+  id             String  @id @default(auto()) @map("_id") @db.ObjectId
+  username       String
+  payment_system String?
+  requisite      String?
+  filled         Int     @default(0)
+  limit          Int     @default(0)
+  crypto_type    String?
+  active         Boolean @default(false)
+}
+
+model Settings {
+  id     String   @id @default(auto()) @map("_id") @db.ObjectId
+  market String
+  name   String
+  value  Json
+  global Boolean?
+}
+
+model User {
+  id                          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name                        String
+  password                    String
+  role                        String   @default("broker")
+  api_keys                    Json?
+  tokens                      Json[]
+  active                      Boolean  @default(true)
+  is_work                     Boolean  @default(false)
+  can_finish_orders           Boolean  @default(false)
+  balance                     Float    @default(0)
+  balance_dep                 Float    @default(0)
+  broker                      String?
+  inviter                     String?
+  percent_method              String   @default("hd")
+  amount_settings             Json
+  system_commissions          Json
+  system_allow                Json
+  broker_commissions          Json
+  auth_tokens                 Json
+  crypto_type                 String   @default("btc")
+  wallet                      String?
+  wallet_deposit_check_amount Float?
+  wallet_added                Float?
+  can_open_orders_via_panel   Boolean  @default(false)
+  send_tx_to_blockchain       Boolean?
+}

@@ -1,0 +1,1 @@
+export const MSECONDS_PER_SECOND = 1000;

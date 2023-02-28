@@ -1,0 +1,30 @@
+{
+  "name": "exchange",
+  "version": "0.0.1",
+  "private": true,
+  "author": "Anonymous",
+  "license": "MIT",
+  "workspaces": [
+    "./apps/*"
+  ],
+  "scripts": {
+    "server:dev": "npm run dev --prefix apps/server",
+    "prisma:init": "npm run prisma:init --prefix apps/server",
+    "prisma:drop": "npm run prisma:drop --prefix apps/server",
+    "prisma:migrate": "npm run prisma:migrate --prefix apps/server",
+    "prisma:studio": "npm run prisma:studio --prefix apps/server",
+    "server:lint-fix": "npm run lint:fix --prefix apps/server",
+    "infra": "cd ./devops && docker-compose up"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": "npm run lint-staged"
+  },
+  "devDependencies": {
+    "husky": "^8.0.0",
+    "lint-staged": "^12.3.2"
+  },
+  "volta": {
+    "node": "18.13.0",
+    "yarn": "1.19.2"
+  }
+}
