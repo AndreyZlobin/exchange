@@ -1,40 +1,32 @@
 import "reflect-metadata";
 
+import { ConfigServiceWithEnv } from "@common/configs";
+import { ILogger } from "@common/logger";
 import { TYPES } from "@DI/types";
-import { AppModule } from "@modules/app/app.module";
 import { NestFactory } from "@nestjs/core";
-import { IBotService } from "@src/services";
-import { inject, injectable } from "inversify";
-import * as process from "process";
+import { ValidationExceptionFilter } from "@shared/exceptions";
+import { AppModule } from "@src/app.module";
+import { IPrismaService, IRedisService } from "@src/database";
 
-import { ValidationExceptionFilter } from "./app/shared/exceptions";
-import { botService, configService, DBCollection, loggerService } from "./DI";
-import { ConfigServiceWithEnv, ILogger, IPrismaService, IRedisService } from "./infra";
-
-const { prismaService, redisService } = DBCollection;
-
-@injectable()
 class Bootstrap {
-  constructor(
-    @inject(TYPES.services.ConfigService) private readonly config: ConfigServiceWithEnv,
-    @inject(TYPES.services.LoggerService) private readonly logger: ILogger,
-    @inject(TYPES.DB.RedisService) private readonly redisService: IRedisService,
-    @inject(TYPES.DB.PrismaService) private readonly prismaService: IPrismaService,
-    @inject(TYPES.services.BotService) private readonly botService: IBotService,
-  ) {}
   async start() {
     try {
-      await Promise.all([this.prismaService.$connect(), this.redisService.$connect()]);
-      const port = Number(this.config.get("PORT"));
-      const prefix = this.config.get("API_VERSION");
-      //     server.start();
       const app = await NestFactory.create(AppModule);
+      const prismaService = app.get<IPrismaService>(TYPES.DB.PrismaService);
+      const redisService = app.get<IRedisService>(TYPES.DB.RedisService);
+      const config = app.get<ConfigServiceWithEnv>(TYPES.services.ConfigService);
+      const logger = app.get<ILogger>(TYPES.services.LoggerService);
 
-      app.useGlobalFilters(new ValidationExceptionFilter(this.logger));
+      const port = Number(config.get("PORT"));
+      const prefix = config.get("API_VERSION");
+
       app.setGlobalPrefix(`api/${prefix}/`);
+      app.useGlobalFilters(new ValidationExceptionFilter(logger));
+      await Promise.all([prismaService.$connect(), redisService.$connect()]);
       await app.listen(port);
 
       // const data = await prismaService.client.log.findMany();
+
       // const data = await prismaService.client.log.create({
       //   data: {
       //     action: "123123",
@@ -44,20 +36,14 @@ class Bootstrap {
       //   },
       // });
 
-      this.logger.log(`[Server]: Server was started on PORT ${port} | http://localhost:${port}`);
+      logger.log(`[Server]: Server was started on PORT ${port} | http://localhost:${port}`);
     } catch (error) {
-      this.logger.error("[Server]: Server can't be started", error);
+      // logger.error("[Server]: Server can't be started", error);
       process.exit(1);
     }
   }
 }
 
-const bootstrap = new Bootstrap(
-  configService,
-  loggerService,
-  redisService,
-  prismaService,
-  botService,
-);
+const bootstrap = new Bootstrap();
 
 bootstrap.start();
