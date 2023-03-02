@@ -21,8 +21,12 @@ function getProviders(): Provider[] {
     { provide: APP_GUARD, useClass: RolesGuard },
   ];
 }
+
 @Module({
   imports: [
+    // ServeStaticModule.forRoot({
+    //   rootPath: join(__dirname, "..", "public"),
+    // }),
     PrismaModule,
     ConfigModule,
     LoggerModule,

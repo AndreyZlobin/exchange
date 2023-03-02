@@ -1,6 +1,4 @@
-import { Injectable } from "@nestjs/common";
-import { injectable } from "inversify";
-// import { injectable } from "inversify";
+import { Injectable, LoggerService as NestLoggerService } from "@nestjs/common";
 import { ILogObj, Logger } from "tslog";
 export interface ILogger {
   log: (...args: unknown[]) => void;
@@ -8,29 +6,8 @@ export interface ILogger {
   warn: (...args: unknown[]) => void;
 }
 
-@injectable()
-export class LoggerService implements ILogger {
-  private logger: Logger<ILogObj>;
-
-  constructor() {
-    this.logger = new Logger();
-  }
-
-  log(...args: unknown[]): void {
-    this.logger.info(...args);
-  }
-
-  error(...args: unknown[]): void {
-    this.logger.error(...args);
-  }
-
-  warn(...args: unknown[]): void {
-    this.logger.warn(...args);
-  }
-}
-
 @Injectable()
-export class LoggerService2 implements ILogger {
+export class LoggerService implements ILogger, NestLoggerService {
   private logger: Logger<ILogObj>;
 
   constructor() {
@@ -47,5 +24,13 @@ export class LoggerService2 implements ILogger {
 
   warn(...args: unknown[]): void {
     this.logger.warn(...args);
+  }
+
+  debug(message: unknown[]): void {
+    this.logger.debug(message);
+  }
+
+  verbose(message: unknown[]): void {
+    this.logger.warn(message);
   }
 }

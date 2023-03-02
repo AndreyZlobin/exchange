@@ -18,7 +18,7 @@
       "@services/*": ["./src/services/*"],
       "@shared/*": ["./src/shared/*"],
       "@common/*": ["./src/common/*"],
-      "@DI/*": ["./src/DI/*"],
+      "@DI/*": ["./src/DI/*"]
     },
     "incremental": true,
     "skipLibCheck": true,
@@ -27,6 +27,6 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-    "alwaysStrict": true,
+    "alwaysStrict": true
   }
 }

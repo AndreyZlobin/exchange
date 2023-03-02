@@ -1,11 +1,13 @@
 import { TYPES } from "@DI/types";
 import { Body, Controller, Inject, Injectable, Post } from "@nestjs/common";
+import { ApiTags } from "@nestjs/swagger";
 import { ValidateInput } from "@shared/validators";
 import { IAuthService } from "@src/core/auth/services";
 
 import { CreateUserDto, UserLoginDto } from "./dto";
 import { registerSchema } from "./validations";
 
+@ApiTags("Auth")
 @Injectable()
 @Controller("auth")
 export class AuthController {
