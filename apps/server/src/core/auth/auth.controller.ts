@@ -3,8 +3,9 @@ import { Body, Controller, Inject, Injectable, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { ValidateInput } from "@shared/validators";
 import { IAuthService } from "@src/core/auth/services";
+import { CreateUserDto } from "@src/core/user/dto";
 
-import { CreateUserDto, UserLoginDto } from "./dto";
+import { UserLoginDto } from "./dto";
 import { registerSchema } from "./validations";
 
 @ApiTags("Auth")

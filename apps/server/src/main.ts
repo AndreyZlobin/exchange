@@ -59,7 +59,7 @@ class Bootstrap {
       await this.app.listen(this.port);
 
       // const data = await prismaService.log.findMany();
-      //
+
       // console.log(data);
 
       this.logger.log(

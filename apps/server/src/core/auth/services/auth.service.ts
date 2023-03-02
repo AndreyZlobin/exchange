@@ -4,9 +4,10 @@ import { IBcryptService } from "@src/common/auth/bcrypt";
 import { IJWTService } from "@src/common/auth/jwt";
 import { IAuthRepository } from "@src/core/auth";
 import { IUserRepository } from "@src/core/user";
+import { CreateUserDto } from "@src/core/user/dto";
 
 import { IAuthCacheService } from "../cache";
-import { CreateUserDto, UserLoginDto } from "../dto";
+import { UserLoginDto } from "../dto";
 
 export interface IAuthService {
   login: (loginDto: UserLoginDto) => Promise<{ accessToken: string; refreshToken: string }>;

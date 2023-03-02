@@ -1,9 +1,10 @@
 import { TYPES } from "@DI/types";
 import { Inject, Injectable } from "@nestjs/common";
 import { User } from "@prisma/client";
+import { CreateUserDto } from "@src/core/user/dto";
 import { IPrismaService } from "@src/database";
 
-import { CreateUserDto, UserLoginDto } from "../dto";
+import { UserLoginDto } from "../dto";
 
 export interface IAuthRepository {
   checkIsUserExist(email: string): Promise<boolean>;

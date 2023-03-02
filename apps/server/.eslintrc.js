@@ -30,7 +30,7 @@ module.exports = {
     "quotes": ["error"],
     "semi": ["error", "always"],
     "no-console": ["error"],
-    "indent": ["error", 2],
+    // "indent": ["error", 2],
     "no-debugger": ["warn"],
     //
     "import/no-default-export": ["error"],
