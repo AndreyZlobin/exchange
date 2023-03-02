@@ -1,2 +1,2 @@
-export * from "./registerUser.dto";
+export * from "./createUser.dto";
 export * from "./userLogin.dto";

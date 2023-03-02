@@ -6,11 +6,11 @@ import { IAuthRepository } from "@src/core/auth";
 import { IUserRepository } from "@src/core/user";
 
 import { IAuthCacheService } from "../cache";
-import { RegisterUserDto, UserLoginDto } from "../dto";
+import { CreateUserDto, UserLoginDto } from "../dto";
 
 export interface IAuthService {
   login: (loginDto: UserLoginDto) => Promise<{ accessToken: string; refreshToken: string }>;
-  register: (registerDto: RegisterUserDto) => Promise<{ id: string } | never>;
+  register: (registerDto: CreateUserDto) => Promise<{ id: string } | never>;
   refresh: (token: string) => Promise<{ accessToken: string; refreshToken: string } | never>;
 }
 
@@ -24,7 +24,7 @@ export class AuthService implements IAuthService {
     @Inject(TYPES.services.JWTService) private readonly jwtService: IJWTService,
   ) {}
 
-  async register({ email, password }: RegisterUserDto) {
+  async register({ email, password }: CreateUserDto) {
     const isUserExist = Boolean(await this.userRepository.findUser({ name: email }));
 
     if (isUserExist) {
@@ -33,6 +33,7 @@ export class AuthService implements IAuthService {
     return this.authRepository.register({
       email,
       password: await this.bcryptService.hash(password),
+      role: [],
     });
   }
 

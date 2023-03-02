@@ -10,20 +10,22 @@
   "scripts": {
     "server:dev": "npm run dev --prefix apps/server",
     "server:lint": "npm run lint --prefix apps/server",
+    "server:check-types": "npm run check-types --prefix apps/server",
     "server:lint-fix": "npm run lint:fix --prefix apps/server",
     "prisma:init": "npm run prisma:init --prefix apps/server",
     "prisma:drop": "npm run prisma:drop --prefix apps/server",
     "prisma:migrate": "npm run prisma:migrate --prefix apps/server",
     "prisma:studio": "npm run prisma:studio --prefix apps/server",
     "prisma:gen": "npm run prisma:gen --prefix apps/server",
-    "infra": "cd ./devops && docker-compose up"
-  },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx}": "npm run lint-staged"
+    "infra": "cd ./devops && docker-compose up",
+    "prepare": "husky install"
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.4.4",
+    "@commitlint/config-conventional": "^17.4.4",
+    "commitlint": "^17.4.4",
     "husky": "^8.0.0",
-    "lint-staged": "^12.3.2"
+    "lint-staged": "^13.1.2"
   },
   "volta": {
     "node": "18.13.0",

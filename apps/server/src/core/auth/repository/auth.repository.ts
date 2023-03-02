@@ -3,7 +3,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { User } from "@prisma/client";
 import { IPrismaService } from "@src/database";
 
-import { RegisterUserDto, UserLoginDto } from "../dto";
+import { CreateUserDto, UserLoginDto } from "../dto";
 
 export interface IAuthRepository {
   checkIsUserExist(email: string): Promise<boolean>;
@@ -12,7 +12,7 @@ export interface IAuthRepository {
 
   logout(): Promise<void>;
 
-  register(registerUserDto: RegisterUserDto): Promise<User>;
+  register(registerUserDto: CreateUserDto): Promise<User>;
 
   forgotPassword(): Promise<void>;
 
@@ -21,9 +21,9 @@ export interface IAuthRepository {
 
 @Injectable()
 export class AuthRepository implements IAuthRepository {
-  constructor(@Inject(TYPES.DB.PrismaService) private readonly prismaServe: IPrismaService) {}
+  constructor(@Inject(TYPES.DB.PrismaService) private readonly prismaService: IPrismaService) {}
   async checkIsUserExist(email: string): Promise<boolean> {
-    return Boolean(await this.prismaServe.client.user.findFirst({ where: { name: email } }));
+    return Boolean(await this.prismaService.user.findFirst({ where: { name: email } }));
   }
 
   login({ email, password }: UserLoginDto) {
@@ -44,9 +44,9 @@ export class AuthRepository implements IAuthRepository {
     return Promise.resolve(undefined);
   }
 
-  async register({ email, password }: RegisterUserDto) {
+  async register({ email, password }: CreateUserDto) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    return this.prismaServe.client.user.create({ data: { name: email, password } });
+    return this.prismaService.user.create({ data: { name: email, password } });
   }
 }

@@ -15,7 +15,7 @@ export class UserService implements IUserService {
     @Inject(TYPES.user.UserRepository) private readonly userRepository: IUserRepository,
   ) {}
 
-  findUserByEmail(email: string) {
+  async findUserByEmail(email: string) {
     return this.userRepository.findUser({ name: email });
   }
 

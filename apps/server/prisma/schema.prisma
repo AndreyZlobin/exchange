@@ -138,30 +138,39 @@ model Settings {
   global Boolean?
 }
 
+enum RoleEnum {
+  superadmin
+  admin
+  broker
+  provider
+  seller
+  support
+}
+
 model User {
-  id                          String   @id @default(auto()) @map("_id") @db.ObjectId
+  id                          String     @id @default(auto()) @map("_id") @db.ObjectId
   name                        String
   password                    String
-  role                        String   @default("broker")
+  role                        RoleEnum[] @default([broker])
   api_keys                    Json?
   tokens                      Json[]
-  active                      Boolean  @default(true)
-  is_work                     Boolean  @default(false)
-  can_finish_orders           Boolean  @default(false)
-  balance                     Float    @default(0)
-  balance_dep                 Float    @default(0)
+  active                      Boolean    @default(true)
+  is_work                     Boolean    @default(false)
+  can_finish_orders           Boolean    @default(false)
+  balance                     Float      @default(0)
+  balance_dep                 Float      @default(0)
   broker                      String?
   inviter                     String?
-  percent_method              String   @default("hd")
+  percent_method              String     @default("hd")
   amount_settings             Json
   system_commissions          Json
   system_allow                Json
   broker_commissions          Json
   auth_tokens                 Json
-  crypto_type                 String   @default("btc")
+  crypto_type                 String     @default("btc")
   wallet                      String?
   wallet_deposit_check_amount Float?
   wallet_added                Float?
-  can_open_orders_via_panel   Boolean  @default(false)
+  can_open_orders_via_panel   Boolean    @default(false)
   send_tx_to_blockchain       Boolean?
 }

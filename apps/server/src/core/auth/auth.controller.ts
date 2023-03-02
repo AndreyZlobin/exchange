@@ -3,7 +3,7 @@ import { Body, Controller, Inject, Injectable, Post } from "@nestjs/common";
 import { ValidateInput } from "@shared/validators";
 import { IAuthService } from "@src/core/auth/services";
 
-import { RegisterUserDto, UserLoginDto } from "./dto";
+import { CreateUserDto, UserLoginDto } from "./dto";
 import { registerSchema } from "./validations";
 
 @Injectable()
@@ -12,7 +12,7 @@ export class AuthController {
   constructor(@Inject(TYPES.auth.AuthService) private readonly authService: IAuthService) {}
   @Post("/register")
   @ValidateInput(registerSchema)
-  async registerUser(@Body() userDto: RegisterUserDto) {
+  async registerUser(@Body() userDto: CreateUserDto) {
     return await this.authService.register(userDto);
   }
 
@@ -22,7 +22,7 @@ export class AuthController {
   }
 
   @Post("/reset_password")
-  async resetPassword(@Body() userDto: RegisterUserDto) {
+  async resetPassword(@Body() userDto: CreateUserDto) {
     return await this.authService.register(userDto);
   }
 

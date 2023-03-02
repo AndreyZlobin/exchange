@@ -13,6 +13,7 @@ class Bootstrap {
     try {
       const app = await NestFactory.create(AppModule);
       const prismaService = app.get<IPrismaService>(TYPES.DB.PrismaService);
+
       const redisService = app.get<IRedisService>(TYPES.DB.RedisService);
       const config = app.get<ConfigServiceWithEnv>(TYPES.services.ConfigService);
       const logger = app.get<ILogger>(TYPES.services.LoggerService);
@@ -23,9 +24,12 @@ class Bootstrap {
       app.setGlobalPrefix(`api/${prefix}/`);
       app.useGlobalFilters(new ValidationExceptionFilter(logger));
       await Promise.all([prismaService.$connect(), redisService.$connect()]);
+      await prismaService.enableShutdownHooks(app);
       await app.listen(port);
 
-      // const data = await prismaService.client.log.findMany();
+      // const data = await prismaService.log.findMany();
+      //
+      // console.log(data);
 
       // const data = await prismaService.client.log.create({
       //   data: {
@@ -38,7 +42,6 @@ class Bootstrap {
 
       logger.log(`[Server]: Server was started on PORT ${port} | http://localhost:${port}`);
     } catch (error) {
-      // logger.error("[Server]: Server can't be started", error);
       process.exit(1);
     }
   }
