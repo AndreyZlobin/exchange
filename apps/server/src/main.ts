@@ -46,7 +46,6 @@ class Bootstrap {
     try {
       this.app = await NestFactory.create(AppModule);
       const prismaService = this.app.get<IPrismaService>(TYPES.DB.PrismaService);
-
       const redisService = this.app.get<IRedisService>(TYPES.DB.RedisService);
 
       const prefix = this.config.get("API_VERSION");

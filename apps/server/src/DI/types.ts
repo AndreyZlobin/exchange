@@ -7,6 +7,11 @@ export const TYPES = {
     DateService: Symbol.for("DateService"),
     CronService: Symbol.for("CronService"),
     BotService: Symbol.for("BotService"),
+    HttpService: Symbol.for("HttpService"),
+  },
+  integration: {
+    GarantexService: Symbol.for("GarantexService"),
+    BinanceService: Symbol.for("BinanceService"),
   },
   DB: {
     RedisService: Symbol.for("RedisService"),
