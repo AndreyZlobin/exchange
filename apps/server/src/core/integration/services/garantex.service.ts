@@ -19,8 +19,8 @@ export interface IGarantexService {
 export class GarantexService implements IGarantexService {
   constructor(@Inject(TYPES.services.HttpService) private readonly httpService: IHttpService) {}
   private readonly urls = {
-    BTC: new URL("https://garantex.io/api/v2/trades?market=btcrub&limit=1").href,
-    USDT: new URL("https://garantex.io/api/v2/trades?market=usdtrub&limit=1").href,
+    BTC: new URL("https://garantex.io/api/v2/trades?market=btcrub&limit=1").toString(),
+    USDT: new URL("https://garantex.io/api/v2/trades?market=usdtrub&limit=1").toString(),
   };
 
   private getPrice(data: [GarantexData]): number {

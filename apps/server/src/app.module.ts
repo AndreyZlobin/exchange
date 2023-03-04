@@ -5,6 +5,7 @@ import { HttpModule } from "@common/http";
 import { LoggerModule } from "@common/logger";
 import { MiddlewareConsumer, Module, NestModule, Provider } from "@nestjs/common";
 import { APP_GUARD, APP_INTERCEPTOR } from "@nestjs/core";
+import { ThrottlerModule } from "@nestjs/throttler";
 import { UserContext } from "@shared/context";
 import { UserInterceptor } from "@shared/interceptors";
 import { AuthenticationMiddleware } from "@shared/middleware";
@@ -26,6 +27,10 @@ function getProviders(): Provider[] {
 
 @Module({
   imports: [
+    ThrottlerModule.forRoot({
+      ttl: 60,
+      limit: 10,
+    }),
     ConfigModule,
     PrismaModule,
     HttpModule,

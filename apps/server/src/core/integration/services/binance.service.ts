@@ -15,9 +15,10 @@ export interface IBinanceService {
 @Injectable()
 export class BinanceService implements IBinanceService {
   constructor(@Inject(TYPES.services.HttpService) private readonly httpService: IHttpService) {}
+  private readonly baseUrl = "https://api.binance.com/api/v3/ticker/price";
   private readonly urls = {
-    BTC: new URL("https://api.binance.com/api/v3/ticker/price?symbol=BTCRUB").href,
-    XMR: new URL("https://api.binance.com/api/v3/ticker/price?symbol=XMRUSDT").href,
+    BTC: new URL(`${this.baseUrl}?symbol=BTCRUB`).toString(),
+    XMR: new URL(`${this.baseUrl}mbol=XMRUSDT`).toString(),
   };
 
   private getPrice(data: BinanceData): number {

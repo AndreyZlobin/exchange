@@ -5,7 +5,6 @@ export interface ILogger {
   error: (...args: unknown[]) => void;
   warn: (...args: unknown[]) => void;
 }
-
 @Injectable()
 export class LoggerService implements ILogger, NestLoggerService {
   private logger: Logger<ILogObj>;
