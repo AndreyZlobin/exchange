@@ -5,11 +5,29 @@ import { ILogger } from "@common/logger";
 import { TYPES } from "@DI/types";
 import { INestApplication } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
-import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import { DocumentBuilder, OpenAPIObject, SwaggerModule } from "@nestjs/swagger";
 import { ValidationExceptionFilter } from "@shared/exceptions";
 import { AppModule } from "@src/app.module";
 import { IPrismaService, IRedisService } from "@src/database";
+import { readFileSync } from "fs";
 import helmet from "helmet";
+
+const loadDockFileAndUpdateDocument = (
+  pathToFile: string,
+  document: OpenAPIObject,
+): OpenAPIObject | null => {
+  try {
+    const json = readFileSync(pathToFile, "utf8");
+
+    const data: OpenAPIObject["components"]["schemas"] = JSON.parse(json).definitions;
+    const clone = structuredClone(document);
+
+    clone.components.schemas = data;
+    return clone;
+  } catch (e) {
+    return null;
+  }
+};
 
 class Bootstrap {
   private app: INestApplication;
@@ -34,9 +52,12 @@ class Bootstrap {
         .setVersion("1.0")
         .build();
 
-      const document = SwaggerModule.createDocument(this.app, options);
+      const document = SwaggerModule.createDocument(this.app, options, {});
 
-      SwaggerModule.setup("api/docs", this.app, document);
+      const updatedDoc =
+        loadDockFileAndUpdateDocument("./src/apiDoc/schema/json-schema.json", document) || document;
+
+      SwaggerModule.setup("api/docs", this.app, updatedDoc);
       this.logger.log(
         `[${SwaggerModule.name}]: Swagger here | http://localhost:${this.port}/api/docs`,
       );

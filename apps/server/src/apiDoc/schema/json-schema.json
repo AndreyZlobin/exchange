@@ -1,0 +1,832 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "BalanceChanges": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "order_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "claim_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "username": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "balance": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "balance_dep": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "balance_current": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "balance_dep_current": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "stage": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "created": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "height": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "tx_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "BlackList": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "value": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "note": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "created": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      }
+    },
+    "ChatsQueue": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "market": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "partner": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "message": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "attempts": {
+          "type": "integer",
+          "default": 0
+        },
+        "send_after": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "is_service": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "Claim": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "uuid": {
+          "type": "string"
+        },
+        "order_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "order_status": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "deal_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "fiat_amount": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "fiat_amount_order": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "status": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "error": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "provider": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "client_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "handler": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "payment_system": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "created": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "images": {
+          "type": [
+            "number",
+            "string",
+            "boolean",
+            "object",
+            "array",
+            "null"
+          ]
+        },
+        "savedImages": {
+          "type": [
+            "number",
+            "string",
+            "boolean",
+            "object",
+            "array",
+            "null"
+          ]
+        },
+        "urls": {
+          "type": [
+            "number",
+            "string",
+            "boolean",
+            "object",
+            "array",
+            "null"
+          ]
+        }
+      }
+    },
+    "Deposit": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "username": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "wallet": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "height": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "btc_amount": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "need_to_handle": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": false
+        },
+        "handled": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": false
+        },
+        "confirmed": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "created": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        }
+      }
+    },
+    "Log": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "action": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "data": {
+          "type": [
+            "number",
+            "string",
+            "boolean",
+            "object",
+            "array",
+            "null"
+          ]
+        },
+        "created": {
+          "type": "integer"
+        }
+      }
+    },
+    "Order": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "uuid": {
+          "type": "string"
+        },
+        "custom_id": {
+          "type": "integer"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "status": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "fiat_amount": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "payment_system": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "crypto_type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "rate_provider": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "crypto_amount_provider": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "rate_deal": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "crypto_amount_deal": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "crypto_amount_broker": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "profit": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "deal_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "callback_urls": {
+          "type": [
+            "number",
+            "string",
+            "boolean",
+            "object",
+            "array",
+            "null"
+          ]
+        },
+        "requisites": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "broker": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "client_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "created": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "updated": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "timeout": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "status_history": {
+          "type": [
+            "number",
+            "string",
+            "boolean",
+            "object",
+            "array",
+            "null"
+          ]
+        },
+        "notes": {
+          "type": [
+            "number",
+            "string",
+            "boolean",
+            "object",
+            "array",
+            "null"
+          ]
+        },
+        "finish_wallet": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "finish_tx_after": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "finished_by": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "finish_error": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "cancel_reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "max_claims_attempts": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "handler": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Requisite": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        },
+        "payment_system": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "requisite": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "filled": {
+          "type": "integer",
+          "default": 0
+        },
+        "limit": {
+          "type": "integer",
+          "default": 0
+        },
+        "crypto_type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "active": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "Settings": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "market": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "value": {
+          "type": [
+            "number",
+            "string",
+            "boolean",
+            "object",
+            "array",
+            "null"
+          ]
+        },
+        "global": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "role": {
+          "type": "array",
+          "enum": [
+            "superadmin",
+            "admin",
+            "broker",
+            "provider",
+            "seller",
+            "support"
+          ]
+        },
+        "api_keys": {
+          "type": [
+            "number",
+            "string",
+            "boolean",
+            "object",
+            "array",
+            "null"
+          ]
+        },
+        "tokens": {
+          "type": "array",
+          "items": {
+            "type": [
+              "number",
+              "string",
+              "boolean",
+              "object",
+              "array",
+              "null"
+            ]
+          }
+        },
+        "active": {
+          "type": "boolean",
+          "default": true
+        },
+        "is_work": {
+          "type": "boolean",
+          "default": false
+        },
+        "can_finish_orders": {
+          "type": "boolean",
+          "default": false
+        },
+        "balance": {
+          "type": "number",
+          "default": 0
+        },
+        "balance_dep": {
+          "type": "number",
+          "default": 0
+        },
+        "broker": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "inviter": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "percent_method": {
+          "type": "string",
+          "default": "hd"
+        },
+        "amount_settings": {
+          "type": [
+            "number",
+            "string",
+            "boolean",
+            "object",
+            "array",
+            "null"
+          ]
+        },
+        "system_commissions": {
+          "type": [
+            "number",
+            "string",
+            "boolean",
+            "object",
+            "array",
+            "null"
+          ]
+        },
+        "system_allow": {
+          "type": [
+            "number",
+            "string",
+            "boolean",
+            "object",
+            "array",
+            "null"
+          ]
+        },
+        "broker_commissions": {
+          "type": [
+            "number",
+            "string",
+            "boolean",
+            "object",
+            "array",
+            "null"
+          ]
+        },
+        "auth_tokens": {
+          "type": [
+            "number",
+            "string",
+            "boolean",
+            "object",
+            "array",
+            "null"
+          ]
+        },
+        "crypto_type": {
+          "type": "string",
+          "default": "btc"
+        },
+        "wallet": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "wallet_deposit_check_amount": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "wallet_added": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "can_open_orders_via_panel": {
+          "type": "boolean",
+          "default": false
+        },
+        "send_tx_to_blockchain": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        }
+      }
+    }
+  },
+  "type": "object",
+  "properties": {
+    "balanceChanges": {
+      "$ref": "#/definitions/BalanceChanges"
+    },
+    "blackList": {
+      "$ref": "#/definitions/BlackList"
+    },
+    "chatsQueue": {
+      "$ref": "#/definitions/ChatsQueue"
+    },
+    "claim": {
+      "$ref": "#/definitions/Claim"
+    },
+    "deposit": {
+      "$ref": "#/definitions/Deposit"
+    },
+    "log": {
+      "$ref": "#/definitions/Log"
+    },
+    "order": {
+      "$ref": "#/definitions/Order"
+    },
+    "requisite": {
+      "$ref": "#/definitions/Requisite"
+    },
+    "settings": {
+      "$ref": "#/definitions/Settings"
+    },
+    "user": {
+      "$ref": "#/definitions/User"
+    }
+  }
+}
