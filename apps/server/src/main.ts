@@ -81,6 +81,60 @@ class Bootstrap {
       await prismaService.enableShutdownHooks(this.app);
       this.swaggerInit();
 
+      // const defaultWallet = { balance: 123 };
+      // const user = await prismaService.user.create({
+      //   data: { active: true, name: "Test2", password: "test3", wallet: { create: defaultWallet } },
+      // });
+      //
+      // await prismaService.user.create({
+      //   data: {
+      //     active: true,
+      //     name: "Test2",
+      //     password: "test3",
+      //     wallet: { create: { balance: 0 } },
+      //   },
+      // });
+      // await prismaService.user.create({
+      //   data: {
+      //     active: true,
+      //     name: "Test2",
+      //     password: "test3",
+      //     wallet: { create: { balance: 30 } },
+      //   },
+      // });
+      // await prismaService.user.create({
+      //   data: {
+      //     active: true,
+      //     name: "Test2",
+      //     password: "test3",
+      //     wallet: { create: { balance: 50 } },
+      //   },
+      // });
+      // await prismaService.user.create({
+      //   data: {
+      //     active: true,
+      //     name: "Test2",
+      //     password: "test3",
+      //     wallet: { create: { balance: 44.5 } },
+      //   },
+      // });
+
+      // const user = await prismaService.user.findUnique({
+      //   where: { id: "6402edd57d7f0a9ebafe317b" },
+      //   include: { wallet: true, orders: true },
+      // });
+
+      // const user = await prismaService.user.delete({
+      //   where: { id: "6402fc5c51519026d5ed9a7b" },
+      //   include: { wallet: true, orders: true },
+      // });
+
+      // const user = await prismaService.user.findMany();
+
+      // const user = await prismaService.user.deleteMany();
+      //
+      // console.log(user);
+
       await this.app.listen(this.port);
       this.logger.log(
         `[Server]: Server was started on PORT ${this.port} | http://localhost:${this.port}`,

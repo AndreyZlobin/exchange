@@ -23,11 +23,12 @@ export class UserRepository implements IUserRepository {
   constructor(@Inject(TYPES.DB.PrismaService) private readonly prismaService: IPrismaService) {}
 
   async create({ email, password, role }: CreateUserDto) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const user = new UserEntity({ name: email, password, role });
+    const hashedPassword = password.concat("");
+    const user = new UserEntity({ name: email, password: hashedPassword, role, active: true });
 
-    return this.prismaService.user.create({ data: user });
+    return this.prismaService.user.create({
+      data: { ...user, password: hashedPassword },
+    });
   }
   async findAll() {
     return this.prismaService.user.findMany();

@@ -1,7 +1,7 @@
 import { ILogger } from "@common/logger";
 import { TYPES } from "@DI/types";
 import { INestApplication, Inject, Injectable, OnModuleInit } from "@nestjs/common";
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 
 import { IDataBaseService } from "../types";
 
@@ -13,7 +13,37 @@ export interface IPrismaService extends PrismaClient, IDataBaseService {
 export class PrismaService extends PrismaClient implements IPrismaService, OnModuleInit {
   constructor(@Inject(TYPES.services.LoggerService) private readonly logger: ILogger) {
     super();
+    this.applyMiddleware();
   }
+
+  applyMiddleware() {
+    this.softDeleteModel("User");
+    this.softDeleteModel("Wallet");
+    this.softDeleteModel("Order");
+  }
+
+  private softDeleteModel(modelName: Prisma.ModelName) {
+    this.$use(async (params, next) => {
+      const isCurrentModel = params.model === modelName;
+
+      if (!isCurrentModel) {
+        return next(params);
+      }
+
+      const deleteActions = ["delete", "deleteMany"];
+
+      if (deleteActions.includes(params.action)) {
+        params.action = params.action.replace("delete", "update") as Prisma.PrismaAction;
+        const args = { ...(params.args ?? {}) };
+        const data = { ...(params.args?.data ?? {}), ...{ deleted: true } };
+
+        params.args = { ...args, data };
+      }
+
+      return next(params);
+    });
+  }
+
   async onModuleInit() {
     try {
       await this.$connect();

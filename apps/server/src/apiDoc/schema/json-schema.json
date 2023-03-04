@@ -363,7 +363,11 @@
           ]
         },
         "created": {
-          "type": "integer"
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
         }
       }
     },
@@ -373,188 +377,21 @@
         "id": {
           "type": "string"
         },
-        "uuid": {
-          "type": "string"
-        },
-        "custom_id": {
-          "type": "integer"
-        },
-        "provider": {
-          "type": "string"
-        },
         "status": {
           "type": [
             "string",
             "null"
           ]
         },
-        "fiat_amount": {
-          "type": [
-            "integer",
-            "null"
-          ]
+        "user": {
+          "$ref": "#/definitions/User"
         },
-        "payment_system": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "crypto_type": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "rate_provider": {
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "crypto_amount_provider": {
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "rate_deal": {
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "crypto_amount_deal": {
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "crypto_amount_broker": {
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "profit": {
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "deal_id": {
-          "type": [
-            "integer",
-            "null"
-          ]
-        },
-        "callback_urls": {
-          "type": [
-            "number",
-            "string",
-            "boolean",
-            "object",
-            "array",
-            "null"
-          ]
-        },
-        "requisites": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "broker": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "client_name": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "created": {
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "updated": {
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "timeout": {
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "status_history": {
-          "type": [
-            "number",
-            "string",
-            "boolean",
-            "object",
-            "array",
-            "null"
-          ]
-        },
-        "notes": {
-          "type": [
-            "number",
-            "string",
-            "boolean",
-            "object",
-            "array",
-            "null"
-          ]
-        },
-        "finish_wallet": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "finish_tx_after": {
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "finished_by": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "finish_error": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "cancel_reason": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "max_claims_attempts": {
+        "deleted": {
           "type": [
             "boolean",
             "null"
-          ]
-        },
-        "handler": {
-          "type": [
-            "string",
-            "null"
-          ]
+          ],
+          "default": false
         }
       }
     },
@@ -629,6 +466,27 @@
         }
       }
     },
+    "Wallet": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "balance": {
+          "type": "number"
+        },
+        "user": {
+          "$ref": "#/definitions/User"
+        },
+        "deleted": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": false
+        }
+      }
+    },
     "User": {
       "type": "object",
       "properties": {
@@ -652,146 +510,32 @@
             "support"
           ]
         },
-        "api_keys": {
-          "type": [
-            "number",
-            "string",
-            "boolean",
-            "object",
-            "array",
-            "null"
-          ]
-        },
-        "tokens": {
-          "type": "array",
-          "items": {
-            "type": [
-              "number",
-              "string",
-              "boolean",
-              "object",
-              "array",
-              "null"
-            ]
-          }
-        },
         "active": {
           "type": "boolean",
           "default": true
         },
-        "is_work": {
-          "type": "boolean",
-          "default": false
-        },
-        "can_finish_orders": {
-          "type": "boolean",
-          "default": false
-        },
-        "balance": {
-          "type": "number",
-          "default": 0
-        },
-        "balance_dep": {
-          "type": "number",
-          "default": 0
-        },
-        "broker": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "inviter": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "percent_method": {
-          "type": "string",
-          "default": "hd"
-        },
-        "amount_settings": {
-          "type": [
-            "number",
-            "string",
-            "boolean",
-            "object",
-            "array",
-            "null"
-          ]
-        },
-        "system_commissions": {
-          "type": [
-            "number",
-            "string",
-            "boolean",
-            "object",
-            "array",
-            "null"
-          ]
-        },
-        "system_allow": {
-          "type": [
-            "number",
-            "string",
-            "boolean",
-            "object",
-            "array",
-            "null"
-          ]
-        },
-        "broker_commissions": {
-          "type": [
-            "number",
-            "string",
-            "boolean",
-            "object",
-            "array",
-            "null"
-          ]
-        },
-        "auth_tokens": {
-          "type": [
-            "number",
-            "string",
-            "boolean",
-            "object",
-            "array",
-            "null"
-          ]
-        },
-        "crypto_type": {
-          "type": "string",
-          "default": "btc"
+        "orders": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Order"
+          }
         },
         "wallet": {
-          "type": [
-            "string",
-            "null"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Wallet"
+            },
+            {
+              "type": "null"
+            }
           ]
         },
-        "wallet_deposit_check_amount": {
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "wallet_added": {
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "can_open_orders_via_panel": {
-          "type": "boolean",
-          "default": false
-        },
-        "send_tx_to_blockchain": {
+        "deleted": {
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "default": false
         }
       }
     }
@@ -824,6 +568,9 @@
     },
     "settings": {
       "$ref": "#/definitions/Settings"
+    },
+    "wallet": {
+      "$ref": "#/definitions/Wallet"
     },
     "user": {
       "$ref": "#/definitions/User"
