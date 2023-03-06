@@ -7,6 +7,7 @@ import { IDataBaseService } from "../types";
 
 export interface IPrismaService extends PrismaClient, IDataBaseService {
   enableShutdownHooks(app: INestApplication): Promise<void>;
+  getSelectedField<T extends object>(fieldsList: Array<keyof T>): Record<keyof T, true>;
 }
 
 @Injectable()
@@ -20,6 +21,13 @@ export class PrismaService extends PrismaClient implements IPrismaService, OnMod
     this.softDeleteModel("User");
     this.softDeleteModel("Wallet");
     this.softDeleteModel("Order");
+  }
+
+  public getSelectedField<T extends object>(fieldsList: Array<keyof T>) {
+    return fieldsList.reduce((acc, key) => {
+      acc[key] = true;
+      return acc;
+    }, {} as Record<keyof T, true>);
   }
 
   private softDeleteModel(modelName: Prisma.ModelName) {

@@ -24,6 +24,9 @@ const loadDockFileAndUpdateDocument = (
     const clone = structuredClone(document);
 
     clone.components.schemas = data;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    clone.definitions = data;
     return clone;
   } catch (e) {
     return null;

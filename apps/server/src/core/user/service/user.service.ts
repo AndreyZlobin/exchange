@@ -13,6 +13,7 @@ export interface IUserService {
   findByName(name: string): Promise<User | null>;
   getUserProfile(): boolean;
   create(user: CreateUserDto): Promise<UserWithoutPassword>;
+  getAll(): Promise<UserWithoutPassword[]>;
 }
 
 const { admin, superadmin, provider } = ROLES;
@@ -28,6 +29,10 @@ export class UserService implements IUserService {
 
   async findByName(name: string) {
     return this.userRepository.findUser({ name });
+  }
+
+  async getAll(): Promise<UserWithoutPassword[]> {
+    return this.userRepository.findAll();
   }
 
   private async checkIsUserExist(name): Promise<boolean> {

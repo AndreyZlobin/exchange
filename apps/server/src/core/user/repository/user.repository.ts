@@ -1,9 +1,9 @@
 import { TYPES } from "@DI/types";
 import { Inject, Injectable } from "@nestjs/common";
-import { User } from "@prisma/client";
 import { IPrismaService } from "@src/database";
 import { PickPrimitives } from "@src/utils";
 
+import { User } from "../types";
 import { UserWithExcludedFields, UserWithoutPassword } from "../types";
 
 type UserFieldsToSearch = Partial<PickPrimitives<User>>;
@@ -11,11 +11,10 @@ type UserFieldsToSearch = Partial<PickPrimitives<User>>;
 export interface IUserRepository {
   create(user: UserWithExcludedFields): Promise<UserWithoutPassword>;
 
-  findAll(): Promise<User[]>;
+  findAll(): Promise<UserWithoutPassword[]>;
 
   findUser(searchFiled: UserFieldsToSearch): Promise<User | null>;
 }
-
 @Injectable()
 export class UserRepository implements IUserRepository {
   // @inject(TYPES.DB.PrismaService) private readonly prismaService: IPrismaService
@@ -26,11 +25,23 @@ export class UserRepository implements IUserRepository {
       data: { ...user },
     });
   }
-  async findAll() {
-    return this.prismaService.user.findMany();
+  async findAll(): Promise<UserWithoutPassword[]> {
+    return this.prismaService.user.findMany({
+      select: this.prismaService.getSelectedField<UserWithoutPassword>([
+        "id",
+        "name",
+        "active",
+        "role",
+        "deleted",
+      ]),
+    });
   }
 
   async findUser(searchFiled: UserFieldsToSearch): Promise<User | null> {
+    return this.prismaService.user.findFirst({ where: { ...searchFiled } });
+  }
+
+  async findUnique(searchFiled: UserFieldsToSearch): Promise<User | null> {
     return this.prismaService.user.findUnique({ where: { ...searchFiled } });
   }
 }
