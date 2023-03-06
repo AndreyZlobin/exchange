@@ -1,0 +1,15 @@
+import { TYPES } from "@DI/types";
+import { Inject, Injectable } from "@nestjs/common";
+
+import { I{{capitalize name}}Repository } from "../repository";
+
+export interface I{{capitalize name}}Service {}
+
+@Injectable()
+export class {{capitalize name}}Service implements I{{capitalize name}}Service {
+
+    constructor(
+        @Inject(TYPES.{{lowercase name}}.{{capitalize name}}Repository) private readonly {{capitalize name}}Repository: I{{capitalize name}}Repository,
+    ) {}
+
+}

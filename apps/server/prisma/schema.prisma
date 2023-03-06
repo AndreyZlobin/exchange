@@ -260,3 +260,18 @@ enum RoleEnum {
   seller
   support
 }
+
+enum OrderStatus {
+  new
+  dealAdded
+  dealCanceled
+  dealCanceledMarkedPaid
+  requisiteAdded
+  markedPaid
+  finished
+  canceled
+  claim
+  renew
+  waitFinishTx
+  finishError
+}
