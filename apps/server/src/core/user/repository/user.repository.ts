@@ -4,13 +4,12 @@ import { User } from "@prisma/client";
 import { IPrismaService } from "@src/database";
 import { PickPrimitives } from "@src/utils";
 
-import { CreateUserDto } from "../dto";
-import { UserEntity } from "../entity";
+import { UserWithExcludedFields, UserWithoutPassword } from "../types";
 
 type UserFieldsToSearch = Partial<PickPrimitives<User>>;
 
 export interface IUserRepository {
-  create(registerUserDto: CreateUserDto): Promise<{ id: string }>;
+  create(user: UserWithExcludedFields): Promise<UserWithoutPassword>;
 
   findAll(): Promise<User[]>;
 
@@ -22,12 +21,9 @@ export class UserRepository implements IUserRepository {
   // @inject(TYPES.DB.PrismaService) private readonly prismaService: IPrismaService
   constructor(@Inject(TYPES.DB.PrismaService) private readonly prismaService: IPrismaService) {}
 
-  async create({ email, password, role }: CreateUserDto) {
-    const hashedPassword = password.concat("");
-    const user = new UserEntity({ name: email, password: hashedPassword, role, active: true });
-
+  async create(user: UserWithExcludedFields) {
     return this.prismaService.user.create({
-      data: { ...user, password: hashedPassword },
+      data: { ...user },
     });
   }
   async findAll() {
@@ -35,6 +31,6 @@ export class UserRepository implements IUserRepository {
   }
 
   async findUser(searchFiled: UserFieldsToSearch): Promise<User | null> {
-    return this.prismaService.user.findFirst({ where: { ...searchFiled } });
+    return this.prismaService.user.findUnique({ where: { ...searchFiled } });
   }
 }

@@ -1,20 +1,28 @@
-import { BcryptService } from "@common/auth";
-import { User } from "@prisma/client";
+import { IBcryptService } from "@common/auth";
 import { Roles } from "@src/core/roles/constants";
 
-type UserWithExcludedFields = Omit<User, "id" | "deleted">;
+import { UserWithExcludedFields } from "../types";
+
 export class UserEntity implements UserWithExcludedFields {
-  private readonly b = new BcryptService();
   public readonly name: string;
   public readonly role: Roles[];
   public readonly active: boolean;
   public readonly password: string;
-  constructor(private readonly data: UserWithExcludedFields) {
+  constructor(
+    private readonly data: UserWithExcludedFields,
+    private readonly bcryptService: IBcryptService,
+  ) {
     const { active, name, role, password } = data;
 
     this.role = role;
     this.name = name;
     this.active = active;
     this.password = password;
+  }
+
+  async getUser(): Promise<UserWithExcludedFields> {
+    const password = await this.bcryptService.hash(this.password);
+
+    return { role: this.role, name: this.name, active: this.active, password };
   }
 }

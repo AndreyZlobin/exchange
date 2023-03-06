@@ -1,9 +1,3 @@
-// see https://www.npmjs.com/package/prisma-json-schema-generator
-generator jsonSchema {
-  provider = "prisma-json-schema-generator"
-  output   = "../src/apiDoc/schema"
-}
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,6 +5,17 @@ generator client {
 datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
+}
+
+// https://www.npmjs.com/package/prisma-dbml-generator
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
+// see https://www.npmjs.com/package/prisma-json-schema-generator
+generator jsonSchema {
+  provider = "prisma-json-schema-generator"
+  output   = "../src/apiDoc/schema"
 }
 
 model BalanceChanges {
@@ -90,7 +95,7 @@ model Log {
 
 model Order {
   id      String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId  String   @unique
+  userId  String   @unique @db.ObjectId
   status  String?
   user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   deleted Boolean? @default(false)
@@ -148,31 +153,77 @@ model Settings {
 }
 
 model Wallet {
+  id                       String   @id @default(auto()) @map("_id") @db.ObjectId
+  /// Текущий баланс пользователя
+  balance                  Float    @default(0)
+  /// Активный баланс пользователя
+  balanceDep               Float    @default(0)
+  /// Адрес кошелька для системы автосписания депозитов
+  address                  String
+  /// Сумма проверки для системы автосписания депозитов
+  walletDepositCheckAmount Int
+  userId                   String   @unique @db.ObjectId
+  user                     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deleted                  Boolean? @default(false)
+}
+
+enum SystemEnum {
+  ccard
+  sim
+  qiwi
+  yandex
+}
+
+type System {
+  /// Все допустимые системы оплаты
+  type             SystemEnum
+  /// Минимальные и максимальные суммы заявок по платежным системам
+  min              Int
+  /// Минимальные и максимальные суммы заявок по платежным системам
+  max              Int
+  /// Комиссии посредника (если таковой имеется)
+  brokerCommission Int
+  /// Комиссии по платежным системам
+  systemCommission Int
+  /// Доступ к созданию заявок по платежным системам
+  isAllow          Boolean    @default(false)
+}
+
+model PaymenySystems {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+}
+
+type Systems {
+  ccard  System
+  sim    System
+  qiwi   System
+  yandex System
+}
+
+model PaymentSetting {
   id      String   @id @default(auto()) @map("_id") @db.ObjectId
-  balance Float
-  userId  String   @unique
+  systems Systems
+  userId  String   @unique @db.ObjectId
   user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   deleted Boolean? @default(false)
 }
 
-enum RoleEnum {
-  superadmin
-  admin
-  broker
-  provider
-  seller
-  support
-}
-
 model User {
-  id       String     @id @default(auto()) @map("_id") @db.ObjectId
-  name     String
-  password String
-  role     RoleEnum[] @default([broker])
-  active   Boolean    @default(true)
-  orders   Order[]
-  wallet   Wallet?
-  deleted  Boolean?   @default(false)
+  id             String          @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  password       String
+  role           RoleEnum[]      @default([broker])
+  /// Активен ли аккаунт, если нет, то нет доступ ко всему функционалу запрещен
+  active         Boolean         @default(true)
+  // /// Готовность обрабатывать трафик
+  // isWork          Boolean    @default(false)
+  // /// Доверенные пользователи с ролью 'provider' способны сами закрывать свои заявки по мере надобности
+  // canFinishOrders Boolean    @default(false)
+  orders         Order[]
+  wallet         Wallet?
+  paymentSetting PaymentSetting?
+  deleted        Boolean?        @default(false)
 
   // id                          String     @id @default(auto()) @map("_id") @db.ObjectId
   // name                        String
@@ -199,4 +250,13 @@ model User {
   // wallet_added                Float?
   // can_open_orders_via_panel   Boolean    @default(false)
   // send_tx_to_blockchain       Boolean?
+}
+
+enum RoleEnum {
+  superadmin
+  admin
+  broker
+  provider
+  seller
+  support
 }

@@ -1,0 +1,163 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table BalanceChanges {
+  id String [pk]
+  order_id Int
+  claim_id Int
+  username String
+  balance Float
+  balance_dep Float
+  balance_current Float
+  balance_dep_current Float
+  stage String
+  created DateTime [default: `now()`]
+  height Int
+  tx_id String
+}
+
+Table BlackList {
+  id String [pk]
+  type String
+  value String
+  note String
+  created DateTime
+}
+
+Table ChatsQueue {
+  id String [pk]
+  type String
+  market String
+  partner String
+  message String
+  status String
+  attempts Int [not null, default: 0]
+  send_after DateTime
+  is_service Boolean [not null, default: false]
+}
+
+Table Claim {
+  id String [pk]
+  uuid String [not null]
+  order_id Int
+  order_status String
+  deal_id Int
+  fiat_amount Float
+  fiat_amount_order Float
+  status String
+  error String
+  provider String
+  client_name String
+  handler String
+  payment_system String
+  created DateTime
+  images Json
+  savedImages Json
+  urls Json
+}
+
+Table Deposit {
+  id String [pk]
+  username String
+  wallet String
+  height Int
+  btc_amount Float
+  need_to_handle Boolean [default: false]
+  handled Boolean [default: false]
+  confirmed Int
+  created Int
+}
+
+Table Log {
+  id String [pk]
+  action String
+  source String
+  data Json
+  created DateTime [default: `now()`]
+}
+
+Table Order {
+  id String [pk]
+  userId String [unique, not null]
+  status String
+  user User [not null]
+  deleted Boolean [default: false]
+}
+
+Table Requisite {
+  id String [pk]
+  username String [not null]
+  payment_system String
+  requisite String
+  filled Int [not null, default: 0]
+  limit Int [not null, default: 0]
+  crypto_type String
+  active Boolean [not null, default: false]
+}
+
+Table Settings {
+  id String [pk]
+  market String [not null]
+  name String [not null]
+  value Json [not null]
+  global Boolean
+}
+
+Table Wallet {
+  id String [pk]
+  balance Float [not null, default: 0, note: 'Текущий баланс пользователя']
+  balanceDep Float [not null, default: 0, note: 'Активный баланс пользователя']
+  address String [not null, note: 'Адрес кошелька для системы автосписания депозитов']
+  walletDepositCheckAmount Int [not null, note: 'Сумма проверки для системы автосписания депозитов']
+  userId String [unique, not null]
+  user User [not null]
+  deleted Boolean [default: false]
+}
+
+Table PaymenySystems {
+  id String [pk]
+  name String [not null]
+}
+
+Table PaymentSetting {
+  id String [pk]
+  systems Systems [not null]
+  userId String [unique, not null]
+  user User [not null]
+  deleted Boolean [default: false]
+}
+
+Table User {
+  id String [pk]
+  name String [not null]
+  password String [not null]
+  role RoleEnum[] [not null]
+  active Boolean [not null, default: true, note: 'Активен ли аккаунт, если нет, то нет доступ ко всему функционалу запрещен']
+  orders Order [not null]
+  wallet Wallet
+  paymentSetting PaymentSetting
+  deleted Boolean [default: false]
+}
+
+Enum SystemEnum {
+  ccard
+  sim
+  qiwi
+  yandex
+}
+
+Enum RoleEnum {
+  superadmin
+  admin
+  broker
+  provider
+  seller
+  support
+}
+
+Ref: Order.userId > User.id [delete: Cascade]
+
+Ref: Wallet.userId - User.id [delete: Cascade]
+
+Ref: PaymentSetting.userId - User.id [delete: Cascade]

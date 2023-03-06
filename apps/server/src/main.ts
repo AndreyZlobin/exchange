@@ -9,6 +9,7 @@ import { DocumentBuilder, OpenAPIObject, SwaggerModule } from "@nestjs/swagger";
 import { ValidationExceptionFilter } from "@shared/exceptions";
 import { AppModule } from "@src/app.module";
 import { IPrismaService, IRedisService } from "@src/database";
+import { mergeDeep } from "@src/utils/mergeDeep";
 import { readFileSync } from "fs";
 import helmet from "helmet";
 
@@ -57,7 +58,7 @@ class Bootstrap {
       const updatedDoc =
         loadDockFileAndUpdateDocument("./src/apiDoc/schema/json-schema.json", document) || document;
 
-      SwaggerModule.setup("api/docs", this.app, updatedDoc);
+      SwaggerModule.setup("api/docs", this.app, mergeDeep(updatedDoc, document));
       this.logger.log(
         `[${SwaggerModule.name}]: Swagger here | http://localhost:${this.port}/api/docs`,
       );
@@ -81,48 +82,69 @@ class Bootstrap {
       await prismaService.enableShutdownHooks(this.app);
       this.swaggerInit();
 
-      // const defaultWallet = { balance: 123 };
+      // const defaultWallet = {
+      //   balance: 0,
+      //   balanceDep: 0,
+      //   address: "",
+      //   walletDepositCheckAmount: 0,
+      // };
+
       // const user = await prismaService.user.create({
-      //   data: { active: true, name: "Test2", password: "test3", wallet: { create: defaultWallet } },
-      // });
-      //
-      // await prismaService.user.create({
       //   data: {
       //     active: true,
       //     name: "Test2",
       //     password: "test3",
-      //     wallet: { create: { balance: 0 } },
+      //     wallet: { create: defaultWallet },
+      //     paymentSetting: {
+      //       create: {
+      //         systems: {
+      //           ccard: {
+      //             type: "ccard",
+      //             min: 300,
+      //             max: 15000,
+      //             brokerCommission: 0,
+      //             systemCommission: 20,
+      //             isAllow: false,
+      //           },
+      //           sim: {
+      //             type: "sim",
+      //             min: 300,
+      //             max: 15000,
+      //             brokerCommission: 0,
+      //             systemCommission: 20,
+      //             isAllow: false,
+      //           },
+      //           qiwi: {
+      //             type: "qiwi",
+      //             min: 300,
+      //             max: 15000,
+      //             brokerCommission: 0,
+      //             systemCommission: 20,
+      //             isAllow: false,
+      //           },
+      //           yandex: {
+      //             type: "yandex",
+      //             min: 300,
+      //             max: 15000,
+      //             brokerCommission: 0,
+      //             systemCommission: 20,
+      //             isAllow: false,
+      //           },
+      //         },
+      //       },
+      //     },
       //   },
-      // });
-      // await prismaService.user.create({
-      //   data: {
-      //     active: true,
-      //     name: "Test2",
-      //     password: "test3",
-      //     wallet: { create: { balance: 30 } },
-      //   },
-      // });
-      // await prismaService.user.create({
-      //   data: {
-      //     active: true,
-      //     name: "Test2",
-      //     password: "test3",
-      //     wallet: { create: { balance: 50 } },
-      //   },
-      // });
-      // await prismaService.user.create({
-      //   data: {
-      //     active: true,
-      //     name: "Test2",
-      //     password: "test3",
-      //     wallet: { create: { balance: 44.5 } },
-      //   },
+      //   include: { paymentSetting: true },
       // });
 
+      //
+      // const userId = "6404387a91f583f46c70840b";
       // const user = await prismaService.user.findUnique({
-      //   where: { id: "6402edd57d7f0a9ebafe317b" },
-      //   include: { wallet: true, orders: true },
+      //   where: { id: "6404300174d68d6ae002fad4" },
+      //   include: { wallet: true, orders: true, _count: true, paymentSetting: true },
       // });
+
+      // const payment = await prismaService.paymentSetting.findUnique({ where: { userId } });
 
       // const user = await prismaService.user.delete({
       //   where: { id: "6402fc5c51519026d5ed9a7b" },
@@ -134,6 +156,8 @@ class Bootstrap {
       // const user = await prismaService.user.deleteMany();
       //
       // console.log(user);
+      // console.log(user);
+      // console.log(payment);
 
       await this.app.listen(this.port);
       this.logger.log(

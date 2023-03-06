@@ -3,7 +3,7 @@ import { Module } from "@nestjs/common";
 import { AuthCacheService } from "@src/core/auth/cache/cache.service";
 import { AuthRepository } from "@src/core/auth/repository";
 import { AuthService } from "@src/core/auth/services";
-import { UserRepository } from "@src/core/user";
+import { UserRepository, UserService } from "@src/core/user";
 
 import { AuthController } from "./auth.controller";
 
@@ -14,6 +14,7 @@ import { AuthController } from "./auth.controller";
     { provide: TYPES.auth.AuthCacheService, useClass: AuthCacheService },
     { provide: TYPES.auth.AuthRepository, useClass: AuthRepository },
     { provide: TYPES.user.UserRepository, useClass: UserRepository },
+    { provide: TYPES.user.UserService, useClass: UserService },
   ],
 })
 export class AuthModule {}

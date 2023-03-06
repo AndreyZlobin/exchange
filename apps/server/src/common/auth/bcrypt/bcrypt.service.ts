@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import { compare, hash } from "bcrypt";
 import { injectable } from "inversify";
 
 export interface IBcryptService {
@@ -12,10 +12,10 @@ export class BcryptService implements IBcryptService {
   private readonly salt = 12;
 
   async hash(plaintext: string): Promise<string> {
-    return bcrypt.hash(plaintext, this.salt);
+    return hash(plaintext, this.salt);
   }
 
   async compare(plaintext: string, digest: string): Promise<boolean> {
-    return bcrypt.compare(plaintext, digest);
+    return compare(plaintext, digest);
   }
 }

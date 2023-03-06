@@ -473,7 +473,54 @@
           "type": "string"
         },
         "balance": {
-          "type": "number"
+          "type": "number",
+          "default": 0,
+          "description": "Текущий баланс пользователя"
+        },
+        "balanceDep": {
+          "type": "number",
+          "default": 0,
+          "description": "Активный баланс пользователя"
+        },
+        "address": {
+          "type": "string",
+          "description": "Адрес кошелька для системы автосписания депозитов"
+        },
+        "walletDepositCheckAmount": {
+          "type": "integer",
+          "description": "Сумма проверки для системы автосписания депозитов"
+        },
+        "user": {
+          "$ref": "#/definitions/User"
+        },
+        "deleted": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": false
+        }
+      }
+    },
+    "PaymenySystems": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "PaymentSetting": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "systems": {
+          "$ref": "#/definitions/Systems"
         },
         "user": {
           "$ref": "#/definitions/User"
@@ -512,7 +559,8 @@
         },
         "active": {
           "type": "boolean",
-          "default": true
+          "default": true,
+          "description": "Активен ли аккаунт, если нет, то нет доступ ко всему функционалу запрещен"
         },
         "orders": {
           "type": "array",
@@ -530,12 +578,69 @@
             }
           ]
         },
+        "paymentSetting": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/PaymentSetting"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "deleted": {
           "type": [
             "boolean",
             "null"
           ],
           "default": false
+        }
+      }
+    },
+    "System": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "ccard",
+            "sim",
+            "qiwi",
+            "yandex"
+          ]
+        },
+        "min": {
+          "type": "integer"
+        },
+        "max": {
+          "type": "integer"
+        },
+        "brokerCommission": {
+          "type": "integer"
+        },
+        "systemCommission": {
+          "type": "integer"
+        },
+        "isAllow": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "Systems": {
+      "type": "object",
+      "properties": {
+        "ccard": {
+          "$ref": "#/definitions/System"
+        },
+        "sim": {
+          "$ref": "#/definitions/System"
+        },
+        "qiwi": {
+          "$ref": "#/definitions/System"
+        },
+        "yandex": {
+          "$ref": "#/definitions/System"
         }
       }
     }
@@ -571,6 +676,12 @@
     },
     "wallet": {
       "$ref": "#/definitions/Wallet"
+    },
+    "paymenySystems": {
+      "$ref": "#/definitions/PaymenySystems"
+    },
+    "paymentSetting": {
+      "$ref": "#/definitions/PaymentSetting"
     },
     "user": {
       "$ref": "#/definitions/User"
