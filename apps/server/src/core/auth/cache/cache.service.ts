@@ -10,6 +10,7 @@ export interface IAuthCacheService {
   setTokensToCache(cacheKey: string, access: string, refresh: string): Promise<void>;
   getTokenFromCache(cacheKey: string): Promise<string | null>;
   getTokenCacheName(key: "access" | "refresh", value: string): string;
+  removeTokens(cacheKey: string): Promise<boolean>;
 }
 
 @Injectable()
@@ -33,6 +34,10 @@ export class AuthCacheService implements IAuthCacheService {
     await this.redisService.client.set(key, value, { EX: exp });
   }
 
+  private async removeToken(key: string) {
+    await this.redisService.client.del(key);
+  }
+
   async getTokenFromCache(key: string) {
     return this.redisService.client.get(key);
   }
@@ -44,6 +49,18 @@ export class AuthCacheService implements IAuthCacheService {
     ]);
 
     return { accessToken, refreshToken };
+  }
+
+  async removeTokens(cacheKey: string): Promise<boolean> {
+    try {
+      await Promise.all([
+        this.removeToken(this.getTokenCacheName("access", cacheKey)),
+        this.removeToken(this.getTokenCacheName("refresh", cacheKey)),
+      ]);
+      return true;
+    } catch (e) {
+      return Promise.reject(false);
+    }
   }
 
   async setTokensToCache(cacheKey: string, access: string, refresh: string) {

@@ -8,6 +8,7 @@
     "./apps/*"
   ],
   "scripts": {
+    "setup": "npm install && npm run prisma:gen",
     "server:dev": "npm run dev --prefix apps/server",
     "server:lint": "npm run lint --prefix apps/server",
     "server:check-types": "npm run check-types --prefix apps/server",

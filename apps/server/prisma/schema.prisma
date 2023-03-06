@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,6 +5,17 @@ generator client {
 datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
+}
+
+// https://www.npmjs.com/package/prisma-dbml-generator
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
+// see https://www.npmjs.com/package/prisma-json-schema-generator
+generator jsonSchema {
+  provider = "prisma-json-schema-generator"
+  output   = "../src/apiDoc/schema"
 }
 
 model BalanceChanges {
@@ -78,45 +86,51 @@ model Deposit {
 }
 
 model Log {
-  id      String  @id @default(auto()) @map("_id") @db.ObjectId
+  id      String    @id @default(auto()) @map("_id") @db.ObjectId
   action  String?
   source  String?
   data    Json?
-  created Int?    @default(0)
+  created DateTime? @default(now())
 }
 
 model Order {
-  id                     String   @id @default(auto()) @map("_id") @db.ObjectId
-  uuid                   String   @default(uuid())
-  custom_id              Int
-  provider               String
-  status                 String?
-  fiat_amount            Int?
-  payment_system         String?
-  crypto_type            String?
-  rate_provider          Float?
-  crypto_amount_provider Float?
-  rate_deal              Float?
-  crypto_amount_deal     Float?
-  crypto_amount_broker   Float?
-  profit                 Float?
-  deal_id                Int?
-  callback_urls          Json?
-  requisites             String?
-  broker                 String?
-  client_name            String?
-  created                Float?
-  updated                Float?
-  timeout                Float?
-  status_history         Json?
-  notes                  Json?
-  finish_wallet          String?
-  finish_tx_after        Float?
-  finished_by            String?
-  finish_error           String?
-  cancel_reason          String?
-  max_claims_attempts    Boolean?
-  handler                String?
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId  String   @unique @db.ObjectId
+  status  String?
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deleted Boolean? @default(false)
+  //
+  // id                     String   @id @default(auto()) @map("_id") @db.ObjectId
+  // uuid                   String   @default(uuid())
+  // custom_id              Int
+  // provider               String
+  // status                 String?
+  // fiat_amount            Int?
+  // payment_system         String?
+  // crypto_type            String?
+  // rate_provider          Float?
+  // crypto_amount_provider Float?
+  // rate_deal              Float?
+  // crypto_amount_deal     Float?
+  // crypto_amount_broker   Float?
+  // profit                 Float?
+  // deal_id                Int?
+  // callback_urls          Json?
+  // requisites             String?
+  // broker                 String?
+  // client_name            String?
+  // created                Float?
+  // updated                Float?
+  // timeout                Float?
+  // status_history         Json?
+  // notes                  Json?
+  // finish_wallet          String?
+  // finish_tx_after        Float?
+  // finished_by            String?
+  // finish_error           String?
+  // cancel_reason          String?
+  // max_claims_attempts    Boolean?
+  // handler                String?
 }
 
 model Requisite {
@@ -138,6 +152,106 @@ model Settings {
   global Boolean?
 }
 
+model Wallet {
+  id                       String   @id @default(auto()) @map("_id") @db.ObjectId
+  /// Текущий баланс пользователя
+  balance                  Float    @default(0)
+  /// Активный баланс пользователя
+  balanceDep               Float    @default(0)
+  /// Адрес кошелька для системы автосписания депозитов
+  address                  String
+  /// Сумма проверки для системы автосписания депозитов
+  walletDepositCheckAmount Int
+  userId                   String   @unique @db.ObjectId
+  user                     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deleted                  Boolean? @default(false)
+}
+
+enum SystemEnum {
+  ccard
+  sim
+  qiwi
+  yandex
+}
+
+type System {
+  /// Все допустимые системы оплаты
+  type             SystemEnum
+  /// Минимальные и максимальные суммы заявок по платежным системам
+  min              Int
+  /// Минимальные и максимальные суммы заявок по платежным системам
+  max              Int
+  /// Комиссии посредника (если таковой имеется)
+  brokerCommission Int
+  /// Комиссии по платежным системам
+  systemCommission Int
+  /// Доступ к созданию заявок по платежным системам
+  isAllow          Boolean    @default(false)
+}
+
+model PaymenySystems {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+}
+
+type Systems {
+  ccard  System
+  sim    System
+  qiwi   System
+  yandex System
+}
+
+model PaymentSetting {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  systems Systems
+  userId  String   @unique @db.ObjectId
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deleted Boolean? @default(false)
+}
+
+model User {
+  id             String          @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  password       String
+  role           RoleEnum[]      @default([broker])
+  /// Активен ли аккаунт, если нет, то нет доступ ко всему функционалу запрещен
+  active         Boolean         @default(true)
+  // /// Готовность обрабатывать трафик
+  // isWork          Boolean    @default(false)
+  // /// Доверенные пользователи с ролью 'provider' способны сами закрывать свои заявки по мере надобности
+  // canFinishOrders Boolean    @default(false)
+  orders         Order[]
+  wallet         Wallet?
+  paymentSetting PaymentSetting?
+  deleted        Boolean?        @default(false)
+
+  // id                          String     @id @default(auto()) @map("_id") @db.ObjectId
+  // name                        String
+  // password                    String
+  // role                        RoleEnum[] @default([broker])
+  // api_keys                    Json?
+  // tokens                      Json[]
+  // active                      Boolean    @default(true)
+  // is_work                     Boolean    @default(false)
+  // can_finish_orders           Boolean    @default(false)
+  // balance                     Float      @default(0)
+  // balance_dep                 Float      @default(0)
+  // broker                      String?
+  // inviter                     String?
+  // percent_method              String     @default("hd")
+  // amount_settings             Json
+  // system_commissions          Json
+  // system_allow                Json
+  // broker_commissions          Json
+  // auth_tokens                 Json
+  // crypto_type                 String     @default("btc")
+  // wallet                      String?
+  // wallet_deposit_check_amount Float?
+  // wallet_added                Float?
+  // can_open_orders_via_panel   Boolean    @default(false)
+  // send_tx_to_blockchain       Boolean?
+}
+
 enum RoleEnum {
   superadmin
   admin
@@ -145,32 +259,4 @@ enum RoleEnum {
   provider
   seller
   support
-}
-
-model User {
-  id                          String     @id @default(auto()) @map("_id") @db.ObjectId
-  name                        String
-  password                    String
-  role                        RoleEnum[] @default([broker])
-  api_keys                    Json?
-  tokens                      Json[]
-  active                      Boolean    @default(true)
-  is_work                     Boolean    @default(false)
-  can_finish_orders           Boolean    @default(false)
-  balance                     Float      @default(0)
-  balance_dep                 Float      @default(0)
-  broker                      String?
-  inviter                     String?
-  percent_method              String     @default("hd")
-  amount_settings             Json
-  system_commissions          Json
-  system_allow                Json
-  broker_commissions          Json
-  auth_tokens                 Json
-  crypto_type                 String     @default("btc")
-  wallet                      String?
-  wallet_deposit_check_amount Float?
-  wallet_added                Float?
-  can_open_orders_via_panel   Boolean    @default(false)
-  send_tx_to_blockchain       Boolean?
 }
