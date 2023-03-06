@@ -9,7 +9,5 @@ interface RequestWithUserData extends Request {
 }
 
 export const Context = createParamDecorator((data: unknown, context: ExecutionContext) => {
-  const req = context.switchToHttp().getRequest<RequestWithUserData>();
-
-  return req.userContext;
+  return context.switchToHttp().getRequest<RequestWithUserData>().userContext;
 });

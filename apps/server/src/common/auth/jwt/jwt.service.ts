@@ -1,7 +1,15 @@
 import { TYPES } from "@DI/types";
 import { Inject, Injectable } from "@nestjs/common";
 import { ConfigServiceWithEnv } from "@src/common/configs";
-import jwt, { JwtPayload, SignOptions } from "jsonwebtoken";
+import {
+  decode,
+  JsonWebTokenError,
+  JwtPayload,
+  sign,
+  SignOptions,
+  TokenExpiredError,
+  verify,
+} from "jsonwebtoken";
 
 type Token = string;
 
@@ -9,7 +17,6 @@ type Payload = string | Buffer | object;
 
 interface JWTServiceOptions extends SignOptions {
   secret: Token;
-
   expiresIn: number;
 }
 export interface IJWTService {
@@ -17,6 +24,7 @@ export interface IJWTService {
   generateToken(payLoad: Payload, secret: string, options: SignOptions): string;
   verifyToken(token: string, secret: string): JwtPayload | string;
   decodeToken(token: string): string | JwtPayload | null;
+  normalizeJWTError(error: unknown): string;
   generateTokens(
     accessPayload: Payload,
     refreshPayload: Payload,
@@ -42,14 +50,22 @@ export class JWTService implements IJWTService {
     };
   }
   generateToken(payload: Payload, secret: string, options: SignOptions) {
-    return jwt.sign({ data: payload }, secret, options);
+    return sign({ data: payload }, secret, options);
   }
   verifyToken(token: string, secret: string) {
-    return jwt.verify(token, secret);
+    return verify(token, secret);
   }
 
+  normalizeJWTError(error: unknown): string {
+    const errorMap = new Map([
+      [TokenExpiredError, "Token Expired"],
+      [JsonWebTokenError, "Invalid token"],
+    ]);
+
+    return errorMap.get(error.constructor as ErrorConstructor) ?? "Invalid token";
+  }
   decodeToken(token: Token) {
-    return jwt.decode(token);
+    return decode(token);
   }
   generateTokens(accessPayload: Payload, refreshPayload: Payload) {
     const { secret: accessSecret, ...restAccess } = this.options.accessOptions;

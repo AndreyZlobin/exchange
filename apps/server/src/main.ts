@@ -54,6 +54,17 @@ class Bootstrap {
         .setTitle("Sample API")
         .setDescription("A simple API for demonstration purposes")
         .setVersion("1.0")
+        .addBearerAuth(
+          {
+            type: "http",
+            scheme: "bearer",
+            bearerFormat: "JWT",
+            name: "JWT",
+            description: "Enter JWT token",
+            in: "header",
+          },
+          "JWT",
+        )
         .build();
 
       const document = SwaggerModule.createDocument(this.app, options, {});
