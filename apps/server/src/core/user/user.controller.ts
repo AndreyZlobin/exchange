@@ -1,5 +1,5 @@
 import { TYPES } from "@DI/types";
-import { Controller, Inject, Injectable, Post } from "@nestjs/common";
+import { Controller, Get, Inject, Injectable } from "@nestjs/common";
 import { ApiResponse, ApiTags, getSchemaPath } from "@nestjs/swagger";
 import { createValidateSchema, ValidateInput } from "@shared/validators";
 import { IUserService } from "@src/core/user/service";
@@ -18,12 +18,12 @@ const t = createValidateSchema({
   }),
 });
 
-@ApiTags("User")
 @Injectable()
+@ApiTags("User")
 @Controller("user")
 export class UserController {
   constructor(@Inject(TYPES.user.UserService) private readonly userService: IUserService) {}
-  @Post("/profile")
+  @Get("/profile")
   @ValidateInput(t)
   async getUserProfile() {
     return this.userService.getUserProfile();
@@ -35,7 +35,7 @@ export class UserController {
   })
   @ApiResponse({ status: 403, description: "Forbidden" })
   @ApiResponse({ status: 400, description: "Bad request" })
-  @Post("/")
+  @Get("/all")
   async getAll() {
     return this.userService.getAll();
   }

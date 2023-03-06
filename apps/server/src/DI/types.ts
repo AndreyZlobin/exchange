@@ -28,4 +28,8 @@ export const TYPES = {
     UserRepository: Symbol.for("UserRepository"),
     UserService: Symbol.for("UserService"),
   },
+  order: {
+    OrderService: Symbol.for("OrderService"),
+    OrderRepository: Symbol.for("OrderRepository"),
+  },
 };
