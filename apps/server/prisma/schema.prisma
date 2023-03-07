@@ -18,40 +18,79 @@ generator jsonSchema {
   output   = "../src/apiDoc/schema"
 }
 
-model BalanceChanges {
-  id                  String    @id @default(auto()) @map("_id") @db.ObjectId
-  order_id            Int?
-  claim_id            Int?
-  username            String?
-  balance             Float?
-  balance_dep         Float?
-  balance_current     Float?
-  balance_dep_current Float?
-  stage               String?
-  created             DateTime? @default(now())
-  height              Int?
-  tx_id               String?
-}
-
-model BlackList {
+model Log {
   id      String    @id @default(auto()) @map("_id") @db.ObjectId
-  type    String?
-  value   String?
-  note    String?
-  created DateTime?
+  action  String?
+  source  String?
+  data    Json?
+  created DateTime? @default(now())
 }
 
-model ChatsQueue {
-  id         String    @id @default(auto()) @map("_id") @db.ObjectId
-  type       String?
-  market     String?
-  partner    String?
-  message    String?
-  status     String?
-  attempts   Int       @default(0)
-  send_after DateTime?
-  is_service Boolean   @default(false)
-}
+// model BalanceChanges {
+//   id                  String    @id @default(auto()) @map("_id") @db.ObjectId
+//   order_id            Int?
+//   claim_id            Int?
+//   username            String?
+//   balance             Float?
+//   balance_dep         Float?
+//   balance_current     Float?
+//   balance_dep_current Float?
+//   stage               String?
+//   created             DateTime? @default(now())
+//   height              Int?
+//   tx_id               String?
+// }
+
+// model BlackList {
+//   id      String    @id @default(auto()) @map("_id") @db.ObjectId
+//   type    String?
+//   value   String?
+//   note    String?
+//   created DateTime?
+// }
+
+// model ChatsQueue {
+//   id         String    @id @default(auto()) @map("_id") @db.ObjectId
+//   type       String?
+//   market     String?
+//   partner    String?
+//   message    String?
+//   status     String?
+//   attempts   Int       @default(0)
+//   send_after DateTime?
+//   is_service Boolean   @default(false)
+// }
+
+// model Requisite {
+//   id             String  @id @default(auto()) @map("_id") @db.ObjectId
+//   username       String
+//   payment_system String?
+//   requisite      String?
+//   filled         Int     @default(0)
+//   limit          Int     @default(0)
+//   crypto_type    String?
+//   active         Boolean @default(false)
+// }
+
+// model Settings {
+//   id     String   @id @default(auto()) @map("_id") @db.ObjectId
+//   market String
+//   name   String
+//   value  Json
+//   global Boolean?
+// }
+
+// model Deposit {
+//   id             String   @id @default(auto()) @map("_id") @db.ObjectId
+//   username       String?
+//   wallet         String?
+//   height         Int?
+//   btc_amount     Float?
+//   need_to_handle Boolean? @default(false)
+//   handled        Boolean? @default(false)
+//   confirmed      Int?
+//   created        Int?
+// }
 
 model Claim {
   id                String    @id @default(auto()) @map("_id") @db.ObjectId
@@ -73,33 +112,56 @@ model Claim {
   urls              Json?
 }
 
-model Deposit {
-  id             String   @id @default(auto()) @map("_id") @db.ObjectId
-  username       String?
-  wallet         String?
-  height         Int?
-  btc_amount     Float?
-  need_to_handle Boolean? @default(false)
-  handled        Boolean? @default(false)
-  confirmed      Int?
-  created        Int?
+enum SystemEnum {
+  ccard
+  sim
+  qiwi
+  yandex
 }
 
-model Log {
-  id      String    @id @default(auto()) @map("_id") @db.ObjectId
-  action  String?
-  source  String?
-  data    Json?
-  created DateTime? @default(now())
+type System {
+  /// Все допустимые системы оплаты
+  type             SystemEnum
+  /// Минимальные и максимальные суммы заявок по платежным системам
+  min              Int
+  /// Минимальные и максимальные суммы заявок по платежным системам
+  max              Int
+  /// Комиссии посредника (если таковой имеется)
+  brokerCommission Int
+  /// Комиссии по платежным системам
+  systemCommission Int
+  /// Доступ к созданию заявок по платежным системам
+  isAllow          Boolean    @default(false)
+}
+
+model PaymentSystem {
+  id               String     @id @default(auto()) @map("_id") @db.ObjectId
+  name             SystemEnum
+  /// Все допустимые системы оплаты
+  type             SystemEnum
+  /// Минимальные и максимальные суммы заявок по платежным системам
+  min              Int
+  /// Минимальные и максимальные суммы заявок по платежным системам
+  max              Int
+  /// Комиссии посредника (если таковой имеется)
+  brokerCommission Int
+  /// Комиссии по платежным системам
+  systemCommission Int
+  /// Доступ к созданию заявок по платежным системам
+  isAllow          Boolean    @default(false)
+  orders           Order[]
 }
 
 model Order {
-  id      String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId  String   @unique @db.ObjectId
-  status  String?
-  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  deleted Boolean? @default(false)
-  //
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  status          OrderStatus   @default(new)
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId          String        @unique @db.ObjectId
+  paymentSystem   PaymentSystem @relation(fields: [paymentSystemId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  paymentSystemId String        @db.ObjectId
+  statusHistory   OrderStatus[] @default([new])
+  created         DateTime?     @default(now())
+  deleted         Boolean?      @default(false)
   // id                     String   @id @default(auto()) @map("_id") @db.ObjectId
   // uuid                   String   @default(uuid())
   // custom_id              Int
@@ -133,25 +195,6 @@ model Order {
   // handler                String?
 }
 
-model Requisite {
-  id             String  @id @default(auto()) @map("_id") @db.ObjectId
-  username       String
-  payment_system String?
-  requisite      String?
-  filled         Int     @default(0)
-  limit          Int     @default(0)
-  crypto_type    String?
-  active         Boolean @default(false)
-}
-
-model Settings {
-  id     String   @id @default(auto()) @map("_id") @db.ObjectId
-  market String
-  name   String
-  value  Json
-  global Boolean?
-}
-
 model Wallet {
   id                       String   @id @default(auto()) @map("_id") @db.ObjectId
   /// Текущий баланс пользователя
@@ -163,35 +206,8 @@ model Wallet {
   /// Сумма проверки для системы автосписания депозитов
   walletDepositCheckAmount Int
   userId                   String   @unique @db.ObjectId
-  user                     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                     User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   deleted                  Boolean? @default(false)
-}
-
-enum SystemEnum {
-  ccard
-  sim
-  qiwi
-  yandex
-}
-
-type System {
-  /// Все допустимые системы оплаты
-  type             SystemEnum
-  /// Минимальные и максимальные суммы заявок по платежным системам
-  min              Int
-  /// Минимальные и максимальные суммы заявок по платежным системам
-  max              Int
-  /// Комиссии посредника (если таковой имеется)
-  brokerCommission Int
-  /// Комиссии по платежным системам
-  systemCommission Int
-  /// Доступ к созданию заявок по платежным системам
-  isAllow          Boolean    @default(false)
-}
-
-model PaymenySystems {
-  id   String @id @default(auto()) @map("_id") @db.ObjectId
-  name String
 }
 
 type Systems {
@@ -205,8 +221,15 @@ model PaymentSetting {
   id      String   @id @default(auto()) @map("_id") @db.ObjectId
   systems Systems
   userId  String   @unique @db.ObjectId
-  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   deleted Boolean? @default(false)
+}
+
+model Currency {
+  id    String             @id @default(auto()) @map("_id") @db.ObjectId
+  name  CurrencyType
+  title String
+  type  CryptocurrencyType
 }
 
 model User {
@@ -250,6 +273,16 @@ model User {
   // wallet_added                Float?
   // can_open_orders_via_panel   Boolean    @default(false)
   // send_tx_to_blockchain       Boolean?
+}
+
+enum CryptocurrencyType {
+  Cryptocurrency
+  Fiat
+}
+
+enum CurrencyType {
+  Tether
+  BTC
 }
 
 enum RoleEnum {

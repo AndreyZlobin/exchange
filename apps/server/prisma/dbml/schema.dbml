@@ -2,39 +2,12 @@
 //// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 //// ------------------------------------------------------
 
-Table BalanceChanges {
+Table Log {
   id String [pk]
-  order_id Int
-  claim_id Int
-  username String
-  balance Float
-  balance_dep Float
-  balance_current Float
-  balance_dep_current Float
-  stage String
+  action String
+  source String
+  data Json
   created DateTime [default: `now()`]
-  height Int
-  tx_id String
-}
-
-Table BlackList {
-  id String [pk]
-  type String
-  value String
-  note String
-  created DateTime
-}
-
-Table ChatsQueue {
-  id String [pk]
-  type String
-  market String
-  partner String
-  message String
-  status String
-  attempts Int [not null, default: 0]
-  send_after DateTime
-  is_service Boolean [not null, default: false]
 }
 
 Table Claim {
@@ -57,51 +30,28 @@ Table Claim {
   urls Json
 }
 
-Table Deposit {
+Table PaymentSystem {
   id String [pk]
-  username String
-  wallet String
-  height Int
-  btc_amount Float
-  need_to_handle Boolean [default: false]
-  handled Boolean [default: false]
-  confirmed Int
-  created Int
-}
-
-Table Log {
-  id String [pk]
-  action String
-  source String
-  data Json
-  created DateTime [default: `now()`]
+  name SystemEnum [not null]
+  type SystemEnum [not null, note: 'Все допустимые системы оплаты']
+  min Int [not null, note: 'Минимальные и максимальные суммы заявок по платежным системам']
+  max Int [not null, note: 'Минимальные и максимальные суммы заявок по платежным системам']
+  brokerCommission Int [not null, note: 'Комиссии посредника (если таковой имеется)']
+  systemCommission Int [not null, note: 'Комиссии по платежным системам']
+  isAllow Boolean [not null, default: false, note: 'Доступ к созданию заявок по платежным системам']
+  orders Order [not null]
 }
 
 Table Order {
   id String [pk]
-  userId String [unique, not null]
-  status String
+  status OrderStatus [not null, default: 'new']
   user User [not null]
+  userId String [unique, not null]
+  paymentSystem PaymentSystem [not null]
+  paymentSystemId String [not null]
+  statusHistory OrderStatus[] [not null]
+  created DateTime [default: `now()`]
   deleted Boolean [default: false]
-}
-
-Table Requisite {
-  id String [pk]
-  username String [not null]
-  payment_system String
-  requisite String
-  filled Int [not null, default: 0]
-  limit Int [not null, default: 0]
-  crypto_type String
-  active Boolean [not null, default: false]
-}
-
-Table Settings {
-  id String [pk]
-  market String [not null]
-  name String [not null]
-  value Json [not null]
-  global Boolean
 }
 
 Table Wallet {
@@ -115,17 +65,19 @@ Table Wallet {
   deleted Boolean [default: false]
 }
 
-Table PaymenySystems {
-  id String [pk]
-  name String [not null]
-}
-
 Table PaymentSetting {
   id String [pk]
   systems Systems [not null]
   userId String [unique, not null]
   user User [not null]
   deleted Boolean [default: false]
+}
+
+Table Currency {
+  id String [pk]
+  name CurrencyType [not null]
+  title String [not null]
+  type CryptocurrencyType [not null]
 }
 
 Table User {
@@ -145,6 +97,16 @@ Enum SystemEnum {
   sim
   qiwi
   yandex
+}
+
+Enum CryptocurrencyType {
+  Cryptocurrency
+  Fiat
+}
+
+Enum CurrencyType {
+  Tether
+  BTC
 }
 
 Enum RoleEnum {
@@ -172,6 +134,8 @@ Enum OrderStatus {
 }
 
 Ref: Order.userId > User.id [delete: Cascade]
+
+Ref: Order.paymentSystemId > PaymentSystem.id [delete: Cascade]
 
 Ref: Wallet.userId - User.id [delete: Cascade]
 

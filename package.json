@@ -20,6 +20,7 @@
     "prisma:gen": "npm run prisma:gen --prefix apps/server",
     "infra": "cd ./devops && docker-compose up",
     "prepare": "husky install",
+    "seed": "npm run seed --prefix apps/server",
     "plop": "npm run plop --prefix apps/server"
   },
   "devDependencies": {

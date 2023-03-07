@@ -29,10 +29,7 @@ export class UserController {
     return this.userService.getUserProfile();
   }
 
-  @ApiResponse({
-    status: 200,
-    schema: { $ref: getSchemaPath("User") },
-  })
+  @ApiResponse({ status: 200, schema: { $ref: getSchemaPath("User") } })
   @ApiResponse({ status: 403, description: "Forbidden" })
   @ApiResponse({ status: 400, description: "Bad request" })
   @Get("/all")
