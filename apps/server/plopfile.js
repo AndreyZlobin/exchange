@@ -13,22 +13,22 @@ module.exports = (plop) => {
     return true;
   };
 
-  plop.addHelper("capitalize", function (input) {
+  plop.addHelper("capitalize", (input) => {
     return input.charAt(0).toUpperCase() + input.slice(1);
   });
 
-  plop.addHelper("lowercase", function (input) {
+  plop.addHelper("lowercase", (input) => {
     return input.toLowerCase();
   });
 
-  plop.setActionType("formatCode", function (answers, config) {
+  plop.setActionType("formatCode", (answers, config) => {
     const { name } = answers;
     const { path } = config;
     const realPaths = path.replace("{{name}}", name);
+    const blobPath = `"${realPaths}/**/*.ts"`;
 
     try {
-      execSync(`prettier --write "${realPaths}/**/*.ts"`);
-      // execSync(`eslint "{${realPaths}}/**/*.ts" --fix`);
+      execSync(`prettier --write "${blobPath}"`);
       return "code formatted";
     } catch (error) {
       throw new Error("Formatting skipped", error);
