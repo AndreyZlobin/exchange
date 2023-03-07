@@ -1,0 +1,10 @@
+import { TYPES } from "@DI/types";
+import { Inject, Injectable } from "@nestjs/common";
+import { IPrismaService } from "@src/database";
+
+export interface I{{capitalize name}}Repository {}
+
+@Injectable()
+export class {{capitalize name}}Repository implements I{{capitalize name}}Repository {
+    constructor(@Inject(TYPES.DB.PrismaService) private readonly prismaService: IPrismaService) {}
+}

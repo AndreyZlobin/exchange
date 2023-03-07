@@ -1,0 +1,16 @@
+import { TYPES } from "@DI/types";
+import { Module } from "@nestjs/common";
+
+import { {{capitalize name}}Controller } from "./{{name}}.controller";
+import { {{capitalize name}}Repository } from "./repository";
+import { {{capitalize name}}Service } from "./service";
+
+@Module({
+providers: [
+    { provide: TYPES.{{lowercase name}}.{{capitalize name}}Service, useClass: {{ capitalize name}}Service },
+    { provide: TYPES.{{lowercase name}}.{{capitalize name}}Repository, useClass: {{ capitalize name}}Repository },
+],
+    controllers: [{{capitalize name}}Controller],
+})
+
+export class {{capitalize name}}Module {}

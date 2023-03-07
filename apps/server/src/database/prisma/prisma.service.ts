@@ -48,6 +48,26 @@ export class PrismaService extends PrismaClient implements IPrismaService, OnMod
         params.args = { ...args, data };
       }
 
+      const findActions = ["findUnique", "findFirst"];
+
+      if (findActions.includes(params.action)) {
+        params.action = "findFirst";
+        params.args.where = { ...(params.args.where ?? {}), deleted: false };
+      }
+      if (params.action === "findMany") {
+        const args = { ...(params.args ?? {}) };
+
+        if (args?.where !== undefined) {
+          if (!args?.where?.deleted) {
+            args.where = { ...args.where, deleted: false };
+          }
+        } else {
+          args.where = { deleted: false };
+        }
+
+        params.args = args;
+      }
+
       return next(params);
     });
   }

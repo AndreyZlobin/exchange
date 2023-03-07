@@ -1,57 +1,31 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
-    "BalanceChanges": {
+    "Log": {
       "type": "object",
       "properties": {
         "id": {
           "type": "string"
         },
-        "order_id": {
-          "type": [
-            "integer",
-            "null"
-          ]
-        },
-        "claim_id": {
-          "type": [
-            "integer",
-            "null"
-          ]
-        },
-        "username": {
+        "action": {
           "type": [
             "string",
             "null"
           ]
         },
-        "balance": {
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "balance_dep": {
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "balance_current": {
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "balance_dep_current": {
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "stage": {
+        "source": {
           "type": [
             "string",
+            "null"
+          ]
+        },
+        "data": {
+          "type": [
+            "number",
+            "string",
+            "boolean",
+            "object",
+            "array",
             "null"
           ]
         },
@@ -61,104 +35,6 @@
             "null"
           ],
           "format": "date-time"
-        },
-        "height": {
-          "type": [
-            "integer",
-            "null"
-          ]
-        },
-        "tx_id": {
-          "type": [
-            "string",
-            "null"
-          ]
-        }
-      }
-    },
-    "BlackList": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "type": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "value": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "note": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "created": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "format": "date-time"
-        }
-      }
-    },
-    "ChatsQueue": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "type": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "market": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "partner": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "message": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "status": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "attempts": {
-          "type": "integer",
-          "default": 0
-        },
-        "send_after": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "format": "date-time"
-        },
-        "is_service": {
-          "type": "boolean",
-          "default": false
         }
       }
     },
@@ -276,98 +152,57 @@
         }
       }
     },
-    "Deposit": {
+    "PaymentSystem": {
       "type": "object",
       "properties": {
         "id": {
           "type": "string"
         },
-        "username": {
-          "type": [
-            "string",
-            "null"
+        "name": {
+          "type": "string",
+          "enum": [
+            "ccard",
+            "sim",
+            "qiwi",
+            "yandex"
           ]
         },
-        "wallet": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "height": {
-          "type": [
-            "integer",
-            "null"
-          ]
-        },
-        "btc_amount": {
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "need_to_handle": {
-          "type": [
-            "boolean",
-            "null"
+        "type": {
+          "type": "string",
+          "enum": [
+            "ccard",
+            "sim",
+            "qiwi",
+            "yandex"
           ],
-          "default": false
+          "description": "Все допустимые системы оплаты"
         },
-        "handled": {
-          "type": [
-            "boolean",
-            "null"
-          ],
-          "default": false
+        "min": {
+          "type": "integer",
+          "description": "Минимальные и максимальные суммы заявок по платежным системам"
         },
-        "confirmed": {
-          "type": [
-            "integer",
-            "null"
-          ]
+        "max": {
+          "type": "integer",
+          "description": "Минимальные и максимальные суммы заявок по платежным системам"
         },
-        "created": {
-          "type": [
-            "integer",
-            "null"
-          ]
-        }
-      }
-    },
-    "Log": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
+        "brokerCommission": {
+          "type": "integer",
+          "description": "Комиссии посредника (если таковой имеется)"
         },
-        "action": {
-          "type": [
-            "string",
-            "null"
-          ]
+        "systemCommission": {
+          "type": "integer",
+          "description": "Комиссии по платежным системам"
         },
-        "source": {
-          "type": [
-            "string",
-            "null"
-          ]
+        "isAllow": {
+          "type": "boolean",
+          "default": false,
+          "description": "Доступ к созданию заявок по платежным системам"
         },
-        "data": {
-          "type": [
-            "number",
-            "string",
-            "boolean",
-            "object",
-            "array",
-            "null"
-          ]
-        },
-        "created": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "format": "date-time"
+        "orders": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Order"
+          }
         }
       }
     },
@@ -378,13 +213,52 @@
           "type": "string"
         },
         "status": {
-          "type": [
-            "string",
-            "null"
+          "type": "string",
+          "default": "new",
+          "enum": [
+            "new",
+            "dealAdded",
+            "dealCanceled",
+            "dealCanceledMarkedPaid",
+            "requisiteAdded",
+            "markedPaid",
+            "finished",
+            "canceled",
+            "claim",
+            "renew",
+            "waitFinishTx",
+            "finishError"
           ]
         },
         "user": {
           "$ref": "#/definitions/User"
+        },
+        "paymentSystem": {
+          "$ref": "#/definitions/PaymentSystem"
+        },
+        "statusHistory": {
+          "type": "array",
+          "enum": [
+            "new",
+            "dealAdded",
+            "dealCanceled",
+            "dealCanceledMarkedPaid",
+            "requisiteAdded",
+            "markedPaid",
+            "finished",
+            "canceled",
+            "claim",
+            "renew",
+            "waitFinishTx",
+            "finishError"
+          ]
+        },
+        "created": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
         },
         "deleted": {
           "type": [
@@ -392,77 +266,6 @@
             "null"
           ],
           "default": false
-        }
-      }
-    },
-    "Requisite": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "username": {
-          "type": "string"
-        },
-        "payment_system": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "requisite": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "filled": {
-          "type": "integer",
-          "default": 0
-        },
-        "limit": {
-          "type": "integer",
-          "default": 0
-        },
-        "crypto_type": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "active": {
-          "type": "boolean",
-          "default": false
-        }
-      }
-    },
-    "Settings": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "market": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "value": {
-          "type": [
-            "number",
-            "string",
-            "boolean",
-            "object",
-            "array",
-            "null"
-          ]
-        },
-        "global": {
-          "type": [
-            "boolean",
-            "null"
-          ]
         }
       }
     },
@@ -502,17 +305,6 @@
         }
       }
     },
-    "PaymenySystems": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        }
-      }
-    },
     "PaymentSetting": {
       "type": "object",
       "properties": {
@@ -531,6 +323,31 @@
             "null"
           ],
           "default": false
+        }
+      }
+    },
+    "Currency": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "enum": [
+            "Tether",
+            "BTC"
+          ]
+        },
+        "title": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "Cryptocurrency",
+            "Fiat"
+          ]
         }
       }
     },
@@ -647,41 +464,26 @@
   },
   "type": "object",
   "properties": {
-    "balanceChanges": {
-      "$ref": "#/definitions/BalanceChanges"
-    },
-    "blackList": {
-      "$ref": "#/definitions/BlackList"
-    },
-    "chatsQueue": {
-      "$ref": "#/definitions/ChatsQueue"
+    "log": {
+      "$ref": "#/definitions/Log"
     },
     "claim": {
       "$ref": "#/definitions/Claim"
     },
-    "deposit": {
-      "$ref": "#/definitions/Deposit"
-    },
-    "log": {
-      "$ref": "#/definitions/Log"
+    "paymentSystem": {
+      "$ref": "#/definitions/PaymentSystem"
     },
     "order": {
       "$ref": "#/definitions/Order"
     },
-    "requisite": {
-      "$ref": "#/definitions/Requisite"
-    },
-    "settings": {
-      "$ref": "#/definitions/Settings"
-    },
     "wallet": {
       "$ref": "#/definitions/Wallet"
     },
-    "paymenySystems": {
-      "$ref": "#/definitions/PaymenySystems"
-    },
     "paymentSetting": {
       "$ref": "#/definitions/PaymentSetting"
+    },
+    "currency": {
+      "$ref": "#/definitions/Currency"
     },
     "user": {
       "$ref": "#/definitions/User"
