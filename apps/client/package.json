@@ -1,22 +1,26 @@
 {
-  "name": "@excahnge/client",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "name": "@exchange/client",
+  "version": "0.0.1",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "check-types": "tsc --noEmit",
+    "eslint": "eslint --cache --ext .js,.ts,.tsx .",
+    "lint": "npm run eslint && npm run check-types",
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "compression": "^1.7.4",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-favicon": "^1.0.1",
+    "react-lazy-load-image-component": "^1.5.5",
+    "react-router-dom": "^6.3.0",
+    "react-toastify": "^9.0.8",
+    "react-top-loading-bar": "^2.3.1"
   },
   "devDependencies": {
+    "@self-kit/eslint-config-react-ts": "^0.1.1",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
-    "@vitejs/plugin-react": "^3.1.0",
-    "typescript": "^4.9.3",
-    "vite": "^4.1.0"
+    "eslint": "8.26.0"
   }
 }

@@ -11,9 +11,11 @@ import { AppModule } from "@src/app.module";
 // import { IGarantexService } from "@src/core/integration/services";
 import { IPrismaService, IRedisService } from "@src/database";
 import { mergeDeep } from "@src/utils/mergeDeep";
+import { getViteServer } from "@src/vite-server";
+import { FrontendRenderFilter, isProduction } from "@src/web/web.filter";
+import * as compression from "compression";
 import { readFileSync } from "fs";
 import helmet from "helmet";
-
 const loadDockFileAndUpdateDocument = (
   pathToFile: string,
   document: OpenAPIObject,
@@ -49,6 +51,43 @@ class Bootstrap {
     return Number(this.config.get("PORT"));
   }
 
+  async ssrInit() {
+    if (isProduction) {
+      /**
+       * @todo
+       * replace to
+       * imports: [
+       *     ServeStaticModule.forRoot({
+       *       rootPath: join(__dirname, '..', 'client'),
+       *     }),
+       *   ],
+       * */
+      // import { resolveDistPath } from "@src/utils";
+
+      // this.app.useStaticAssets(resolveDistPath("client"), {
+      //   index: false,
+      // });
+
+      this.app.use(compression());
+    } else {
+      const vite = await getViteServer({ force: true });
+
+      this.app.use(vite.middlewares);
+    }
+    this.app.enableCors({
+      origin: "*",
+      credentials: true,
+      allowedHeaders: "Content-Type, Accept, Origin",
+      preflightContinue: false,
+      methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    });
+    this.app.useGlobalFilters(new FrontendRenderFilter());
+    // this.app.useGlobalPipes(
+    //   new ValidationPipe({
+    //     transform: true,
+    //   }),
+    // );
+  }
   swaggerInit() {
     try {
       const options = new DocumentBuilder()
@@ -85,7 +124,16 @@ class Bootstrap {
   async start() {
     try {
       this.app = await NestFactory.create(AppModule);
-      this.app.use(helmet());
+      this.app.use(
+        helmet({
+          contentSecurityPolicy: {
+            directives: {
+              defaultSrc: ["'self'"],
+              connectSrc: ["'self'", "ws://localhost:24678"],
+            },
+          },
+        }),
+      );
       const prismaService = this.app.get<IPrismaService>(TYPES.DB.PrismaService);
       const redisService = this.app.get<IRedisService>(TYPES.DB.RedisService);
       const prefix = this.config.get("API_VERSION");
@@ -135,7 +183,7 @@ class Bootstrap {
       console.log({ profit });
       console.log({ btc: user.getQuantityOfCurrency(btcPrice, 100_000, 3) });
       console.log({ usd: user.getQuantityOfCurrency(usdtPrice, 300, 1) });*/
-
+      await this.ssrInit();
       await this.app.listen(this.port);
       this.logger.log(
         `[Server]: Server was started on PORT ${this.port} | http://localhost:${this.port}`,

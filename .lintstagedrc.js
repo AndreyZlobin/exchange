@@ -1,5 +1,6 @@
-const serverConfig = require("./apps/server/.lintstagedrc.js");
-
 module.exports = {
-  ...serverConfig
+  "apps/server/**/*.{ts,tsx}": [
+    "npm run lint:fix --prefix apps/server",
+    "git add"
+  ],
 };

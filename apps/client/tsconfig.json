@@ -1,21 +1,45 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "useDefineForClassFields": true,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "allowJs": false,
-    "skipLibCheck": true,
-    "esModuleInterop": false,
+    "baseUrl": ".",
+    "jsx": "react-jsx",
+    "module": "esnext",
+    "target": "esnext",
+    "moduleResolution": "node",
+    "strictPropertyInitialization": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "removeComments": false,
+    "useDefineForClassFields": true,
+    "allowJs": false,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "ESNext",
-    "moduleResolution": "Node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
+    "isolatedModules": false,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "alwaysStrict": true,
+    "noUnusedLocals": false,
+    "importHelpers": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "lib": ["es7", "dom", "dom.iterable", "esnext"],
+    "paths": {
+      "@services/*": ["./src/core/services/*"],
+      "@api/*": ["./src/core/api/*"],
+      "@core/*": ["./src/core/*"],
+      "@assets/*": ["./assets/*"]
+    },
+    "typeRoots": [
+      "node",
+      "node_modules/@types",
+      "./typings"
+    ]
   },
-  "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "./**/*.d.ts",
+  ],
+  "exclude": ["node_modules", "dist", "tmp",]
 }

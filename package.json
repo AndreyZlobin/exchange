@@ -2,11 +2,7 @@
   "name": "exchange",
   "version": "0.0.1",
   "private": true,
-  "author": "Anonymous",
-  "license": "MIT",
-  "workspaces": [
-    "./apps/*"
-  ],
+  "workspaces": ["apps/*"],
   "scripts": {
     "setup": "npm install && npm run prisma:gen",
     "server:dev": "npm run dev --prefix apps/server",
@@ -19,6 +15,9 @@
     "prisma:studio": "npm run prisma:studio --prefix apps/server",
     "prisma:gen": "npm run prisma:gen --prefix apps/server",
     "client:dev": "npm run dev --prefix apps/client",
+    "client:check-types": "npm run check-types --prefix apps/client",
+    "client:lint": "npm run lint --prefix apps/client",
+    "client:lint-fix": "npm run lint:fix --prefix apps/client",
     "infra": "cd ./devops && docker-compose up",
     "prepare": "husky install",
     "seed": "npm run seed --prefix apps/server",
@@ -34,6 +33,7 @@
   },
   "volta": {
     "node": "18.13.0",
+    "npm": "8.19.2",
     "yarn": "1.19.2"
   }
 }
