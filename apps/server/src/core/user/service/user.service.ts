@@ -5,7 +5,7 @@ import { HttpException } from "@shared/exceptions";
 import { ROLES } from "@src/core/roles/constants";
 
 import { CreateUserDto } from "../dto";
-import { UserEntity } from "../entity";
+import { UserEntity, UserSettingsEntity } from "../entity";
 import { IUserRepository } from "../repository";
 import { User, UserWithoutPassword } from "../types";
 
@@ -60,10 +60,11 @@ export class UserService implements IUserService {
       throw new HttpException(errorMessage, HttpStatus.BAD_REQUEST);
     }
 
-    const userEntity = new UserEntity({ name, password, role, active: true }, this.bcryptService);
+    const userSettings = UserSettingsEntity.getDefaultSettings;
+    const userEntity = new UserEntity({ name, password, role }, this.bcryptService);
     const user = await userEntity.getUser();
 
-    return this.userRepository.create(user);
+    return this.userRepository.create(user, userSettings);
   }
 
   getUserProfile(): boolean {

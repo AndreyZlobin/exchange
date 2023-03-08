@@ -1,5 +1,7 @@
-import { User as ModelUser } from "@prisma/client";
+import { User as ModelUser, UserSettings as ModelUserSettings } from "@prisma/client";
 
-export type User = ModelUser;
-export type UserWithExcludedFields = Omit<User, "id" | "deleted">;
+export type UserSettings = ModelUserSettings;
+export type UserSettingsWithExcludedFields = Omit<UserSettings, "id" | "userId">;
+export type User = ModelUser & { settings: UserSettings };
+export type UserWithExcludedFields = Omit<User, "id" | "deleted" | "createdAt" | "settings">;
 export type UserWithoutPassword = Omit<User, "password">;

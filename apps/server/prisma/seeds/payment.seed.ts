@@ -4,12 +4,14 @@ import { prisma } from "./client";
 
 export const paymentSystemSeeders: Array<Omit<PaymentSystem, "id">> = [
   {
-    name: SystemEnum.ccard,
-    type: SystemEnum.ccard,
+    name: SystemEnum.card,
+    type: SystemEnum.card,
     min: 300,
     max: 15000,
     brokerCommission: 0,
     systemCommission: 20,
+    authToken: "НЕ УСТАНОВЛЕН",
+    apiKey: "",
     isAllow: true,
   },
   {
@@ -19,6 +21,8 @@ export const paymentSystemSeeders: Array<Omit<PaymentSystem, "id">> = [
     max: 15000,
     brokerCommission: 0,
     systemCommission: 20,
+    authToken: "НЕ УСТАНОВЛЕН",
+    apiKey: "",
     isAllow: true,
   },
   {
@@ -28,6 +32,8 @@ export const paymentSystemSeeders: Array<Omit<PaymentSystem, "id">> = [
     max: 15000,
     brokerCommission: 0,
     systemCommission: 20,
+    authToken: "НЕ УСТАНОВЛЕН",
+    apiKey: "",
     isAllow: true,
   },
   {
@@ -37,6 +43,8 @@ export const paymentSystemSeeders: Array<Omit<PaymentSystem, "id">> = [
     max: 15000,
     brokerCommission: 0,
     systemCommission: 20,
+    authToken: "НЕ УСТАНОВЛЕН",
+    apiKey: "",
     isAllow: true,
   },
 ];

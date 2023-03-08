@@ -70,8 +70,8 @@
       //     paymentSetting: {
       //       create: {
       //         systems: {
-      //           ccard: {
-      //             type: "ccard",
+      //           card: {
+      //             type: "card",
       //             min: 300,
       //             max: 15000,
       //             brokerCommission: 0,

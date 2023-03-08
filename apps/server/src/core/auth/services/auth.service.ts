@@ -1,12 +1,12 @@
 import { TYPES } from "@DI/types";
 import { HttpStatus, Inject, Injectable } from "@nestjs/common";
-import { User } from "@prisma/client";
 import { HttpException } from "@shared/exceptions";
 import { IBcryptService } from "@src/common/auth/bcrypt";
 import { IJWTService } from "@src/common/auth/jwt";
 import { IAuthRepository } from "@src/core/auth";
 import { IUserRepository, IUserService } from "@src/core/user";
 import { CreateUserDto } from "@src/core/user/dto";
+import { User } from "@src/core/user/types";
 
 import { IAuthCacheService } from "../cache";
 import { UserLoginDto } from "../dto";
@@ -82,7 +82,7 @@ export class AuthService implements IAuthService {
       throw new HttpException("Не верный логин или пароль", HttpStatus.BAD_REQUEST);
     }
 
-    if (!user.active) {
+    if (!user.settings.active) {
       throw new HttpException("Пользователь не активен", HttpStatus.BAD_REQUEST);
     }
 

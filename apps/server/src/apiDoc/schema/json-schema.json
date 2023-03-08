@@ -161,7 +161,7 @@
         "name": {
           "type": "string",
           "enum": [
-            "ccard",
+            "card",
             "sim",
             "qiwi",
             "yandex"
@@ -170,7 +170,7 @@
         "type": {
           "type": "string",
           "enum": [
-            "ccard",
+            "card",
             "sim",
             "qiwi",
             "yandex"
@@ -193,10 +193,18 @@
           "type": "integer",
           "description": "Комиссии по платежным системам"
         },
+        "authToken": {
+          "type": "string",
+          "default": "Не установлен",
+          "description": "Доступ к созданию заявок по платежным системам"
+        },
+        "apiKey": {
+          "type": "string",
+          "default": ""
+        },
         "isAllow": {
           "type": "boolean",
-          "default": false,
-          "description": "Доступ к созданию заявок по платежным системам"
+          "default": false
         },
         "orders": {
           "type": "array",
@@ -230,28 +238,29 @@
             "finishError"
           ]
         },
+        "fiatAmount": {
+          "type": "integer",
+          "description": "Количество фиатной валюты, которое необходимо купить/продать"
+        },
+        "cryptoAmount": {
+          "type": "integer",
+          "description": "Rоличество криптовалюты, которое необходимо купить/продать"
+        },
+        "type": {
+          "type": "string",
+          "description": "Тип заказа (покупка/продажа)"
+        },
+        "statusHistory": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OrderStatusHistory"
+          }
+        },
         "user": {
           "$ref": "#/definitions/User"
         },
         "paymentSystem": {
           "$ref": "#/definitions/PaymentSystem"
-        },
-        "statusHistory": {
-          "type": "array",
-          "enum": [
-            "new",
-            "dealAdded",
-            "dealCanceled",
-            "dealCanceledMarkedPaid",
-            "requisiteAdded",
-            "markedPaid",
-            "finished",
-            "canceled",
-            "claim",
-            "renew",
-            "waitFinishTx",
-            "finishError"
-          ]
         },
         "created": {
           "type": [
@@ -266,6 +275,9 @@
             "null"
           ],
           "default": false
+        },
+        "currencyType": {
+          "$ref": "#/definitions/Currency"
         }
       }
     },
@@ -287,10 +299,12 @@
         },
         "address": {
           "type": "string",
+          "default": "",
           "description": "Адрес кошелька для системы автосписания депозитов"
         },
         "walletDepositCheckAmount": {
           "type": "integer",
+          "default": 0,
           "description": "Сумма проверки для системы автосписания депозитов"
         },
         "user": {
@@ -302,6 +316,13 @@
             "null"
           ],
           "default": false
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
         }
       }
     },
@@ -313,9 +334,6 @@
         },
         "systems": {
           "$ref": "#/definitions/Systems"
-        },
-        "user": {
-          "$ref": "#/definitions/User"
         },
         "deleted": {
           "type": [
@@ -348,6 +366,114 @@
             "Cryptocurrency",
             "Fiat"
           ]
+        },
+        "order": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Order"
+          }
+        }
+      }
+    },
+    "UserSettings": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "active": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": true,
+          "description": "Активен ли аккаунт, если нет, то нет доступ ко всему функционалу запрещен"
+        },
+        "cryptoType": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": "BTC",
+          "enum": [
+            "Tether",
+            "BTC"
+          ]
+        },
+        "percentMethod": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": "hd",
+          "enum": [
+            "hd",
+            "binance"
+          ],
+          "description": "Метод рассчета"
+        },
+        "canFinishOrders": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": false,
+          "description": "Может ли завершать заявки,  доверенные пользователи с ролью 'provider' способны сами закрывать свои заявки по мере надобности"
+        },
+        "canOpenOrdersViaPanel": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": false,
+          "description": "Может добавлять заявки с панели"
+        },
+        "canViewDirectBalance": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": false,
+          "description": "????"
+        },
+        "sendTxToBlockchain": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": false,
+          "description": "Отправлять транзакцию в сеть по завершении"
+        },
+        "clientMaxEqualSumOrdersOnPeriod": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "default": 0,
+          "description": "Заявки от клиента с одной суммой за период"
+        },
+        "clientMaxEqualSumOrdersTime": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "default": 0,
+          "description": "Период проверки одной суммы от клиента (мин.)"
+        },
+        "clientMaxEqualSumOrdersMode": {
+          "type": "string",
+          "default": "fiatAmount",
+          "description": "fiatAmount | btcAmount"
+        },
+        "broker": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": ""
+        },
+        "user": {
+          "$ref": "#/definitions/User"
         }
       }
     },
@@ -364,7 +490,8 @@
           "type": "string"
         },
         "role": {
-          "type": "array",
+          "type": "string",
+          "default": "broker",
           "enum": [
             "superadmin",
             "admin",
@@ -373,11 +500,6 @@
             "seller",
             "support"
           ]
-        },
-        "active": {
-          "type": "boolean",
-          "default": true,
-          "description": "Активен ли аккаунт, если нет, то нет доступ ко всему функционалу запрещен"
         },
         "orders": {
           "type": "array",
@@ -395,15 +517,22 @@
             }
           ]
         },
-        "paymentSetting": {
+        "settings": {
           "anyOf": [
             {
-              "$ref": "#/definitions/PaymentSetting"
+              "$ref": "#/definitions/UserSettings"
             },
             {
               "type": "null"
             }
           ]
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
         },
         "deleted": {
           "type": [
@@ -420,7 +549,7 @@
         "type": {
           "type": "string",
           "enum": [
-            "ccard",
+            "card",
             "sim",
             "qiwi",
             "yandex"
@@ -444,10 +573,36 @@
         }
       }
     },
+    "OrderStatusHistory": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "new",
+            "dealAdded",
+            "dealCanceled",
+            "dealCanceledMarkedPaid",
+            "requisiteAdded",
+            "markedPaid",
+            "finished",
+            "canceled",
+            "claim",
+            "renew",
+            "waitFinishTx",
+            "finishError"
+          ]
+        }
+      }
+    },
     "Systems": {
       "type": "object",
       "properties": {
-        "ccard": {
+        "card": {
           "$ref": "#/definitions/System"
         },
         "sim": {
@@ -484,6 +639,9 @@
     },
     "currency": {
       "$ref": "#/definitions/Currency"
+    },
+    "userSettings": {
+      "$ref": "#/definitions/UserSettings"
     },
     "user": {
       "$ref": "#/definitions/User"

@@ -38,38 +38,44 @@ Table PaymentSystem {
   max Int [not null, note: 'Минимальные и максимальные суммы заявок по платежным системам']
   brokerCommission Int [not null, note: 'Комиссии посредника (если таковой имеется)']
   systemCommission Int [not null, note: 'Комиссии по платежным системам']
-  isAllow Boolean [not null, default: false, note: 'Доступ к созданию заявок по платежным системам']
+  authToken String [not null, default: 'Не установлен', note: 'Доступ к созданию заявок по платежным системам']
+  apiKey String [not null, default: '']
+  isAllow Boolean [not null, default: false]
   orders Order [not null]
 }
 
 Table Order {
   id String [pk]
   status OrderStatus [not null, default: 'new']
+  fiatAmount Int [not null, note: 'Количество фиатной валюты, которое необходимо купить/продать']
+  cryptoAmount Int [not null, note: 'Rоличество криптовалюты, которое необходимо купить/продать']
+  type String [not null, note: 'Тип заказа (покупка/продажа)']
+  statusHistory OrderStatusHistory[] [not null]
   user User [not null]
   userId String [unique, not null]
   paymentSystem PaymentSystem [not null]
   paymentSystemId String [not null]
-  statusHistory OrderStatus[] [not null]
   created DateTime [default: `now()`]
   deleted Boolean [default: false]
+  currencyType Currency [not null, note: 'Конкретный тип криптовалюты']
+  currencyTypeId String [not null]
 }
 
 Table Wallet {
   id String [pk]
   balance Float [not null, default: 0, note: 'Текущий баланс пользователя']
   balanceDep Float [not null, default: 0, note: 'Активный баланс пользователя']
-  address String [not null, note: 'Адрес кошелька для системы автосписания депозитов']
-  walletDepositCheckAmount Int [not null, note: 'Сумма проверки для системы автосписания депозитов']
+  address String [not null, default: '', note: 'Адрес кошелька для системы автосписания депозитов']
+  walletDepositCheckAmount Int [not null, default: 0, note: 'Сумма проверки для системы автосписания депозитов']
   userId String [unique, not null]
   user User [not null]
   deleted Boolean [default: false]
+  createdAt DateTime [default: `now()`]
 }
 
 Table PaymentSetting {
   id String [pk]
   systems Systems [not null]
-  userId String [unique, not null]
-  user User [not null]
   deleted Boolean [default: false]
 }
 
@@ -78,22 +84,40 @@ Table Currency {
   name CurrencyType [not null]
   title String [not null]
   type CryptocurrencyType [not null]
+  order Order [not null]
+}
+
+Table UserSettings {
+  id String [pk]
+  active Boolean [default: true, note: 'Активен ли аккаунт, если нет, то нет доступ ко всему функционалу запрещен']
+  cryptoType CurrencyType [default: 'BTC']
+  percentMethod PercentMethod [default: 'hd', note: 'Метод рассчета']
+  canFinishOrders Boolean [default: false, note: 'Может ли завершать заявки,  доверенные пользователи с ролью \'provider\' способны сами закрывать свои заявки по мере надобности']
+  canOpenOrdersViaPanel Boolean [default: false, note: 'Может добавлять заявки с панели']
+  canViewDirectBalance Boolean [default: false, note: '????']
+  sendTxToBlockchain Boolean [default: false, note: 'Отправлять транзакцию в сеть по завершении']
+  clientMaxEqualSumOrdersOnPeriod Int [default: 0, note: 'Заявки от клиента с одной суммой за период']
+  clientMaxEqualSumOrdersTime Int [default: 0, note: 'Период проверки одной суммы от клиента (мин.)']
+  clientMaxEqualSumOrdersMode String [not null, default: 'fiatAmount', note: 'fiatAmount | btcAmount']
+  broker String [default: '']
+  userId String [unique, not null]
+  user User [not null]
 }
 
 Table User {
   id String [pk]
   name String [not null]
   password String [not null]
-  role RoleEnum[] [not null]
-  active Boolean [not null, default: true, note: 'Активен ли аккаунт, если нет, то нет доступ ко всему функционалу запрещен']
+  role RoleEnum [not null, default: 'broker']
   orders Order [not null]
   wallet Wallet
-  paymentSetting PaymentSetting
+  settings UserSettings
+  createdAt DateTime [default: `now()`]
   deleted Boolean [default: false]
 }
 
 Enum SystemEnum {
-  ccard
+  card
   sim
   qiwi
   yandex
@@ -107,6 +131,11 @@ Enum CryptocurrencyType {
 Enum CurrencyType {
   Tether
   BTC
+}
+
+Enum PercentMethod {
+  hd
+  binance
 }
 
 Enum RoleEnum {
@@ -137,6 +166,8 @@ Ref: Order.userId > User.id [delete: Cascade]
 
 Ref: Order.paymentSystemId > PaymentSystem.id [delete: Cascade]
 
+Ref: Order.currencyTypeId > Currency.id [delete: Cascade]
+
 Ref: Wallet.userId - User.id [delete: Cascade]
 
-Ref: PaymentSetting.userId - User.id [delete: Cascade]
+Ref: UserSettings.userId - User.id [delete: Cascade]

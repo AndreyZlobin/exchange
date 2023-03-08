@@ -8,6 +8,7 @@ import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, OpenAPIObject, SwaggerModule } from "@nestjs/swagger";
 import { ValidationExceptionFilter } from "@shared/exceptions";
 import { AppModule } from "@src/app.module";
+// import { IGarantexService } from "@src/core/integration/services";
 import { IPrismaService, IRedisService } from "@src/database";
 import { mergeDeep } from "@src/utils/mergeDeep";
 import { readFileSync } from "fs";
@@ -87,14 +88,53 @@ class Bootstrap {
       this.app.use(helmet());
       const prismaService = this.app.get<IPrismaService>(TYPES.DB.PrismaService);
       const redisService = this.app.get<IRedisService>(TYPES.DB.RedisService);
-
       const prefix = this.config.get("API_VERSION");
 
       this.app.setGlobalPrefix(`api/${prefix}/`);
       this.app.useGlobalFilters(new ValidationExceptionFilter(this.logger));
+
       await Promise.all([prismaService.$connect(), redisService.$connect()]);
       await prismaService.enableShutdownHooks(this.app);
+
       this.swaggerInit();
+      // const garantexService = this.app.get<IGarantexService>(TYPES.integration.GarantexService);
+      /*      /!**
+       * @description
+       * Поставщик переводит 100.000р при курсе биткоина 1.000.000 (garantex), с комиссией 3% (1.000.000 + 3%), итого он получает биткоинов на : 100.000 / 1.030.000 (1.000.000 +3%) = 0,09708
+       * Поставщик заплатил 100.000 получил 0,09708
+       * Теперь берем продавца, он продает биткоин, предположим на его счете 1 биткоин. Ему прилетела заявка на 100.000р - он выдал реквизит, получил оплату, закрыл заявку. Сколько биткоинов он отдает ?
+       * 100.000 / 1.020.000 = 0,0980392
+       * Итого продавец получил 100.000р, отдал 0.0980392
+       * Прибыль платформы : 0.0980392 - 0.09708 = 0,00095921 btc
+       * *!/
+      class User {
+        private getPercent(number: number, percent: number) {
+          const decimalPercent = percent / 100;
+
+          return number * decimalPercent;
+        }
+        getQuantityOfCurrency(currencyPrice: number, clientAmount: number, percent: number) {
+          if (percent < 0 || percent > 100) {
+            throw new Error("Percent value must be between 0 and 100");
+          }
+          const percentOfCurrencyPrice = this.getPercent(currencyPrice, percent);
+
+          return clientAmount / (currencyPrice + percentOfCurrencyPrice);
+        }
+      }
+      const btcPrice = await garantexService.getBtcPrice();
+      const usdtPrice = await garantexService.getUSDTPrice();
+
+      const user = new User();
+      const privider = user.getQuantityOfCurrency(1_000_000, 100_000, 3);
+      const seller = user.getQuantityOfCurrency(1_000_000, 100_000, 2);
+      const profit = seller - privider;
+
+      console.log({ privider });
+      console.log({ seller });
+      console.log({ profit });
+      console.log({ btc: user.getQuantityOfCurrency(btcPrice, 100_000, 3) });
+      console.log({ usd: user.getQuantityOfCurrency(usdtPrice, 300, 1) });*/
 
       await this.app.listen(this.port);
       this.logger.log(
