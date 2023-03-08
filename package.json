@@ -18,6 +18,7 @@
     "prisma:migrate": "npm run prisma:migrate --prefix apps/server",
     "prisma:studio": "npm run prisma:studio --prefix apps/server",
     "prisma:gen": "npm run prisma:gen --prefix apps/server",
+    "client:dev": "npm run dev --prefix apps/client",
     "infra": "cd ./devops && docker-compose up",
     "prepare": "husky install",
     "seed": "npm run seed --prefix apps/server",
