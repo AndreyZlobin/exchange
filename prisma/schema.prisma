@@ -159,6 +159,12 @@ type OrderStatusHistory {
   status OrderStatus
 }
 
+type OrderValues {
+  crypto_amount_provider Int
+  crypto_amount_deal     Int
+  profit                 Int
+}
+
 model Order {
   id              String               @id @default(auto()) @map("_id") @db.ObjectId
   status          OrderStatus          @default(new)
@@ -179,6 +185,7 @@ model Order {
   /// Конкретный тип криптовалюты
   currencyType    Currency             @relation(fields: [currencyTypeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   currencyTypeId  String               @db.ObjectId
+  values          OrderValues
   // id                     String   @id @default(auto()) @map("_id") @db.ObjectId
   // uuid                   String   @default(uuid())
   // custom_id              Int
@@ -317,14 +324,12 @@ enum RoleEnum {
 enum OrderStatus {
   new
   dealAdded
-  dealCanceled
-  dealCanceledMarkedPaid
   requisiteAdded
+  dealCanceled
   markedPaid
+  dealCanceledMarkedPaid
   finished
   canceled
   claim
   renew
-  waitFinishTx
-  finishError
 }
