@@ -9,12 +9,15 @@ export function App() {
           <div>
             <button
               onClick={() => {
-                console.log('werwer');
+                fetch('/api/v1/health-check')
+                  .then((res) => res.json())
+                  .then((res) => {
+                    console.log(res);
+                  });
               }}
             >
-              fdsfsdf
+              get check
             </button>
-            <div>home </div>
             <div>home </div>
           </div>
         }
