@@ -1,5 +1,0 @@
-/node_nodules
-/dist
-src/core/api
-.eslintrc.js
-/**/*.d.ts
