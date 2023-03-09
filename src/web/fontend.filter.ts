@@ -2,8 +2,8 @@ import { Request, Response } from "express";
 import * as process from "process";
 import { ViteDevServer } from "vite";
 
-// export const isProduction = process.env.NODE_ENV !== undefined;
-export const isProduction = process.env.NODE_ENV === undefined;
+export const isProduction = process.env.NODE_ENV !== undefined;
+// export const isProduction = process.env.NODE_ENV === undefined;
 import {
   ArgumentsHost,
   Catch,

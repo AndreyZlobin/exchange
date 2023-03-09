@@ -109,11 +109,6 @@ class Bootstrap {
       this.app.use(
         helmet({
           contentSecurityPolicy: false,
-          // directives: {
-          //   defaultSrc: ["'self'"],
-          //   connectSrc: ["'self'", "ws://localhost:24678"],
-          // },
-          // },
         }),
       );
       const prismaService = this.app.get<IPrismaService>(TYPES.DB.PrismaService);
