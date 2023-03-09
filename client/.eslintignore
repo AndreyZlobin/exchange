@@ -1,0 +1,7 @@
+/node_nodules
+/dist
+/dev-dist
+src/core/api
+.eslintrc.json
+/**/__mocks__/*
+/**/*.d.ts
