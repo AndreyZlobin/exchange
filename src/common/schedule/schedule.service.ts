@@ -1,5 +1,5 @@
-import { Injectable } from "@nestjs/common";
-import { Cron, CronExpression, Interval, Timeout } from "@nestjs/schedule";
+import { Injectable } from '@nestjs/common';
+import { Cron, CronExpression, Interval, Timeout } from '@nestjs/schedule';
 
 @Injectable()
 export class ScheduleService {

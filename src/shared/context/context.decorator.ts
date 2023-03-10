@@ -1,10 +1,10 @@
-import { createParamDecorator, ExecutionContext } from "@nestjs/common";
-import { UserContext } from "@shared/context/user.context";
+import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import { UserContext } from '@shared/context/user.context';
 
 interface RequestWithUserData extends Request {
   userContext: {
-    userId: UserContext["userId"];
-    username: UserContext["username"];
+    userId: UserContext['userId'];
+    username: UserContext['username'];
   };
 }
 

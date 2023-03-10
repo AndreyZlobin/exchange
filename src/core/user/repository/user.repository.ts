@@ -1,10 +1,10 @@
-import { TYPES } from "@DI/types";
-import { Inject, Injectable } from "@nestjs/common";
-import { IPrismaService } from "@src/database";
-import { PickPrimitives } from "@src/utils";
+import { TYPES } from '@DI/types';
+import { Inject, Injectable } from '@nestjs/common';
+import { IPrismaService } from '@src/database';
+import { PickPrimitives } from '@src/utils';
 
-import { User, UserSettings, UserSettingsWithExcludedFields } from "../types";
-import { UserWithExcludedFields, UserWithoutPassword } from "../types";
+import { User, UserSettings, UserSettingsWithExcludedFields } from '../types';
+import { UserWithExcludedFields, UserWithoutPassword } from '../types';
 
 type UserFieldsToSearch = Partial<PickPrimitives<User>>;
 
@@ -32,10 +32,10 @@ export class UserRepository implements IUserRepository {
   async findAll(): Promise<UserWithoutPassword[]> {
     return this.prismaService.user.findMany({
       select: this.prismaService.getSelectedField<UserWithoutPassword>([
-        "id",
-        "name",
-        "role",
-        "deleted",
+        'id',
+        'name',
+        'role',
+        'deleted',
       ]),
     });
   }

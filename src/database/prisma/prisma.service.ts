@@ -1,9 +1,9 @@
-import { ILogger } from "@common/logger";
-import { TYPES } from "@DI/types";
-import { INestApplication, Inject, Injectable, OnModuleInit } from "@nestjs/common";
-import { Prisma, PrismaClient } from "@prisma/client";
+import { ILogger } from '@common/logger';
+import { TYPES } from '@DI/types';
+import { INestApplication, Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { Prisma, PrismaClient } from '@prisma/client';
 
-import { IDataBaseService } from "../types";
+import { IDataBaseService } from '../types';
 
 export interface IPrismaService extends PrismaClient, IDataBaseService {
   enableShutdownHooks(app: INestApplication): Promise<void>;
@@ -18,9 +18,9 @@ export class PrismaService extends PrismaClient implements IPrismaService, OnMod
   }
 
   applyMiddleware() {
-    this.softDeleteModel("User");
-    this.softDeleteModel("Wallet");
-    this.softDeleteModel("Order");
+    this.softDeleteModel('User');
+    this.softDeleteModel('Wallet');
+    this.softDeleteModel('Order');
   }
 
   public getSelectedField<T extends object>(fieldsList: Array<keyof T>) {
@@ -38,23 +38,23 @@ export class PrismaService extends PrismaClient implements IPrismaService, OnMod
         return next(params);
       }
 
-      const deleteActions = ["delete", "deleteMany"];
+      const deleteActions = ['delete', 'deleteMany'];
 
       if (deleteActions.includes(params.action)) {
-        params.action = params.action.replace("delete", "update") as Prisma.PrismaAction;
+        params.action = params.action.replace('delete', 'update') as Prisma.PrismaAction;
         const args = { ...(params.args ?? {}) };
         const data = { ...(params.args?.data ?? {}), ...{ deleted: true } };
 
         params.args = { ...args, data };
       }
 
-      const findActions = ["findUnique", "findFirst"];
+      const findActions = ['findUnique', 'findFirst'];
 
       if (findActions.includes(params.action)) {
-        params.action = "findFirst";
+        params.action = 'findFirst';
         params.args.where = { ...(params.args.where ?? {}), deleted: false };
       }
-      if (params.action === "findMany") {
+      if (params.action === 'findMany') {
         const args = { ...(params.args ?? {}) };
 
         if (args?.where !== undefined) {
@@ -75,7 +75,7 @@ export class PrismaService extends PrismaClient implements IPrismaService, OnMod
   async onModuleInit() {
     try {
       await this.$connect();
-      this.logger.log("[Database]: Database has been started");
+      this.logger.log('[Database]: Database has been started');
     } catch (e) {
       this.logger.error(e);
       process.exit(1);
@@ -83,7 +83,7 @@ export class PrismaService extends PrismaClient implements IPrismaService, OnMod
   }
 
   async enableShutdownHooks(app: INestApplication) {
-    this.$on("beforeExit", async () => {
+    this.$on('beforeExit', async () => {
       await app.close();
     });
   }

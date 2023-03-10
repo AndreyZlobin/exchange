@@ -1,1 +1,1 @@
-export * from "./dateToISO";
+export * from './dateToISO';

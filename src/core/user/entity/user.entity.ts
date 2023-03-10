@@ -1,7 +1,7 @@
-import { IBcryptService } from "@common/auth";
-import { Roles } from "@src/core/roles/constants";
+import { IBcryptService } from '@common/auth';
+import { Roles } from '@src/core/roles/constants';
 
-import { UserSettings, UserWithExcludedFields } from "../types";
+import { UserSettings, UserWithExcludedFields } from '../types';
 
 export class UserEntity implements UserWithExcludedFields {
   public readonly name: string;

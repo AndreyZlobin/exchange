@@ -1,13 +1,13 @@
-import { IBcryptService } from "@common/auth";
-import { TYPES } from "@DI/types";
-import { HttpStatus, Inject, Injectable } from "@nestjs/common";
-import { HttpException } from "@shared/exceptions";
-import { ROLES } from "@src/core/roles/constants";
+import { IBcryptService } from '@common/auth';
+import { TYPES } from '@DI/types';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { HttpException } from '@shared/exceptions';
+import { ROLES } from '@src/core/roles/constants';
 
-import { CreateUserDto } from "../dto";
-import { UserEntity, UserSettingsEntity } from "../entity";
-import { IUserRepository } from "../repository";
-import { User, UserWithoutPassword } from "../types";
+import { CreateUserDto } from '../dto';
+import { UserEntity, UserSettingsEntity } from '../entity';
+import { IUserRepository } from '../repository';
+import { User, UserWithoutPassword } from '../types';
 
 export interface IUserService {
   findByName(name: string): Promise<User | null>;
@@ -41,10 +41,10 @@ export class UserService implements IUserService {
 
   async create({ name, password, role }: CreateUserDto): Promise<UserWithoutPassword> {
     // req.user.role
-    const currentRole = "admin";
+    const currentRole = 'admin';
 
     if (!this.allowedRoles.includes(currentRole)) {
-      throw new HttpException("Нет доступа", HttpStatus.FORBIDDEN);
+      throw new HttpException('Нет доступа', HttpStatus.FORBIDDEN);
     }
 
     const isUserExist = await this.checkIsUserExist(name);
@@ -53,8 +53,8 @@ export class UserService implements IUserService {
       const errorMessage =
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        currentRole === "provider"
-          ? "Ошибка создания пользователя"
+        currentRole === 'provider'
+          ? 'Ошибка создания пользователя'
           : `Пользователь с логином ${name} уже существует`;
 
       throw new HttpException(errorMessage, HttpStatus.BAD_REQUEST);

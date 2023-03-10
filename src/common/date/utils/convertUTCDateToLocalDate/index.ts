@@ -1,1 +1,1 @@
-export * from "./convertUTCDateToLocalDate";
+export * from './convertUTCDateToLocalDate';

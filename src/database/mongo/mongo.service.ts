@@ -1,10 +1,10 @@
-import { ConfigServiceWithEnv } from "@common/configs";
-import { ILogger } from "@common/logger";
-import { TYPES } from "@DI/types";
-import { inject, injectable } from "inversify";
-import { Mongoose } from "mongoose";
+import { ConfigServiceWithEnv } from '@common/configs';
+import { ILogger } from '@common/logger';
+import { TYPES } from '@DI/types';
+import { inject, injectable } from 'inversify';
+import { Mongoose } from 'mongoose';
 
-import { IDataBaseService } from "../types";
+import { IDataBaseService } from '../types';
 
 export type IMongoService = IDataBaseService;
 // createModel<T extends object>(name: string, schema: Schema<T>): Model<T, object, object>;
@@ -17,7 +17,7 @@ export class MongoService implements IMongoService {
     @inject(TYPES.services.ConfigService) private readonly config: ConfigServiceWithEnv,
     @inject(TYPES.services.LoggerService) private readonly logger: ILogger,
   ) {
-    this.database.connection.on("error", (error) => {
+    this.database.connection.on('error', (error) => {
       this.logger.error(error);
     });
   }
@@ -27,7 +27,7 @@ export class MongoService implements IMongoService {
   // }
 
   async $connect() {
-    const connectUrl = this.config.get("DATABASE_URL");
+    const connectUrl = this.config.get('DATABASE_URL');
 
     try {
       await this.database.connect(connectUrl, {
@@ -50,9 +50,9 @@ export class MongoService implements IMongoService {
       // console.log(all);
       //
 
-      this.logger.log("[DATABASE]: connected successfully");
+      this.logger.log('[DATABASE]: connected successfully');
     } catch (e) {
-      this.logger.error("[DATABASE]: error", e);
+      this.logger.error('[DATABASE]: error', e);
       process.exit(1);
     }
   }

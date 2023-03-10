@@ -1,15 +1,15 @@
-import { TYPES } from "@DI/types";
-import { HttpStatus, Inject, Injectable } from "@nestjs/common";
-import { HttpException } from "@shared/exceptions";
-import { IBcryptService } from "@src/common/auth/bcrypt";
-import { IJWTService } from "@src/common/auth/jwt";
-import { IAuthRepository } from "@src/core/auth";
-import { IUserRepository, IUserService } from "@src/core/user";
-import { CreateUserDto } from "@src/core/user/dto";
-import { User } from "@src/core/user/types";
+import { TYPES } from '@DI/types';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { HttpException } from '@shared/exceptions';
+import { IBcryptService } from '@src/common/auth/bcrypt';
+import { IJWTService } from '@src/common/auth/jwt';
+import { IAuthRepository } from '@src/core/auth';
+import { IUserRepository, IUserService } from '@src/core/user';
+import { CreateUserDto } from '@src/core/user/dto';
+import { User } from '@src/core/user/types';
 
-import { IAuthCacheService } from "../cache";
-import { UserLoginDto } from "../dto";
+import { IAuthCacheService } from '../cache';
+import { UserLoginDto } from '../dto';
 
 export interface IAuthService {
   login: (loginDto: UserLoginDto) => Promise<{ accessToken: string; refreshToken: string }>;
@@ -45,14 +45,14 @@ export class AuthService implements IAuthService {
       data: string;
     };
 
-    if (!token) throw new HttpException("Invalid refresh token", HttpStatus.BAD_REQUEST);
+    if (!token) throw new HttpException('Invalid refresh token', HttpStatus.BAD_REQUEST);
 
     const tokenFromCache = await this.authCacheService.getTokenFromCache(
-      this.authCacheService.getTokenCacheName("refresh", token.data),
+      this.authCacheService.getTokenCacheName('refresh', token.data),
     );
 
     if (tokenFromCache !== refreshToken)
-      throw new HttpException("Invalid refresh token", HttpStatus.BAD_REQUEST);
+      throw new HttpException('Invalid refresh token', HttpStatus.BAD_REQUEST);
 
     const tokens = this.jwtService.generateTokens(token.data, token.data);
 
@@ -79,11 +79,11 @@ export class AuthService implements IAuthService {
     const user = await this.verifyUser(name, password);
 
     if (!user) {
-      throw new HttpException("Не верный логин или пароль", HttpStatus.BAD_REQUEST);
+      throw new HttpException('Не верный логин или пароль', HttpStatus.BAD_REQUEST);
     }
 
     if (!user.settings.active) {
-      throw new HttpException("Пользователь не активен", HttpStatus.BAD_REQUEST);
+      throw new HttpException('Пользователь не активен', HttpStatus.BAD_REQUEST);
     }
 
     const tokens = this.jwtService.generateTokens(user.id, user.id);

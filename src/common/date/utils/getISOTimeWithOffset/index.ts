@@ -1,1 +1,1 @@
-export * from "./getISOTimeWithOffset";
+export * from './getISOTimeWithOffset';

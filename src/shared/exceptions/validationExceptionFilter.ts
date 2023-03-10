@@ -1,8 +1,8 @@
-import { ILogger } from "@common/logger";
-import { TYPES } from "@DI/types";
-import { ArgumentsHost, Catch, HttpStatus } from "@nestjs/common";
-import { inject } from "inversify";
-import { ValidationError } from "yup";
+import { ILogger } from '@common/logger';
+import { TYPES } from '@DI/types';
+import { ArgumentsHost, Catch, HttpStatus } from '@nestjs/common';
+import { inject } from 'inversify';
+import { ValidationError } from 'yup';
 
 @Catch(ValidationError)
 export class ValidationExceptionFilter {
@@ -18,7 +18,7 @@ export class ValidationExceptionFilter {
 
     response.status(HttpStatus.BAD_REQUEST).json({
       statusCode: HttpStatus.BAD_REQUEST,
-      message: "Input validation failed",
+      message: 'Input validation failed',
       errors,
     });
   }

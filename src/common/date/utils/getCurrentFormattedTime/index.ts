@@ -1,1 +1,1 @@
-export * from "./getCurrentFormattedTime";
+export * from './getCurrentFormattedTime';

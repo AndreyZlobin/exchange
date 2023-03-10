@@ -1,7 +1,7 @@
-import { TYPES } from "@DI/types";
-import { Global, Module } from "@nestjs/common";
+import { TYPES } from '@DI/types';
+import { Global, Module } from '@nestjs/common';
 
-import { CronService } from "./cron.service";
+import { CronService } from './cron.service';
 
 @Global()
 @Module({

@@ -1,11 +1,11 @@
-import { IJWTService } from "@common/auth";
-import { TYPES } from "@DI/types";
-import { HttpStatus, Inject, Injectable, NestMiddleware } from "@nestjs/common";
-import { UserContext } from "@shared/context";
-import { HttpException } from "@shared/exceptions";
-import { IAuthCacheService } from "@src/core/auth/cache";
-import { IPrismaService } from "@src/database";
-import { NextFunction, Request, Response } from "express";
+import { IJWTService } from '@common/auth';
+import { TYPES } from '@DI/types';
+import { HttpStatus, Inject, Injectable, NestMiddleware } from '@nestjs/common';
+import { UserContext } from '@shared/context';
+import { HttpException } from '@shared/exceptions';
+import { IAuthCacheService } from '@src/core/auth/cache';
+import { IPrismaService } from '@src/database';
+import { NextFunction, Request, Response } from 'express';
 
 interface RequestWithContext extends Request {
   userContext: UserContext;
@@ -24,9 +24,9 @@ export class AuthenticationMiddleware implements NestMiddleware {
     const { authorization } = req.headers;
 
     if (!Boolean(authorization)) {
-      throw new HttpException("Ошибка авторизации, требуется токен", HttpStatus.UNAUTHORIZED);
+      throw new HttpException('Ошибка авторизации, требуется токен', HttpStatus.UNAUTHORIZED);
     }
-    const [, token] = authorization.split(" ");
+    const [, token] = authorization.split(' ');
 
     try {
       interface DecodedToken {
@@ -39,7 +39,7 @@ export class AuthenticationMiddleware implements NestMiddleware {
       if (!decodedToken.data) return next();
 
       const cache = await this.authCacheService.getTokenFromCache(
-        this.authCacheService.getTokenCacheName("access", decodedToken.data),
+        this.authCacheService.getTokenCacheName('access', decodedToken.data),
       );
       const userContext = new UserContext();
 

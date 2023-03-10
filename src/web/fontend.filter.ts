@@ -1,28 +1,28 @@
-import { Request, Response } from "express";
-import { ViteDevServer } from "vite";
+import { Request, Response } from 'express';
+import { ViteDevServer } from 'vite';
 
-export const isProduction = process.env.NODE_ENV === "production";
+export const isProduction = process.env.NODE_ENV === 'production';
 import {
   ArgumentsHost,
   Catch,
   ExceptionFilter,
   InternalServerErrorException,
   NotFoundException,
-} from "@nestjs/common";
-import { resolveClientPath, resolveDistPath } from "@src/utils";
-import { getViteServer } from "@src/vite-server";
-import { readFileSync } from "fs";
+} from '@nestjs/common';
+import { resolveClientPath, resolveDistPath } from '@src/utils';
+import { getViteServer } from '@src/vite-server';
+import { readFileSync } from 'fs';
 
-const TEMPLATE_PLACEHOLDER = "<!--ssr-outlet-->";
+const TEMPLATE_PLACEHOLDER = '<!--ssr-outlet-->';
 
 const options = {
   prod: {
-    templatePath: resolveDistPath("index.html"),
-    renderPath: resolveDistPath("entry-server.js"),
+    templatePath: resolveDistPath('index.html'),
+    renderPath: resolveDistPath('entry-server.js'),
   },
   dev: {
-    templatePath: resolveClientPath("index.html"),
-    renderPath: resolveClientPath("src", "entry-server.tsx"),
+    templatePath: resolveClientPath('index.html'),
+    renderPath: resolveClientPath('src', 'entry-server.tsx'),
   },
 };
 
@@ -42,13 +42,13 @@ export class FrontendRenderFilter implements ExceptionFilter {
       if (isProduction) {
         const { templatePath, renderPath } = options.prod;
 
-        template = readFileSync(templatePath, { encoding: "utf-8" });
+        template = readFileSync(templatePath, { encoding: 'utf-8' });
         render = (await import(renderPath)).render;
       } else {
         const { templatePath, renderPath } = options.dev;
 
         vite = await getViteServer();
-        template = readFileSync(templatePath, "utf-8");
+        template = readFileSync(templatePath, 'utf-8');
         /**
          * @description
          * 2. Apply Vite HTML transforms. This injects the Vite HMR client, and

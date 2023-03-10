@@ -1,11 +1,6 @@
-import { TYPES } from "@DI/types";
-import { Controller, Inject } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
-
-import { I{{capitalize name}}Service } from "./service";
-
-@ApiTags("{{capitalize name}}")
-@Controller()
-export class {{capitalize name}}Controller {
-    constructor(@Inject(TYPES.{{name}}.{{capitalize name}}Service) private readonly {{name}}Service: I{{capitalize name}}Service) {}
-}
+import { TYPES } from "@DI/types"; import { Controller, Inject } from "@nestjs/common"; import {
+ApiTags } from "@nestjs/swagger"; import { I{{capitalize name}}Service } from "./service";
+@ApiTags("{{capitalize name}}") @Controller() export class
+{{capitalize name}}Controller { constructor(@Inject(TYPES.{{name}}.{{capitalize name}}Service)
+private readonly
+{{name}}Service: I{{capitalize name}}Service) {} }

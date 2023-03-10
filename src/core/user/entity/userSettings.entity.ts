@@ -1,6 +1,6 @@
-import { CurrencyType, PercentMethod } from "@prisma/client";
+import { CurrencyType, PercentMethod } from '@prisma/client';
 
-import { UserSettings, UserSettingsWithExcludedFields } from "../types";
+import { UserSettings, UserSettingsWithExcludedFields } from '../types';
 
 export class UserSettingsEntity implements UserSettingsWithExcludedFields {
   public readonly active: boolean;
@@ -25,8 +25,8 @@ export class UserSettingsEntity implements UserSettingsWithExcludedFields {
       sendTxToBlockchain = false,
       clientMaxEqualSumOrdersOnPeriod = 0,
       clientMaxEqualSumOrdersTime = 0,
-      clientMaxEqualSumOrdersMode = "fiatAmount",
-      broker = "",
+      clientMaxEqualSumOrdersMode = 'fiatAmount',
+      broker = '',
     } = data;
 
     this.active = active;
@@ -53,8 +53,8 @@ export class UserSettingsEntity implements UserSettingsWithExcludedFields {
       sendTxToBlockchain: false,
       clientMaxEqualSumOrdersOnPeriod: 0,
       clientMaxEqualSumOrdersTime: 0,
-      clientMaxEqualSumOrdersMode: "fiatAmount",
-      broker: "",
+      clientMaxEqualSumOrdersMode: 'fiatAmount',
+      broker: '',
     };
   }
   get getSettings(): UserSettingsWithExcludedFields {
@@ -68,8 +68,8 @@ export class UserSettingsEntity implements UserSettingsWithExcludedFields {
       sendTxToBlockchain: false,
       clientMaxEqualSumOrdersOnPeriod: 0,
       clientMaxEqualSumOrdersTime: 0,
-      clientMaxEqualSumOrdersMode: "fiatAmount",
-      broker: "",
+      clientMaxEqualSumOrdersMode: 'fiatAmount',
+      broker: '',
     };
   }
 }

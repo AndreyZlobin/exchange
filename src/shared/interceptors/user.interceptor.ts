@@ -1,7 +1,7 @@
-import { TYPES } from "@DI/types";
-import { CallHandler, ExecutionContext, Inject, Injectable, NestInterceptor } from "@nestjs/common";
-import { IPrismaService } from "@src/database";
-import { tap } from "rxjs/operators";
+import { TYPES } from '@DI/types';
+import { CallHandler, ExecutionContext, Inject, Injectable, NestInterceptor } from '@nestjs/common';
+import { IPrismaService } from '@src/database';
+import { tap } from 'rxjs/operators';
 
 @Injectable()
 export class UserInterceptor implements NestInterceptor {

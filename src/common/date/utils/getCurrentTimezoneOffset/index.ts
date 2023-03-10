@@ -1,1 +1,1 @@
-export * from "./getCurrentTimezoneOffset";
+export * from './getCurrentTimezoneOffset';

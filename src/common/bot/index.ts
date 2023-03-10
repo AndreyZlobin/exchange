@@ -1,1 +1,1 @@
-export { BotService, IBotService } from "./bot.service";
+export { BotService, IBotService } from './bot.service';

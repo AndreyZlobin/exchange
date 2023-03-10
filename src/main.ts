@@ -1,29 +1,29 @@
-import "reflect-metadata";
+import 'reflect-metadata';
 
-import { ConfigServiceWithEnv } from "@common/configs";
-import { ILogger } from "@common/logger";
-import { TYPES } from "@DI/types";
-import { NestFactory } from "@nestjs/core";
-import { NestExpressApplication } from "@nestjs/platform-express";
-import { DocumentBuilder, OpenAPIObject, SwaggerModule } from "@nestjs/swagger";
-import { ValidationExceptionFilter } from "@shared/exceptions";
-import { AppModule } from "@src/app.module";
-import { IPrismaService, IRedisService } from "@src/database";
-import { resolveDistPath } from "@src/utils";
-import { mergeDeep } from "@src/utils/mergeDeep";
-import { getViteServer } from "@src/vite-server";
-import { FrontendRenderFilter, isProduction } from "@src/web";
-import * as compression from "compression";
-import { readFileSync } from "fs";
-import helmet from "helmet";
+import { ConfigServiceWithEnv } from '@common/configs';
+import { ILogger } from '@common/logger';
+import { TYPES } from '@DI/types';
+import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
+import { ValidationExceptionFilter } from '@shared/exceptions';
+import { AppModule } from '@src/app.module';
+import { IPrismaService, IRedisService } from '@src/database';
+import { resolveDistPath } from '@src/utils';
+import { mergeDeep } from '@src/utils/mergeDeep';
+import { getViteServer } from '@src/vite-server';
+import { FrontendRenderFilter, isProduction } from '@src/web';
+import * as compression from 'compression';
+import { readFileSync } from 'fs';
+import helmet from 'helmet';
 const loadDockFileAndUpdateDocument = (
   pathToFile: string,
   document: OpenAPIObject,
 ): OpenAPIObject | null => {
   try {
-    const json = readFileSync(pathToFile, "utf8");
+    const json = readFileSync(pathToFile, 'utf8');
 
-    const data: OpenAPIObject["components"]["schemas"] = JSON.parse(json).definitions;
+    const data: OpenAPIObject['components']['schemas'] = JSON.parse(json).definitions;
     const clone = structuredClone(document);
 
     clone.components.schemas = data;
@@ -48,7 +48,7 @@ class Bootstrap {
   }
 
   get port() {
-    return Number(this.config.get("PORT"));
+    return Number(this.config.get('PORT'));
   }
 
   async ssrInit() {
@@ -62,39 +62,39 @@ class Bootstrap {
     }
 
     this.app.enableCors({
-      origin: "*",
+      origin: '*',
       credentials: true,
-      allowedHeaders: "Content-Type, Accept, Origin",
+      allowedHeaders: 'Content-Type, Accept, Origin',
       preflightContinue: false,
-      methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     });
     this.app.useGlobalFilters(new FrontendRenderFilter());
   }
   swaggerInit() {
     try {
       const options = new DocumentBuilder()
-        .setTitle("Sample API")
-        .setDescription("A simple API for demonstration purposes")
-        .setVersion("1.0")
+        .setTitle('Sample API')
+        .setDescription('A simple API for demonstration purposes')
+        .setVersion('1.0')
         .addBearerAuth(
           {
-            type: "http",
-            scheme: "bearer",
-            bearerFormat: "JWT",
-            name: "JWT",
-            description: "Enter JWT token",
-            in: "header",
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT',
+            name: 'JWT',
+            description: 'Enter JWT token',
+            in: 'header',
           },
-          "JWT",
+          'JWT',
         )
         .build();
 
       const document = SwaggerModule.createDocument(this.app, options, {});
 
       const updatedDoc =
-        loadDockFileAndUpdateDocument("./src/apiDoc/schema/json-schema.json", document) || document;
+        loadDockFileAndUpdateDocument('./src/apiDoc/schema/json-schema.json', document) || document;
 
-      SwaggerModule.setup("api/docs", this.app, mergeDeep(updatedDoc, document));
+      SwaggerModule.setup('api/docs', this.app, mergeDeep(updatedDoc, document));
       this.logger.log(
         `[${SwaggerModule.name}]: Swagger here | http://localhost:${this.port}/api/docs`,
       );
@@ -113,7 +113,7 @@ class Bootstrap {
       );
       const prismaService = this.app.get<IPrismaService>(TYPES.DB.PrismaService);
       const redisService = this.app.get<IRedisService>(TYPES.DB.RedisService);
-      const prefix = this.config.get("API_VERSION");
+      const prefix = this.config.get('API_VERSION');
 
       this.app.setGlobalPrefix(`api/${prefix}/`);
       this.app.useGlobalFilters(new ValidationExceptionFilter(this.logger));

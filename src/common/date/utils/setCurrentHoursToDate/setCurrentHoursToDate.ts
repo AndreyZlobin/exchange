@@ -1,4 +1,4 @@
-import { DateType } from "../index";
+import { DateType } from '../index';
 
 export const setCurrentHoursToDate = (date: DateType) => {
   const currentDate = new Date();

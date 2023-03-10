@@ -1,4 +1,4 @@
-import { DateType } from "../types";
+import { DateType } from '../types';
 
 export const subDays = (date: DateType, daysAgo: number) => {
   const localDate = new Date(date);

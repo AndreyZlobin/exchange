@@ -1,1 +1,1 @@
-export * from "./setCurrentHoursToDate";
+export * from './setCurrentHoursToDate';

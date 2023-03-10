@@ -1,5 +1,5 @@
 type MergeOptions = {
-  arrayStrategy?: "replace" | "concat";
+  arrayStrategy?: 'replace' | 'concat';
 };
 
 export function mergeDeep<T extends Record<string, any>>(
@@ -7,7 +7,7 @@ export function mergeDeep<T extends Record<string, any>>(
   source: T,
   options: MergeOptions = {},
 ): T {
-  const arrayStrategy = options.arrayStrategy || "replace";
+  const arrayStrategy = options.arrayStrategy || 'replace';
   const result = { ...target };
 
   Object.keys(source).forEach((key) => {
@@ -17,12 +17,12 @@ export function mergeDeep<T extends Record<string, any>>(
 
     if (Array.isArray(targetValue) && Array.isArray(sourceValue)) {
       const mergedArray =
-        arrayStrategy === "concat" ? targetValue.concat(sourceValue) : sourceValue;
+        arrayStrategy === 'concat' ? targetValue.concat(sourceValue) : sourceValue;
 
       result[k] = mergedArray;
     } else if (
-      typeof targetValue === "object" &&
-      typeof sourceValue === "object" &&
+      typeof targetValue === 'object' &&
+      typeof sourceValue === 'object' &&
       targetValue !== null &&
       sourceValue !== null
     ) {

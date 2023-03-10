@@ -4,7 +4,7 @@ export function App() {
   return (
     <Routes>
       <Route
-        path="/"
+        path='/'
         element={
           <div>
             <button
@@ -22,7 +22,7 @@ export function App() {
           </div>
         }
       />
-      <Route path="*" element={<p> nf</p>} />
+      <Route path='*' element={<p> nf</p>} />
     </Routes>
   );
 }
