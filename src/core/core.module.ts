@@ -12,6 +12,7 @@ import { AuthenticationMiddleware } from '@shared/middleware';
 import { AuthCacheService } from '@src/core/auth/cache/cache.service';
 import { IntegrationModule } from '@src/core/integration/integration.module';
 import { RolesGuard, SelfWithRoleGuard } from '@src/core/roles';
+import { WalletModule } from '@src/core/wallet/wallet.module';
 import { PrismaModule } from '@src/database/prisma/prisma.module';
 import { RedisModule } from '@src/database/redis/redis.module';
 
@@ -44,6 +45,7 @@ import { UserModule } from './user/user.module';
     UserModule,
     AuthModule,
     OrderModule,
+    WalletModule,
   ],
 })
 export class CoreModule implements NestModule {
@@ -59,6 +61,8 @@ export class CoreModule implements NestModule {
       { path: 'user/profile', method: RequestMethod.GET },
       // user
       { path: 'order/*', method: RequestMethod.ALL },
+      // Wallet
+      { path: 'wallet/*', method: RequestMethod.ALL },
     ];
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(AuthenticationMiddleware).forRoutes(...this.authRouteMiddlewareCollections);

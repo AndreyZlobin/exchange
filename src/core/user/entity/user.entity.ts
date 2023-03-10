@@ -3,6 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Roles } from '@src/core/roles/constants';
 import { UserSettingsEntity } from '@src/core/user/entity/userSettings.entity';
 
+import { CreateUserDto } from '../dto';
 import { UserWithExcludedFields } from '../types';
 
 export class UserEntity implements UserWithExcludedFields {
@@ -25,7 +26,7 @@ export class UserEntity implements UserWithExcludedFields {
     this.password = password;
   }
 
-  async getUser(): Promise<UserWithExcludedFields> {
+  async getUser(): Promise<CreateUserDto> {
     const password = await this.bcryptService.hash(this.password);
 
     return { role: this.role, name: this.name, password };

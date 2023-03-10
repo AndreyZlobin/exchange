@@ -5,8 +5,7 @@ import { IBcryptService } from '@src/common/auth/bcrypt';
 import { IJWTService } from '@src/common/auth/jwt';
 import { IAuthRepository } from '@src/core/auth';
 import { IUserRepository, IUserService } from '@src/core/user';
-import { CreateUserDto } from '@src/core/user/dto';
-import { User } from '@src/core/user/types';
+import { CreateUserDto, ResultUserDto } from '@src/core/user/dto';
 
 import { IAuthCacheService } from '../cache';
 import { UserLoginDto } from '../dto';
@@ -61,7 +60,7 @@ export class AuthService implements IAuthService {
     return tokens;
   }
 
-  private async verifyUser(name: string, password: string): Promise<false | User> {
+  private async verifyUser(name: string, password: string): Promise<false | ResultUserDto> {
     const user = await this.userService.findByName(name);
 
     if (!user) return false;

@@ -32,4 +32,8 @@ export const TYPES = {
     OrderService: Symbol.for('OrderService'),
     OrderRepository: Symbol.for('OrderRepository'),
   },
+  wallet: {
+    WalletService: Symbol.for('WalletService'),
+    WalletRepository: Symbol.for('WalletRepository'),
+  },
 };

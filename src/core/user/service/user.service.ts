@@ -2,18 +2,19 @@ import { IBcryptService } from '@common/auth';
 import { TYPES } from '@DI/types';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { HttpException } from '@shared/exceptions';
+import { PaymentSystemEntity } from '@src/core/paymentSystem/entity/paymentSystem.entity';
 import { ROLES } from '@src/core/roles/constants';
 
-import { CreateUserDto } from '../dto';
+import { CreateUserDto, ResultUserDto, UserDto } from '../dto';
 import { UserEntity, UserSettingsEntity } from '../entity';
 import { IUserRepository } from '../repository';
-import { User, UserWithoutPassword } from '../types';
+import { UserWithoutPassword } from '../types';
 
 export interface IUserService {
-  findByName(name: string): Promise<User | null>;
+  findByName(name: string): Promise<ResultUserDto | null>;
   getUserProfile(): boolean;
-  create(user: CreateUserDto): Promise<UserWithoutPassword>;
-  getAll(): Promise<UserWithoutPassword[]>;
+  create(user: CreateUserDto): Promise<UserDto>;
+  getAll(): Promise<UserDto[]>;
 }
 
 const { admin, superadmin, provider } = ROLES;
@@ -58,10 +59,11 @@ export class UserService implements IUserService {
     }
 
     const userSettings = UserSettingsEntity.getDefaultSettings;
+    const userPaymentSystems = PaymentSystemEntity.getDefaultUserPaymentSystem;
     const userEntity = new UserEntity({ name, password, role }, this.bcryptService);
     const user = await userEntity.getUser();
 
-    return this.userRepository.create(user, userSettings);
+    return this.userRepository.create(user, userSettings, userPaymentSystems);
   }
 
   getUserProfile(): boolean {
