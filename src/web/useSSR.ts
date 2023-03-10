@@ -1,44 +1,44 @@
-import { NestExpressApplication } from "@nestjs/platform-express";
-import { resolveClientPath, resolveDistPath } from "@src/utils";
-import { getViteServer } from "@src/vite-server";
-import { NextFunction, Request, Response } from "express";
-import { readFileSync } from "fs";
-import * as process from "process";
-import { ViteDevServer } from "vite";
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { resolveClientPath, resolveDistPath } from '@src/utils';
+import { getViteServer } from '@src/vite-server';
+import { NextFunction, Request, Response } from 'express';
+import { readFileSync } from 'fs';
+import * as process from 'process';
+import { ViteDevServer } from 'vite';
 
-const TEMPLATE_PLACEHOLDER = "<!--ssr-outlet-->";
+const TEMPLATE_PLACEHOLDER = '<!--ssr-outlet-->';
 
 const options = {
   prod: {
-    templatePath: resolveDistPath("index.html"),
-    renderPath: resolveDistPath("src", "entry-server.tsx"),
+    templatePath: resolveDistPath('index.html'),
+    renderPath: resolveDistPath('src', 'entry-server.tsx'),
   },
   dev: {
-    templatePath: resolveClientPath("index.html"),
-    renderPath: resolveClientPath("src", "entry-server.tsx"),
+    templatePath: resolveClientPath('index.html'),
+    renderPath: resolveClientPath('src', 'entry-server.tsx'),
   },
 };
-const isProduction = process.env.NODE_ENV === "prod";
+const isProduction = process.env.NODE_ENV === 'prod';
 
 export const useSSR = async (app: NestExpressApplication) => {
   let template: string;
   let render: (url: string) => Promise<string>;
   let vite: ViteDevServer;
 
-  await app.use("*", async (req: Request, res: Response, next: NextFunction) => {
+  await app.use('*', async (req: Request, res: Response, next: NextFunction) => {
     const url = req.originalUrl;
 
     try {
       if (isProduction) {
         const { templatePath, renderPath } = options.prod;
 
-        template = readFileSync(templatePath, { encoding: "utf-8" });
+        template = readFileSync(templatePath, { encoding: 'utf-8' });
         render = (await import(renderPath)).render;
       } else {
         const { templatePath, renderPath } = options.dev;
 
         vite = await getViteServer();
-        template = readFileSync(templatePath, "utf-8");
+        template = readFileSync(templatePath, 'utf-8');
         /**
          * @description
          * 2. Apply Vite HTML transforms. This injects the Vite HMR client, and
@@ -62,7 +62,7 @@ export const useSSR = async (app: NestExpressApplication) => {
 
       const html = template.replace(TEMPLATE_PLACEHOLDER, appHtml);
 
-      res.status(200).set({ "Content-Type": "text/html" }).end(html);
+      res.status(200).set({ 'Content-Type': 'text/html' }).end(html);
     } catch (error) {
       const e = error as Error;
 

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 var __decorate =
   (this && this.__decorate) ||
   function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ var __decorate =
           ? (desc = Object.getOwnPropertyDescriptor(target, key))
           : desc,
       d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+    if (typeof Reflect === 'object' && typeof Reflect.decorate === 'function')
       r = Reflect.decorate(decorators, target, key, desc);
     else
       for (var i = decorators.length - 1; i >= 0; i--)
@@ -38,7 +38,7 @@ var __awaiter =
       }
       function rejected(value) {
         try {
-          step(generator["throw"](value));
+          step(generator['throw'](value));
         } catch (e) {
           reject(e);
         }
@@ -67,7 +67,7 @@ var __generator =
       g;
     return (
       (g = { next: verb(0), throw: verb(1), return: verb(2) }),
-      typeof Symbol === "function" &&
+      typeof Symbol === 'function' &&
         (g[Symbol.iterator] = function () {
           return this;
         }),
@@ -79,7 +79,7 @@ var __generator =
       };
     }
     function step(op) {
-      if (f) throw new TypeError("Generator is already executing.");
+      if (f) throw new TypeError('Generator is already executing.');
       while ((g && ((g = 0), op[0] && (_ = 0)), _))
         try {
           if (
@@ -87,9 +87,9 @@ var __generator =
             y &&
               (t =
                 op[0] & 2
-                  ? y["return"]
+                  ? y['return']
                   : op[0]
-                  ? y["throw"] || ((t = y["return"]) && t.call(y), 0)
+                  ? y['throw'] || ((t = y['return']) && t.call(y), 0)
                   : y.next) &&
               !(t = t.call(y, op[1])).done)
           )
@@ -151,7 +151,7 @@ var __generator =
   };
 exports.__esModule = true;
 exports.AuthenticationMiddleware = void 0;
-var common_1 = require("@nestjs/common");
+var common_1 = require('@nestjs/common');
 var AuthenticationMiddleware = /** @class */ (function () {
   function AuthenticationMiddleware() {}
   AuthenticationMiddleware.prototype.use = function (req, res, next) {

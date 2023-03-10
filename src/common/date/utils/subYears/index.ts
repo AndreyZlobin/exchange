@@ -1,1 +1,1 @@
-export * from "./subYears";
+export * from './subYears';

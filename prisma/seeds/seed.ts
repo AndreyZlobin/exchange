@@ -1,6 +1,6 @@
-import { prisma } from "./client";
-import { createCurrency } from "./currency.seed";
-import { createPaymentSystem } from "./payment.seed";
+import { prisma } from './client';
+import { createCurrency } from './currency.seed';
+// import { createPaymentSystem } from './payment.seed';
 
 const createSeed = async (key: string, cb: () => Promise<unknown>) => {
   try {
@@ -15,8 +15,8 @@ const createSeed = async (key: string, cb: () => Promise<unknown>) => {
 
 async function main() {
   await Promise.all([
-    createSeed("paymentSystem", createPaymentSystem),
-    createSeed("currency", createCurrency),
+    // createSeed('paymentSystem', createPaymentSystem),
+    createSeed('currency', createCurrency),
   ]);
 }
 

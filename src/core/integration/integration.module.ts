@@ -1,7 +1,7 @@
-import { TYPES } from "@DI/types";
-import { Global, Module } from "@nestjs/common";
+import { TYPES } from '@DI/types';
+import { Global, Module } from '@nestjs/common';
 
-import { BinanceService, GarantexService } from "./services";
+import { BinanceService, GarantexService } from './services';
 
 @Global()
 @Module({

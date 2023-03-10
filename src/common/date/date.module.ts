@@ -1,7 +1,7 @@
-import { TYPES } from "@DI/types";
-import { Global, Module } from "@nestjs/common";
+import { TYPES } from '@DI/types';
+import { Global, Module } from '@nestjs/common';
 
-import { DateService } from "./date.service";
+import { DateService } from './date.service';
 
 @Global()
 @Module({

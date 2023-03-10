@@ -206,11 +206,25 @@
           "type": "boolean",
           "default": false
         },
-        "orders": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Order"
-          }
+        "user": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "paymentSystemBlacklist": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/PaymentSystemBlacklist"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       }
     },
@@ -220,35 +234,36 @@
         "id": {
           "type": "string"
         },
+        "provider": {
+          "type": "string"
+        },
         "status": {
           "type": "string",
           "default": "new",
           "enum": [
             "new",
             "dealAdded",
-            "dealCanceled",
-            "dealCanceledMarkedPaid",
             "requisiteAdded",
+            "dealCanceled",
             "markedPaid",
+            "dealCanceledMarkedPaid",
             "finished",
             "canceled",
             "claim",
-            "renew",
-            "waitFinishTx",
-            "finishError"
+            "renew"
           ]
         },
-        "fiatAmount": {
-          "type": "integer",
-          "description": "Количество фиатной валюты, которое необходимо купить/продать"
+        "amount": {
+          "$ref": "#/definitions/OrderRate"
         },
-        "cryptoAmount": {
-          "type": "integer",
-          "description": "Rоличество криптовалюты, которое необходимо купить/продать"
+        "rate": {
+          "$ref": "#/definitions/OrderRate"
+        },
+        "notes": {
+          "$ref": "#/definitions/Notes"
         },
         "type": {
-          "type": "string",
-          "description": "Тип заказа (покупка/продажа)"
+          "type": "string"
         },
         "statusHistory": {
           "type": "array",
@@ -258,9 +273,6 @@
         },
         "user": {
           "$ref": "#/definitions/User"
-        },
-        "paymentSystem": {
-          "$ref": "#/definitions/PaymentSystem"
         },
         "created": {
           "type": [
@@ -278,6 +290,9 @@
         },
         "currencyType": {
           "$ref": "#/definitions/Currency"
+        },
+        "values": {
+          "$ref": "#/definitions/OrderValues"
         }
       }
     },
@@ -507,6 +522,12 @@
             "$ref": "#/definitions/Order"
           }
         },
+        "paymentSystems": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PaymentSystem"
+          }
+        },
         "wallet": {
           "anyOf": [
             {
@@ -527,6 +548,14 @@
             }
           ]
         },
+        "isWork": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": false,
+          "description": "Готовность обрабатывать трафик"
+        },
         "createdAt": {
           "type": [
             "string",
@@ -540,6 +569,76 @@
             "null"
           ],
           "default": false
+        },
+        "userBlacklist": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/UserBlacklist"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "UserBlacklist": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "blacklistedUserId": {
+          "type": "integer"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "user": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          }
+        },
+        "userId": {
+          "type": "string"
+        }
+      }
+    },
+    "PaymentSystemBlacklist": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "blacklistedUserId": {
+          "type": "integer"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "paymentSystem": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PaymentSystem"
+          }
+        },
+        "paymentSystemId": {
+          "type": "string"
         }
       }
     },
@@ -585,17 +684,70 @@
           "enum": [
             "new",
             "dealAdded",
-            "dealCanceled",
-            "dealCanceledMarkedPaid",
             "requisiteAdded",
+            "dealCanceled",
             "markedPaid",
+            "dealCanceledMarkedPaid",
             "finished",
             "canceled",
             "claim",
-            "renew",
-            "waitFinishTx",
-            "finishError"
+            "renew"
           ]
+        }
+      }
+    },
+    "OrderValues": {
+      "type": "object",
+      "properties": {
+        "crypto_amount_provider": {
+          "type": "integer"
+        },
+        "crypto_amount_deal": {
+          "type": "integer"
+        },
+        "profit": {
+          "type": "integer"
+        }
+      }
+    },
+    "OrderRate": {
+      "type": "object",
+      "properties": {
+        "fiat": {
+          "type": "integer"
+        },
+        "crypto": {
+          "type": "integer"
+        }
+      }
+    },
+    "OrderAmount": {
+      "type": "object",
+      "properties": {
+        "deal": {
+          "type": "integer"
+        },
+        "provider": {
+          "type": "integer"
+        }
+      }
+    },
+    "Notes": {
+      "type": "object",
+      "properties": {
+        "isPaid": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": false
+        },
+        "isProblem": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": false
         }
       }
     },
@@ -645,6 +797,12 @@
     },
     "user": {
       "$ref": "#/definitions/User"
+    },
+    "userBlacklist": {
+      "$ref": "#/definitions/UserBlacklist"
+    },
+    "paymentSystemBlacklist": {
+      "$ref": "#/definitions/PaymentSystemBlacklist"
     }
   }
 }

@@ -1,1 +1,1 @@
-export * from "./resetHoursToEnd";
+export * from './resetHoursToEnd';

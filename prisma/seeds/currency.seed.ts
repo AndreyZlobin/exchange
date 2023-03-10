@@ -1,16 +1,16 @@
-import { CryptocurrencyType, Currency, CurrencyType } from "@prisma/client";
+import { CryptocurrencyType, Currency, CurrencyType } from '@prisma/client';
 
-import { prisma } from "./client";
+import { prisma } from './client';
 
-export const paymentSystemSeeders: Array<Omit<Currency, "id">> = [
+export const paymentSystemSeeders: Array<Omit<Currency, 'id'>> = [
   {
     name: CurrencyType.BTC,
-    title: "Bitcoin",
+    title: 'Bitcoin',
     type: CryptocurrencyType.Cryptocurrency,
   },
   {
     name: CurrencyType.Tether,
-    title: "Tether",
+    title: 'Tether',
     type: CryptocurrencyType.Cryptocurrency,
   },
 ];

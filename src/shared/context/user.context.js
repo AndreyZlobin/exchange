@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 var __decorate =
   (this && this.__decorate) ||
   function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ var __decorate =
           ? (desc = Object.getOwnPropertyDescriptor(target, key))
           : desc,
       d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+    if (typeof Reflect === 'object' && typeof Reflect.decorate === 'function')
       r = Reflect.decorate(decorators, target, key, desc);
     else
       for (var i = decorators.length - 1; i >= 0; i--)
@@ -20,7 +20,7 @@ var __decorate =
   };
 exports.__esModule = true;
 exports.UserContext = void 0;
-var common_1 = require("@nestjs/common");
+var common_1 = require('@nestjs/common');
 var UserContext = /** @class */ (function () {
   function UserContext() {}
   UserContext.prototype.setUserId = function (id) {

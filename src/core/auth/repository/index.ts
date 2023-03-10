@@ -1,1 +1,1 @@
-export { AuthRepository, IAuthRepository } from "./auth.repository";
+export { AuthRepository, IAuthRepository } from './auth.repository';

@@ -1,5 +1,5 @@
-import { CronJob } from "cron";
-import { injectable } from "inversify";
+import { CronJob } from 'cron';
+import { injectable } from 'inversify';
 
 export interface ICronService {
   start(): void;

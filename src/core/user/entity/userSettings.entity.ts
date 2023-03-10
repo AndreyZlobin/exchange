@@ -1,19 +1,33 @@
-import { CurrencyType, PercentMethod } from "@prisma/client";
+import { ApiProperty } from '@nestjs/swagger';
+import { CurrencyType, PercentMethod } from '@prisma/client';
 
-import { UserSettings, UserSettingsWithExcludedFields } from "../types";
+import { UserSettings, UserSettingsWithExcludedFields } from '../types';
 
 export class UserSettingsEntity implements UserSettingsWithExcludedFields {
+  @ApiProperty()
   public readonly active: boolean;
+  @ApiProperty()
   public readonly broker: string;
+  @ApiProperty()
   public readonly canFinishOrders: boolean;
+  @ApiProperty()
   public readonly canOpenOrdersViaPanel: boolean;
+  @ApiProperty()
   public readonly canViewDirectBalance: boolean;
+  @ApiProperty()
   public readonly clientMaxEqualSumOrdersMode: string;
+  @ApiProperty()
   public readonly clientMaxEqualSumOrdersOnPeriod: number;
+  @ApiProperty()
   public readonly clientMaxEqualSumOrdersTime: number;
+  @ApiProperty()
   public readonly cryptoType: CurrencyType;
+  @ApiProperty()
   public readonly percentMethod: PercentMethod;
+
+  @ApiProperty()
   public readonly sendTxToBlockchain: boolean;
+
   constructor(public readonly data: UserSettings) {
     const {
       active = true,
@@ -25,8 +39,8 @@ export class UserSettingsEntity implements UserSettingsWithExcludedFields {
       sendTxToBlockchain = false,
       clientMaxEqualSumOrdersOnPeriod = 0,
       clientMaxEqualSumOrdersTime = 0,
-      clientMaxEqualSumOrdersMode = "fiatAmount",
-      broker = "",
+      clientMaxEqualSumOrdersMode = 'fiatAmount',
+      broker = '',
     } = data;
 
     this.active = active;
@@ -53,8 +67,8 @@ export class UserSettingsEntity implements UserSettingsWithExcludedFields {
       sendTxToBlockchain: false,
       clientMaxEqualSumOrdersOnPeriod: 0,
       clientMaxEqualSumOrdersTime: 0,
-      clientMaxEqualSumOrdersMode: "fiatAmount",
-      broker: "",
+      clientMaxEqualSumOrdersMode: 'fiatAmount',
+      broker: '',
     };
   }
   get getSettings(): UserSettingsWithExcludedFields {
@@ -68,8 +82,8 @@ export class UserSettingsEntity implements UserSettingsWithExcludedFields {
       sendTxToBlockchain: false,
       clientMaxEqualSumOrdersOnPeriod: 0,
       clientMaxEqualSumOrdersTime: 0,
-      clientMaxEqualSumOrdersMode: "fiatAmount",
-      broker: "",
+      clientMaxEqualSumOrdersMode: 'fiatAmount',
+      broker: '',
     };
   }
 }

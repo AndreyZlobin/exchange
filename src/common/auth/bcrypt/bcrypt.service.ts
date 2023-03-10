@@ -1,5 +1,5 @@
-import { compare, hash } from "bcrypt";
-import { injectable } from "inversify";
+import { compare, hash } from 'bcrypt';
+import { injectable } from 'inversify';
 
 export interface IBcryptService {
   hash: (plaintext: string) => Promise<string>;

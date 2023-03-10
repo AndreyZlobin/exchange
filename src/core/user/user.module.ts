@@ -1,9 +1,9 @@
-import { TYPES } from "@DI/types";
-import { Module } from "@nestjs/common";
-import { UserRepository } from "@src/core/user/repository";
-import { UserService } from "@src/core/user/service";
+import { TYPES } from '@DI/types';
+import { Module } from '@nestjs/common';
+import { UserRepository } from '@src/core/user/repository';
+import { UserService } from '@src/core/user/service';
 
-import { UserController } from "./user.controller";
+import { UserController } from './user.controller';
 
 @Module({
   providers: [

@@ -1,6 +1,6 @@
-import { TYPES } from "@DI/types";
-import { Global, Module } from "@nestjs/common";
-import { BcryptService } from "@src/common/auth/bcrypt/bcrypt.service";
+import { TYPES } from '@DI/types';
+import { Global, Module } from '@nestjs/common';
+import { BcryptService } from '@src/common/auth/bcrypt/bcrypt.service';
 
 @Global()
 @Module({

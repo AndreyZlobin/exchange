@@ -1,7 +1,7 @@
-import { TYPES } from "@DI/types";
-import { Global, Module } from "@nestjs/common";
+import { TYPES } from '@DI/types';
+import { Global, Module } from '@nestjs/common';
 
-import { PrismaService } from "./prisma.service";
+import { PrismaService } from './prisma.service';
 
 @Global()
 @Module({

@@ -1,6 +1,6 @@
-import { TYPES } from "@DI/types";
-import { Inject, Injectable } from "@nestjs/common";
-import { IPrismaService } from "@src/database";
+import { TYPES } from '@DI/types';
+import { Inject, Injectable } from '@nestjs/common';
+import { IPrismaService } from '@src/database';
 
 export interface IAuthRepository {
   check(): Promise<void>;

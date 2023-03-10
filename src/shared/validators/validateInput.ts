@@ -5,9 +5,9 @@ import {
   HttpStatus,
   NestInterceptor,
   UseInterceptors,
-} from "@nestjs/common";
-import { Observable } from "rxjs";
-import { object, Schema, ValidationError } from "yup";
+} from '@nestjs/common';
+import { Observable } from 'rxjs';
+import { object, Schema, ValidationError } from 'yup';
 
 function normalizeYupErrors(errors: ValidationError): Record<string, string> {
   const validationErrors: Record<string, string> = {};
@@ -19,7 +19,7 @@ function normalizeYupErrors(errors: ValidationError): Record<string, string> {
 
   errors.inner.forEach((err) => {
     if (err.inner.length === 0) {
-      const path = err.path.split(".")?.at(-1) || err.path;
+      const path = err.path.split('.')?.at(-1) || err.path;
 
       validationErrors[path] = err.message;
       return;
@@ -60,7 +60,7 @@ export function ValidateInput(schema: Schema): MethodDecorator & ClassDecorator 
             HttpStatus.BAD_REQUEST,
           );
         }
-        throw new HttpException("Something went wrong", HttpStatus.INTERNAL_SERVER_ERROR);
+        throw new HttpException('Something went wrong', HttpStatus.INTERNAL_SERVER_ERROR);
       }
     }
   }

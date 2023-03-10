@@ -41,24 +41,28 @@ Table PaymentSystem {
   authToken String [not null, default: 'Не установлен', note: 'Доступ к созданию заявок по платежным системам']
   apiKey String [not null, default: '']
   isAllow Boolean [not null, default: false]
-  orders Order [not null]
+  user User
+  userId String
+  paymentSystemBlacklist PaymentSystemBlacklist
+  paymentSystemBlacklistId String
 }
 
 Table Order {
   id String [pk]
+  provider String [not null]
   status OrderStatus [not null, default: 'new']
-  fiatAmount Int [not null, note: 'Количество фиатной валюты, которое необходимо купить/продать']
-  cryptoAmount Int [not null, note: 'Rоличество криптовалюты, которое необходимо купить/продать']
-  type String [not null, note: 'Тип заказа (покупка/продажа)']
+  amount OrderRate [not null]
+  rate OrderRate [not null]
+  notes Notes [not null]
+  type String [not null]
   statusHistory OrderStatusHistory[] [not null]
   user User [not null]
   userId String [unique, not null]
-  paymentSystem PaymentSystem [not null]
-  paymentSystemId String [not null]
   created DateTime [default: `now()`]
   deleted Boolean [default: false]
   currencyType Currency [not null, note: 'Конкретный тип криптовалюты']
   currencyTypeId String [not null]
+  values OrderValues [not null]
 }
 
 Table Wallet {
@@ -110,10 +114,32 @@ Table User {
   password String [not null]
   role RoleEnum [not null, default: 'broker']
   orders Order [not null]
+  paymentSystems PaymentSystem [not null]
   wallet Wallet
   settings UserSettings
+  isWork Boolean [default: false, note: 'Готовность обрабатывать трафик']
   createdAt DateTime [default: `now()`]
   deleted Boolean [default: false]
+  userBlacklist UserBlacklist
+  userBlacklistId String
+}
+
+Table UserBlacklist {
+  id String [pk]
+  reason String
+  blacklistedUserId Int [not null]
+  createdAt DateTime [default: `now()`, not null]
+  user User [not null]
+  userId String [not null]
+}
+
+Table PaymentSystemBlacklist {
+  id String [pk]
+  reason String
+  blacklistedUserId Int [not null]
+  createdAt DateTime [default: `now()`, not null]
+  paymentSystem PaymentSystem [not null]
+  paymentSystemId String [not null]
 }
 
 Enum SystemEnum {
@@ -150,24 +176,26 @@ Enum RoleEnum {
 Enum OrderStatus {
   new
   dealAdded
-  dealCanceled
-  dealCanceledMarkedPaid
   requisiteAdded
+  dealCanceled
   markedPaid
+  dealCanceledMarkedPaid
   finished
   canceled
   claim
   renew
-  waitFinishTx
-  finishError
 }
 
-Ref: Order.userId > User.id [delete: Cascade]
+Ref: PaymentSystem.userId > User.id
 
-Ref: Order.paymentSystemId > PaymentSystem.id [delete: Cascade]
+Ref: PaymentSystem.paymentSystemBlacklistId > PaymentSystemBlacklist.id [delete: Cascade]
+
+Ref: Order.userId > User.id [delete: Cascade]
 
 Ref: Order.currencyTypeId > Currency.id [delete: Cascade]
 
 Ref: Wallet.userId - User.id [delete: Cascade]
 
 Ref: UserSettings.userId - User.id [delete: Cascade]
+
+Ref: User.userBlacklistId > UserBlacklist.id

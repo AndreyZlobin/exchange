@@ -1,1 +1,1 @@
-export * from "./subDays";
+export * from './subDays';

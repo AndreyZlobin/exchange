@@ -1,7 +1,7 @@
-import { Injectable } from "@nestjs/common";
-import axios, { AxiosInstance } from "axios";
+import { Injectable } from '@nestjs/common';
+import axios, { AxiosInstance } from 'axios';
 
-import { HttpServiceParams, IHttpService } from "./http.interface";
+import { HttpServiceParams, IHttpService } from './http.interface';
 
 @Injectable()
 export class HttpService implements IHttpService {

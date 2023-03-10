@@ -1,2 +1,2 @@
-export * from "./binance.service";
-export * from "./garantex.service";
+export * from './binance.service';
+export * from './garantex.service';

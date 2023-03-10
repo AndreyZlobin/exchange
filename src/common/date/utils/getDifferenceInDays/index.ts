@@ -1,1 +1,1 @@
-export * from "./getDifferenceInDays";
+export * from './getDifferenceInDays';

@@ -1,5 +1,5 @@
-import { Injectable } from "@nestjs/common";
-import { config, DotenvParseOutput } from "dotenv";
+import { Injectable } from '@nestjs/common';
+import { config, DotenvParseOutput } from 'dotenv';
 export interface IConfigService<Env extends string> {
   get(key: Env): string;
 }
@@ -11,10 +11,10 @@ export class ConfigService<Env extends string> implements IConfigService<Env> {
     const { error, parsed } = config();
 
     if (error) {
-      throw new Error("Error of config parse");
+      throw new Error('Error of config parse');
     }
     if (!parsed) {
-      throw new Error("Config is empty");
+      throw new Error('Config is empty');
     }
     this.config = parsed;
   }
@@ -25,19 +25,19 @@ export class ConfigService<Env extends string> implements IConfigService<Env> {
 }
 
 export type Env =
-  | "PORT"
-  | "API_VERSION"
-  | "NODE_ENV"
-  | "DATABASE_URL"
-  | "ACCESS_TOKEN_SECRET"
-  | "REFRESH_TOKEN_SECRET"
-  | "ACCESS_TOKEN_EXP"
-  | "REFRESH_TOKEN_EXP"
-  | "REDIS_HOST"
-  | "REDIS_PORT"
-  | "REDIS_EXTERNAL_PORT"
-  | "REDIS_PASSWORD"
-  | "TELEGRAM_BOT_TOKEN"
-  | "REDIS_CONNECTION";
+  | 'PORT'
+  | 'API_VERSION'
+  | 'NODE_ENV'
+  | 'DATABASE_URL'
+  | 'ACCESS_TOKEN_SECRET'
+  | 'REFRESH_TOKEN_SECRET'
+  | 'ACCESS_TOKEN_EXP'
+  | 'REFRESH_TOKEN_EXP'
+  | 'REDIS_HOST'
+  | 'REDIS_PORT'
+  | 'REDIS_EXTERNAL_PORT'
+  | 'REDIS_PASSWORD'
+  | 'TELEGRAM_BOT_TOKEN'
+  | 'REDIS_CONNECTION';
 
 export type ConfigServiceWithEnv = IConfigService<Env>;

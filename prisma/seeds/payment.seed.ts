@@ -1,8 +1,8 @@
-import { PaymentSystem, SystemEnum } from "@prisma/client";
+import { PaymentSystem, SystemEnum } from '@prisma/client';
 
-import { prisma } from "./client";
+import { prisma } from './client';
 
-export const paymentSystemSeeders: Array<Omit<PaymentSystem, "id">> = [
+export const paymentSystemSeeders: Array<Omit<PaymentSystem, 'id' | 'paymentSystemBlacklistId' | 'userId'>> = [
   {
     name: SystemEnum.card,
     type: SystemEnum.card,
@@ -10,8 +10,8 @@ export const paymentSystemSeeders: Array<Omit<PaymentSystem, "id">> = [
     max: 15000,
     brokerCommission: 0,
     systemCommission: 20,
-    authToken: "НЕ УСТАНОВЛЕН",
-    apiKey: "",
+    authToken: 'НЕ УСТАНОВЛЕН',
+    apiKey: '',
     isAllow: true,
   },
   {
@@ -21,8 +21,8 @@ export const paymentSystemSeeders: Array<Omit<PaymentSystem, "id">> = [
     max: 15000,
     brokerCommission: 0,
     systemCommission: 20,
-    authToken: "НЕ УСТАНОВЛЕН",
-    apiKey: "",
+    authToken: 'НЕ УСТАНОВЛЕН',
+    apiKey: '',
     isAllow: true,
   },
   {
@@ -32,8 +32,8 @@ export const paymentSystemSeeders: Array<Omit<PaymentSystem, "id">> = [
     max: 15000,
     brokerCommission: 0,
     systemCommission: 20,
-    authToken: "НЕ УСТАНОВЛЕН",
-    apiKey: "",
+    authToken: 'НЕ УСТАНОВЛЕН',
+    apiKey: '',
     isAllow: true,
   },
   {
@@ -43,11 +43,12 @@ export const paymentSystemSeeders: Array<Omit<PaymentSystem, "id">> = [
     max: 15000,
     brokerCommission: 0,
     systemCommission: 20,
-    authToken: "НЕ УСТАНОВЛЕН",
-    apiKey: "",
+    authToken: 'НЕ УСТАНОВЛЕН',
+    apiKey: '',
     isAllow: true,
   },
 ];
 
-export const createPaymentSystem = () =>
+export const createPaymentSystem = () => {
   prisma.$transaction(paymentSystemSeeders.map((data) => prisma.paymentSystem.create({ data })));
+};

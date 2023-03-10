@@ -1,4 +1,4 @@
-import { MINUTES_PER_HOUR, MSECONDS_PER_SECOND, SECONDS_PER_MINUTE } from "../../constants";
+import { MINUTES_PER_HOUR, MSECONDS_PER_SECOND, SECONDS_PER_MINUTE } from '../../constants';
 
 export function convertUTCDateToLocalDate(date: Date) {
   const newDate = new Date(

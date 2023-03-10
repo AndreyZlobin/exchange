@@ -1,10 +1,11 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { Roles } from "@src/core/roles/constants";
+import { ApiProperty } from '@nestjs/swagger';
+import { Roles } from '@src/core/roles/constants';
 
 export class CreateUserDto {
-  @ApiProperty({ required: true, type: String })
+  @ApiProperty()
   name!: string;
-  @ApiProperty({ required: true, type: String })
+  @ApiProperty()
   password!: string;
+  @ApiProperty()
   role: Roles;
 }

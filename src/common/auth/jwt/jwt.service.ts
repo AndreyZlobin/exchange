@@ -1,6 +1,6 @@
-import { TYPES } from "@DI/types";
-import { Inject, Injectable } from "@nestjs/common";
-import { ConfigServiceWithEnv } from "@src/common/configs";
+import { TYPES } from '@DI/types';
+import { Inject, Injectable } from '@nestjs/common';
+import { ConfigServiceWithEnv } from '@src/common/configs';
 import {
   decode,
   JsonWebTokenError,
@@ -9,7 +9,7 @@ import {
   SignOptions,
   TokenExpiredError,
   verify,
-} from "jsonwebtoken";
+} from 'jsonwebtoken';
 
 type Token = string;
 
@@ -40,12 +40,12 @@ export class JWTService implements IJWTService {
   get options() {
     return {
       accessOptions: {
-        secret: this.config.get("ACCESS_TOKEN_SECRET"),
-        expiresIn: parseInt(this.config.get("ACCESS_TOKEN_EXP")),
+        secret: this.config.get('ACCESS_TOKEN_SECRET'),
+        expiresIn: parseInt(this.config.get('ACCESS_TOKEN_EXP')),
       },
       refreshOptions: {
-        secret: this.config.get("REFRESH_TOKEN_SECRET"),
-        expiresIn: parseInt(this.config.get("REFRESH_TOKEN_EXP")),
+        secret: this.config.get('REFRESH_TOKEN_SECRET'),
+        expiresIn: parseInt(this.config.get('REFRESH_TOKEN_EXP')),
       },
     };
   }
@@ -58,11 +58,11 @@ export class JWTService implements IJWTService {
 
   normalizeJWTError(error: unknown): string {
     const errorMap = new Map([
-      [TokenExpiredError, "Token Expired"],
-      [JsonWebTokenError, "Invalid token"],
+      [TokenExpiredError, 'Token Expired'],
+      [JsonWebTokenError, 'Invalid token'],
     ]);
 
-    return errorMap.get(error.constructor as ErrorConstructor) ?? "Invalid token";
+    return errorMap.get(error.constructor as ErrorConstructor) ?? 'Invalid token';
   }
   decodeToken(token: Token) {
     return decode(token);

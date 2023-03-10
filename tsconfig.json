@@ -29,6 +29,6 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "alwaysStrict": true,
-    "typeRoots" : ["node_modules/@types", "client/types"]
+    "typeRoots": ["node_modules/@types", "client/types"]
   }
 }

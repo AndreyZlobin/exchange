@@ -1,1 +1,1 @@
-export { createValidateSchema, ValidateInput } from "./validateInput";
+export { createValidateSchema, ValidateInput } from './validateInput';

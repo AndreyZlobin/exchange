@@ -1,4 +1,4 @@
-import { injectable } from "inversify";
+import { injectable } from 'inversify';
 
 import {
   dateFormat,
@@ -13,7 +13,7 @@ import {
   setCurrentHoursToDate,
   subDays,
   subYears,
-} from "./utils";
+} from './utils';
 
 type IDateToString = (date: DateType) => string;
 

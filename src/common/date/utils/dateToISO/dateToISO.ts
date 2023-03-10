@@ -1,4 +1,4 @@
-import { DateType } from "../types";
+import { DateType } from '../types';
 
 type DateToISOStringOptions = {
   withTime?: boolean;
@@ -16,5 +16,5 @@ export const dateToISOString: IDateToISOString = (date, { withTime, withLocalOff
 
   const textTimeZoneOptimizedDate = privateDate.toISOString();
 
-  return withTime ? textTimeZoneOptimizedDate : textTimeZoneOptimizedDate.replace(/T.*Z/, "");
+  return withTime ? textTimeZoneOptimizedDate : textTimeZoneOptimizedDate.replace(/T.*Z/, '');
 };

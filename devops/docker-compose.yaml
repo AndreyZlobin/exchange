@@ -11,11 +11,11 @@ services:
     environment:
       - REDIS_REPLICATION_MODE=master
     ports:
-      - "6380:6379"
+      - '6380:6379'
     deploy:
       resources:
         limits:
-          cpus: "1"
+          cpus: '1'
           memory: 512M
 
   mongo:
@@ -33,4 +33,4 @@ services:
       MONGO_REPLICA_PORT: 27018
     ports:
       - '27018:27018'
-    command: ["mongod", "--bind_ip_all", "--port", "27017", "--auth",]
+    command: ['mongod', '--bind_ip_all', '--port', '27017', '--auth']

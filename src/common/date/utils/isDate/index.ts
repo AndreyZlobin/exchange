@@ -1,1 +1,1 @@
-export * from "./isDate";
+export * from './isDate';

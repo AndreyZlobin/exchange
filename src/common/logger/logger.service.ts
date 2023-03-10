@@ -1,5 +1,5 @@
-import { Injectable, LoggerService as NestLoggerService } from "@nestjs/common";
-import { ILogObj, Logger } from "tslog";
+import { Injectable, LoggerService as NestLoggerService } from '@nestjs/common';
+import { ILogObj, Logger } from 'tslog';
 export interface ILogger {
   log: (...args: unknown[]) => void;
   error: (...args: unknown[]) => void;

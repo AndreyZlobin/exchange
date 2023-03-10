@@ -1,2 +1,2 @@
-export * from "./jwt.module";
-export { IJWTService, JWTService } from "./jwt.service";
+export * from './jwt.module';
+export { IJWTService, JWTService } from './jwt.service';

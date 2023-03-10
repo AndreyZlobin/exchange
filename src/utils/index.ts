@@ -10,4 +10,4 @@ export type ExcludePrimitives<T> = Pick<
   { [K in keyof T]: T[K] extends Primitive ? never : K }[keyof T]
 >;
 
-export * from "./resolve-path";
+export * from './resolve-path';
