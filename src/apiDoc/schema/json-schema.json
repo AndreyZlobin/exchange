@@ -8,16 +8,32 @@
           "type": "string"
         },
         "action": {
-          "type": ["string", "null"]
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "source": {
-          "type": ["string", "null"]
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "data": {
-          "type": ["number", "string", "boolean", "object", "array", "null"]
+          "type": [
+            "number",
+            "string",
+            "boolean",
+            "object",
+            "array",
+            "null"
+          ]
         },
         "created": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "format": "date-time"
         }
       }
@@ -32,50 +48,107 @@
           "type": "string"
         },
         "order_id": {
-          "type": ["integer", "null"]
+          "type": [
+            "integer",
+            "null"
+          ]
         },
         "order_status": {
-          "type": ["string", "null"]
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "deal_id": {
-          "type": ["integer", "null"]
+          "type": [
+            "integer",
+            "null"
+          ]
         },
         "fiat_amount": {
-          "type": ["number", "null"]
+          "type": [
+            "number",
+            "null"
+          ]
         },
         "fiat_amount_order": {
-          "type": ["number", "null"]
+          "type": [
+            "number",
+            "null"
+          ]
         },
         "status": {
-          "type": ["string", "null"]
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "error": {
-          "type": ["string", "null"]
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "provider": {
-          "type": ["string", "null"]
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "client_name": {
-          "type": ["string", "null"]
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "handler": {
-          "type": ["string", "null"]
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "payment_system": {
-          "type": ["string", "null"]
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "created": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "format": "date-time"
         },
         "images": {
-          "type": ["number", "string", "boolean", "object", "array", "null"]
+          "type": [
+            "number",
+            "string",
+            "boolean",
+            "object",
+            "array",
+            "null"
+          ]
         },
         "savedImages": {
-          "type": ["number", "string", "boolean", "object", "array", "null"]
+          "type": [
+            "number",
+            "string",
+            "boolean",
+            "object",
+            "array",
+            "null"
+          ]
         },
         "urls": {
-          "type": ["number", "string", "boolean", "object", "array", "null"]
+          "type": [
+            "number",
+            "string",
+            "boolean",
+            "object",
+            "array",
+            "null"
+          ]
         }
       }
     },
@@ -87,11 +160,21 @@
         },
         "name": {
           "type": "string",
-          "enum": ["card", "sim", "qiwi", "yandex"]
+          "enum": [
+            "card",
+            "sim",
+            "qiwi",
+            "yandex"
+          ]
         },
         "type": {
           "type": "string",
-          "enum": ["card", "sim", "qiwi", "yandex"],
+          "enum": [
+            "card",
+            "sim",
+            "qiwi",
+            "yandex"
+          ],
           "description": "Все допустимые системы оплаты"
         },
         "min": {
@@ -137,35 +220,36 @@
         "id": {
           "type": "string"
         },
+        "provider": {
+          "type": "string"
+        },
         "status": {
           "type": "string",
           "default": "new",
           "enum": [
             "new",
             "dealAdded",
-            "dealCanceled",
-            "dealCanceledMarkedPaid",
             "requisiteAdded",
+            "dealCanceled",
             "markedPaid",
+            "dealCanceledMarkedPaid",
             "finished",
             "canceled",
             "claim",
-            "renew",
-            "waitFinishTx",
-            "finishError"
+            "renew"
           ]
         },
-        "fiatAmount": {
-          "type": "integer",
-          "description": "Количество фиатной валюты, которое необходимо купить/продать"
+        "amount": {
+          "$ref": "#/definitions/OrderRate"
         },
-        "cryptoAmount": {
-          "type": "integer",
-          "description": "Rоличество криптовалюты, которое необходимо купить/продать"
+        "rate": {
+          "$ref": "#/definitions/OrderRate"
+        },
+        "notes": {
+          "$ref": "#/definitions/Notes"
         },
         "type": {
-          "type": "string",
-          "description": "Тип заказа (покупка/продажа)"
+          "type": "string"
         },
         "statusHistory": {
           "type": "array",
@@ -180,15 +264,24 @@
           "$ref": "#/definitions/PaymentSystem"
         },
         "created": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "format": "date-time"
         },
         "deleted": {
-          "type": ["boolean", "null"],
+          "type": [
+            "boolean",
+            "null"
+          ],
           "default": false
         },
         "currencyType": {
           "$ref": "#/definitions/Currency"
+        },
+        "values": {
+          "$ref": "#/definitions/OrderValues"
         }
       }
     },
@@ -222,11 +315,17 @@
           "$ref": "#/definitions/User"
         },
         "deleted": {
-          "type": ["boolean", "null"],
+          "type": [
+            "boolean",
+            "null"
+          ],
           "default": false
         },
         "createdAt": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "format": "date-time"
         }
       }
@@ -241,7 +340,10 @@
           "$ref": "#/definitions/Systems"
         },
         "deleted": {
-          "type": ["boolean", "null"],
+          "type": [
+            "boolean",
+            "null"
+          ],
           "default": false
         }
       }
@@ -254,14 +356,20 @@
         },
         "name": {
           "type": "string",
-          "enum": ["Tether", "BTC"]
+          "enum": [
+            "Tether",
+            "BTC"
+          ]
         },
         "title": {
           "type": "string"
         },
         "type": {
           "type": "string",
-          "enum": ["Cryptocurrency", "Fiat"]
+          "enum": [
+            "Cryptocurrency",
+            "Fiat"
+          ]
         },
         "order": {
           "type": "array",
@@ -278,48 +386,81 @@
           "type": "string"
         },
         "active": {
-          "type": ["boolean", "null"],
+          "type": [
+            "boolean",
+            "null"
+          ],
           "default": true,
           "description": "Активен ли аккаунт, если нет, то нет доступ ко всему функционалу запрещен"
         },
         "cryptoType": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "default": "BTC",
-          "enum": ["Tether", "BTC"]
+          "enum": [
+            "Tether",
+            "BTC"
+          ]
         },
         "percentMethod": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "default": "hd",
-          "enum": ["hd", "binance"],
+          "enum": [
+            "hd",
+            "binance"
+          ],
           "description": "Метод рассчета"
         },
         "canFinishOrders": {
-          "type": ["boolean", "null"],
+          "type": [
+            "boolean",
+            "null"
+          ],
           "default": false,
           "description": "Может ли завершать заявки,  доверенные пользователи с ролью 'provider' способны сами закрывать свои заявки по мере надобности"
         },
         "canOpenOrdersViaPanel": {
-          "type": ["boolean", "null"],
+          "type": [
+            "boolean",
+            "null"
+          ],
           "default": false,
           "description": "Может добавлять заявки с панели"
         },
         "canViewDirectBalance": {
-          "type": ["boolean", "null"],
+          "type": [
+            "boolean",
+            "null"
+          ],
           "default": false,
           "description": "????"
         },
         "sendTxToBlockchain": {
-          "type": ["boolean", "null"],
+          "type": [
+            "boolean",
+            "null"
+          ],
           "default": false,
           "description": "Отправлять транзакцию в сеть по завершении"
         },
         "clientMaxEqualSumOrdersOnPeriod": {
-          "type": ["integer", "null"],
+          "type": [
+            "integer",
+            "null"
+          ],
           "default": 0,
           "description": "Заявки от клиента с одной суммой за период"
         },
         "clientMaxEqualSumOrdersTime": {
-          "type": ["integer", "null"],
+          "type": [
+            "integer",
+            "null"
+          ],
           "default": 0,
           "description": "Период проверки одной суммы от клиента (мин.)"
         },
@@ -329,7 +470,10 @@
           "description": "fiatAmount | btcAmount"
         },
         "broker": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "default": ""
         },
         "user": {
@@ -352,7 +496,14 @@
         "role": {
           "type": "string",
           "default": "broker",
-          "enum": ["superadmin", "admin", "broker", "provider", "seller", "support"]
+          "enum": [
+            "superadmin",
+            "admin",
+            "broker",
+            "provider",
+            "seller",
+            "support"
+          ]
         },
         "orders": {
           "type": "array",
@@ -380,12 +531,26 @@
             }
           ]
         },
+        "isWork": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": false,
+          "description": "Готовность обрабатывать трафик"
+        },
         "createdAt": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "format": "date-time"
         },
         "deleted": {
-          "type": ["boolean", "null"],
+          "type": [
+            "boolean",
+            "null"
+          ],
           "default": false
         }
       }
@@ -395,7 +560,12 @@
       "properties": {
         "type": {
           "type": "string",
-          "enum": ["card", "sim", "qiwi", "yandex"]
+          "enum": [
+            "card",
+            "sim",
+            "qiwi",
+            "yandex"
+          ]
         },
         "min": {
           "type": "integer"
@@ -427,17 +597,70 @@
           "enum": [
             "new",
             "dealAdded",
-            "dealCanceled",
-            "dealCanceledMarkedPaid",
             "requisiteAdded",
+            "dealCanceled",
             "markedPaid",
+            "dealCanceledMarkedPaid",
             "finished",
             "canceled",
             "claim",
-            "renew",
-            "waitFinishTx",
-            "finishError"
+            "renew"
           ]
+        }
+      }
+    },
+    "OrderValues": {
+      "type": "object",
+      "properties": {
+        "crypto_amount_provider": {
+          "type": "integer"
+        },
+        "crypto_amount_deal": {
+          "type": "integer"
+        },
+        "profit": {
+          "type": "integer"
+        }
+      }
+    },
+    "OrderRate": {
+      "type": "object",
+      "properties": {
+        "fiat": {
+          "type": "integer"
+        },
+        "crypto": {
+          "type": "integer"
+        }
+      }
+    },
+    "OrderAmount": {
+      "type": "object",
+      "properties": {
+        "deal": {
+          "type": "integer"
+        },
+        "provider": {
+          "type": "integer"
+        }
+      }
+    },
+    "Notes": {
+      "type": "object",
+      "properties": {
+        "isPaid": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": false
+        },
+        "isProblem": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": false
         }
       }
     },

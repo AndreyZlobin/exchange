@@ -1,4 +1,5 @@
 /node_nodules
 /dist
 /client
+/prisma
 .eslintrc

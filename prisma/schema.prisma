@@ -165,14 +165,32 @@ type OrderValues {
   profit                 Int
 }
 
+type OrderRate {
+  /// Количество фиатной валюты, которое необходимо купить/продать
+  fiat   Int
+  /// Rоличество криптовалюты, которое необходимо купить/продать
+  crypto Int
+}
+
+type OrderAmount {
+  deal     Int
+  provider Int
+}
+
+type Notes {
+  /// Если оплачена
+  isPaid    Boolean? @default(false)
+  /// Если проблемная
+  isProblem Boolean? @default(false)
+}
+
 model Order {
   id              String               @id @default(auto()) @map("_id") @db.ObjectId
+  provider        String
   status          OrderStatus          @default(new)
-  /// Количество фиатной валюты, которое необходимо купить/продать
-  fiatAmount      Int
-  /// Rоличество криптовалюты, которое необходимо купить/продать
-  cryptoAmount    Int
-  /// Тип заказа (покупка/продажа)
+  amount          OrderRate
+  rate            OrderRate
+  notes           Notes
   type            String
   // История статусов заказа
   statusHistory   OrderStatusHistory[]
@@ -186,37 +204,6 @@ model Order {
   currencyType    Currency             @relation(fields: [currencyTypeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   currencyTypeId  String               @db.ObjectId
   values          OrderValues
-  // id                     String   @id @default(auto()) @map("_id") @db.ObjectId
-  // uuid                   String   @default(uuid())
-  // custom_id              Int
-  // provider               String
-  // status                 String?
-  // fiat_amount            Int?
-  // payment_system         String?
-  // crypto_type            String?
-  // rate_provider          Float?
-  // crypto_amount_provider Float?
-  // rate_deal              Float?
-  // crypto_amount_deal     Float?
-  // crypto_amount_broker   Float?
-  // profit                 Float?
-  // deal_id                Int?
-  // callback_urls          Json?
-  // requisites             String?
-  // broker                 String?
-  // client_name            String?
-  // created                Float?
-  // updated                Float?
-  // timeout                Float?
-  // status_history         Json?
-  // notes                  Json?
-  // finish_wallet          String?
-  // finish_tx_after        Float?
-  // finished_by            String?
-  // finish_error           String?
-  // cancel_reason          String?
-  // max_claims_attempts    Boolean?
-  // handler                String?
 }
 
 model Wallet {
@@ -291,10 +278,10 @@ model User {
   orders    Order[]
   wallet    Wallet?
   settings  UserSettings?
+  /// Готовность обрабатывать трафик
+  isWork    Boolean?      @default(false)
   createdAt DateTime?     @default(now())
   deleted   Boolean?      @default(false)
-  // /// Готовность обрабатывать трафик
-  // isWork          Boolean    @default(false)
 }
 
 enum CryptocurrencyType {
