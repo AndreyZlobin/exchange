@@ -1,11 +1,24 @@
 import { TYPES } from '@DI/types';
-import { Body, Controller, Inject, Injectable, Post } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags, getSchemaPath } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Inject,
+  Injectable,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Context, UserContext } from '@shared/context';
+import { ApiError } from '@shared/exceptions/api.error';
 import { ValidateInput } from '@shared/validators';
 import { IAuthService } from '@src/core/auth/services';
+import { RolesGuard } from '@src/core/roles';
 import { CreateUserDto } from '@src/core/user/dto';
+import { UserEntity } from '@src/core/user/entity';
 
-import { UserLoginDto } from './dto';
+import { LoginResultDto, UserLoginDto } from './dto';
 import { registerSchema } from './validations';
 
 @ApiTags('Auth')
@@ -19,41 +32,52 @@ export class AuthController {
   @ApiResponse({
     status: 201,
     description: 'The record has been successfully created',
-    schema: { $ref: getSchemaPath('User') },
+    type: UserEntity,
   })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiError.badRequest()
+  @ApiError.internalServerError()
+  @UseGuards(RolesGuard)
+  @RolesGuard.Roles(RolesGuard.roles.superadmin, RolesGuard.roles.admin, RolesGuard.roles.provider)
   async registerUser(@Body() userDto: CreateUserDto) {
     return await this.authService.register(userDto);
   }
 
   @Post('/login')
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Логин', description: 'Вернет пару токенов' })
-  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiResponse({ status: HttpStatus.OK, type: LoginResultDto })
+  @ApiError.badRequest()
+  @ApiError.internalServerError()
+  @ApiHeader({ name: 'token' })
   async login(@Body() userLoginDto: UserLoginDto) {
     return await this.authService.login(userLoginDto);
   }
 
   @Post('/reset_password')
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Восстановление пароля' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiError.badRequest()
+  @ApiError.internalServerError()
   async resetPassword(@Body() userDto: CreateUserDto) {
     return await this.authService.register(userDto);
   }
 
   @Post('/logout')
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Выход пользователя из системы' })
   @ApiBearerAuth()
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 400, description: 'Bad request' })
-  async logout() {
-    return true;
+  @ApiError.badRequest()
+  @ApiError.unauthorized()
+  @ApiError.internalServerError()
+  async logout(@Context() context: UserContext) {
+    return this.authService.logout(context.userId);
   }
   @Post('/refresh')
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'обновление токена' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiError.badRequest()
+  @ApiError.unauthorized()
+  @ApiError.internalServerError()
   async refresh(@Body() { refreshToken }: { refreshToken: string }) {
     return await this.authService.refresh(refreshToken);
   }

@@ -1,13 +1,18 @@
 import { IBcryptService } from '@common/auth';
+import { ApiProperty } from '@nestjs/swagger';
 import { Roles } from '@src/core/roles/constants';
+import { UserSettingsEntity } from '@src/core/user/entity/userSettings.entity';
 
-import { UserSettings, UserWithExcludedFields } from '../types';
+import { UserWithExcludedFields } from '../types';
 
 export class UserEntity implements UserWithExcludedFields {
+  @ApiProperty()
   public readonly name: string;
+  @ApiProperty()
   public readonly role: Roles;
   public readonly password: string;
-  public readonly settings: UserSettings;
+  @ApiProperty()
+  public readonly settings: UserSettingsEntity;
 
   constructor(
     private readonly data: UserWithExcludedFields,

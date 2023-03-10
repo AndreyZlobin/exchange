@@ -37,7 +37,6 @@ export class AuthenticationMiddleware implements NestMiddleware {
         this.jwtService.verifyToken(token, this.jwtService.options.accessOptions.secret) ?? {};
 
       if (!decodedToken.data) return next();
-
       const cache = await this.authCacheService.getTokenFromCache(
         this.authCacheService.getTokenCacheName('access', decodedToken.data),
       );

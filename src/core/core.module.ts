@@ -5,13 +5,13 @@ import { HttpModule } from '@common/http';
 import { LoggerModule } from '@common/logger';
 import { TYPES } from '@DI/types';
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
-import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { UserContext } from '@shared/context';
 import { UserInterceptor } from '@shared/interceptors';
 import { AuthenticationMiddleware } from '@shared/middleware';
 import { AuthCacheService } from '@src/core/auth/cache/cache.service';
 import { IntegrationModule } from '@src/core/integration/integration.module';
-import { RolesGuard } from '@src/core/roles';
+import { RolesGuard, SelfWithRoleGuard } from '@src/core/roles';
 import { PrismaModule } from '@src/database/prisma/prisma.module';
 import { RedisModule } from '@src/database/redis/redis.module';
 
@@ -24,7 +24,8 @@ import { UserModule } from './user/user.module';
     UserContext,
     { provide: TYPES.auth.AuthCacheService, useClass: AuthCacheService },
     { provide: APP_INTERCEPTOR, useClass: UserInterceptor },
-    { provide: APP_GUARD, useClass: RolesGuard },
+    SelfWithRoleGuard,
+    RolesGuard,
     AuthenticationMiddleware,
   ],
   imports: [
@@ -54,6 +55,7 @@ export class CoreModule implements NestModule {
       { path: 'auth/refresh', method: RequestMethod.POST },
       // user
       { path: 'user/all', method: RequestMethod.GET },
+      { path: 'user/edit/*', method: RequestMethod.PUT },
       { path: 'user/profile', method: RequestMethod.GET },
       // user
       { path: 'order/*', method: RequestMethod.ALL },

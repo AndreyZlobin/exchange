@@ -15,6 +15,7 @@ export interface IAuthService {
   login: (loginDto: UserLoginDto) => Promise<{ accessToken: string; refreshToken: string }>;
   register: (registerDto: CreateUserDto) => Promise<{ id: string } | never>;
   refresh: (token: string) => Promise<{ accessToken: string; refreshToken: string } | never>;
+  logout: (userId: string) => Promise<boolean>;
 }
 
 @Injectable()
@@ -30,11 +31,6 @@ export class AuthService implements IAuthService {
 
   async register({ name, password, role }: CreateUserDto) {
     return this.userService.create({ name, password, role });
-    // return this.authRepository.register({
-    //   name,
-    //   password: await this.bcryptService.hash(password),
-    //   role: [],
-    // });
   }
 
   async refresh(refreshToken: string) {
@@ -94,25 +90,9 @@ export class AuthService implements IAuthService {
   }
 
   public async logout(userId: string): Promise<boolean> {
+    if (!userId) {
+      throw new HttpException('Ошибка выхода из аккаунта', HttpStatus.BAD_REQUEST);
+    }
     return this.authCacheService.removeTokens(userId);
   }
-
-  // async login({ email, password }: UserLoginDto) {
-  //   const user = await this.userRepository.findUser({ name: email });
-  //
-  //   if (!user) {
-  //     throw new HttpException(`User with email ${email} not found`, 404);
-  //   }
-  //
-  //   const isPasswordValid = await this.bcryptService.compare(password, user.password);
-  //
-  //   if (!isPasswordValid) {
-  //     throw new HttpException("Incorrect password", HttpStatus.BAD_REQUEST);
-  //   }
-  //   const tokens = this.jwtService.generateTokens(user.id, user.id);
-  //
-  //   await this.authCacheService.setTokensToCache(user.id, tokens.accessToken, tokens.refreshToken);
-  //
-  //   return tokens;
-  // }
 }

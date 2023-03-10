@@ -29,12 +29,14 @@ export class UserRepository implements IUserRepository {
       include: { settings: true },
     });
   }
-  async findAll(): Promise<UserWithoutPassword[]> {
+  async findAll() {
     return this.prismaService.user.findMany({
       select: this.prismaService.getSelectedField<UserWithoutPassword>([
         'id',
         'name',
+        'isWork',
         'role',
+        'settings',
         'deleted',
       ]),
     });

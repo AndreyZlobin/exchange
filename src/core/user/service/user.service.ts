@@ -50,12 +50,9 @@ export class UserService implements IUserService {
     const isUserExist = await this.checkIsUserExist(name);
 
     if (isUserExist) {
-      const errorMessage =
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        currentRole === 'provider'
-          ? 'Ошибка создания пользователя'
-          : `Пользователь с логином ${name} уже существует`;
+      const errorMessage = `Пользователь с логином ${name} уже существует`;
+      // currentRole === 'provider'
+      //   ? 'Ошибка создания пользователя'
 
       throw new HttpException(errorMessage, HttpStatus.BAD_REQUEST);
     }

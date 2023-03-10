@@ -135,23 +135,26 @@ type System {
 }
 
 model PaymentSystem {
-  id               String     @id @default(auto()) @map("_id") @db.ObjectId
-  name             SystemEnum
+  id                       String                  @id @default(auto()) @map("_id") @db.ObjectId
+  name                     SystemEnum
   /// Все допустимые системы оплаты
-  type             SystemEnum
+  type                     SystemEnum
   /// Минимальные и максимальные суммы заявок по платежным системам
-  min              Int
+  min                      Int
   /// Минимальные и максимальные суммы заявок по платежным системам
-  max              Int
+  max                      Int
   /// Комиссии посредника (если таковой имеется)
-  brokerCommission Int
+  brokerCommission         Int
   /// Комиссии по платежным системам
-  systemCommission Int
+  systemCommission         Int
   /// Доступ к созданию заявок по платежным системам
-  authToken        String     @default("Не установлен")
-  apiKey           String     @default("")
-  isAllow          Boolean    @default(false)
-  orders           Order[]
+  authToken                String                  @default("Не установлен")
+  apiKey                   String                  @default("")
+  isAllow                  Boolean                 @default(false)
+  user                     User?                   @relation(fields: [userId], references: [id])
+  userId                   String?                 @db.ObjectId
+  paymentSystemBlacklist   PaymentSystemBlacklist? @relation(fields: [paymentSystemBlacklistId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  paymentSystemBlacklistId String?                 @db.ObjectId
 }
 
 type OrderStatusHistory {
@@ -185,25 +188,23 @@ type Notes {
 }
 
 model Order {
-  id              String               @id @default(auto()) @map("_id") @db.ObjectId
-  provider        String
-  status          OrderStatus          @default(new)
-  amount          OrderRate
-  rate            OrderRate
-  notes           Notes
-  type            String
+  id             String               @id @default(auto()) @map("_id") @db.ObjectId
+  provider       String
+  status         OrderStatus          @default(new)
+  amount         OrderRate
+  rate           OrderRate
+  notes          Notes
+  type           String
   // История статусов заказа
-  statusHistory   OrderStatusHistory[]
-  user            User                 @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId          String               @unique @db.ObjectId
-  paymentSystem   PaymentSystem        @relation(fields: [paymentSystemId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  paymentSystemId String               @db.ObjectId
-  created         DateTime?            @default(now())
-  deleted         Boolean?             @default(false)
+  statusHistory  OrderStatusHistory[]
+  user           User                 @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId         String               @unique @db.ObjectId
+  created        DateTime?            @default(now())
+  deleted        Boolean?             @default(false)
   /// Конкретный тип криптовалюты
-  currencyType    Currency             @relation(fields: [currencyTypeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  currencyTypeId  String               @db.ObjectId
-  values          OrderValues
+  currencyType   Currency             @relation(fields: [currencyTypeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  currencyTypeId String               @db.ObjectId
+  values         OrderValues
 }
 
 model Wallet {
@@ -271,17 +272,40 @@ model UserSettings {
 }
 
 model User {
-  id        String        @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  password  String
-  role      RoleEnum      @default(broker)
-  orders    Order[]
-  wallet    Wallet?
-  settings  UserSettings?
+  id              String          @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  password        String
+  role            RoleEnum        @default(broker)
+  orders          Order[]
+  paymentSystems  PaymentSystem[]
+  wallet          Wallet?
+  settings        UserSettings?
   /// Готовность обрабатывать трафик
-  isWork    Boolean?      @default(false)
-  createdAt DateTime?     @default(now())
-  deleted   Boolean?      @default(false)
+  isWork          Boolean?        @default(false)
+  createdAt       DateTime?       @default(now())
+  deleted         Boolean?        @default(false)
+  // blacklist      UserBlacklist?  @relation(fields: [blacklistId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  // blacklistId    String?         @db.ObjectId
+  userBlacklist   UserBlacklist?  @relation(fields: [userBlacklistId], references: [id])
+  userBlacklistId String?         @db.ObjectId
+}
+
+model UserBlacklist {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  reason            String?
+  blacklistedUserId Int
+  createdAt         DateTime @default(now())
+  user              User[]
+  userId            String   @db.ObjectId
+}
+
+model PaymentSystemBlacklist {
+  id                String          @id @default(auto()) @map("_id") @db.ObjectId
+  reason            String?
+  blacklistedUserId Int
+  createdAt         DateTime        @default(now())
+  paymentSystem     PaymentSystem[]
+  paymentSystemId   String          @db.ObjectId
 }
 
 enum CryptocurrencyType {

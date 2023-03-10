@@ -2,7 +2,7 @@ import { PaymentSystem, SystemEnum } from '@prisma/client';
 
 import { prisma } from './client';
 
-export const paymentSystemSeeders: Array<Omit<PaymentSystem, 'id'>> = [
+export const paymentSystemSeeders: Array<Omit<PaymentSystem, 'id' | 'paymentSystemBlacklistId' | 'userId'>> = [
   {
     name: SystemEnum.card,
     type: SystemEnum.card,
@@ -49,5 +49,6 @@ export const paymentSystemSeeders: Array<Omit<PaymentSystem, 'id'>> = [
   },
 ];
 
-export const createPaymentSystem = () =>
+export const createPaymentSystem = () => {
   prisma.$transaction(paymentSystemSeeders.map((data) => prisma.paymentSystem.create({ data })));
+};

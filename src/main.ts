@@ -106,11 +106,7 @@ class Bootstrap {
   async start() {
     try {
       this.app = await NestFactory.create(AppModule);
-      this.app.use(
-        helmet({
-          contentSecurityPolicy: false,
-        }),
-      );
+      this.app.use(helmet({ contentSecurityPolicy: false }));
       const prismaService = this.app.get<IPrismaService>(TYPES.DB.PrismaService);
       const redisService = this.app.get<IRedisService>(TYPES.DB.RedisService);
       const prefix = this.config.get('API_VERSION');
@@ -121,7 +117,6 @@ class Bootstrap {
       await Promise.all([prismaService.$connect(), redisService.$connect()]);
       await prismaService.enableShutdownHooks(this.app);
 
-      this.swaggerInit();
       // const garantexService = this.app.get<IGarantexService>(TYPES.integration.GarantexService);
       /*      /!**
        * @description
@@ -161,6 +156,7 @@ class Bootstrap {
       console.log({ btc: user.getQuantityOfCurrency(btcPrice, 100_000, 3) });
       console.log({ usd: user.getQuantityOfCurrency(usdtPrice, 300, 1) });*/
       await this.ssrInit();
+      this.swaggerInit();
       await this.app.listen(this.port);
       this.logger.log(
         `[Server]: Server was started on PORT ${this.port} | http://localhost:${this.port}`,

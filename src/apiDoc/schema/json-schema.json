@@ -206,11 +206,25 @@
           "type": "boolean",
           "default": false
         },
-        "orders": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Order"
-          }
+        "user": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "paymentSystemBlacklist": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/PaymentSystemBlacklist"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       }
     },
@@ -259,9 +273,6 @@
         },
         "user": {
           "$ref": "#/definitions/User"
-        },
-        "paymentSystem": {
-          "$ref": "#/definitions/PaymentSystem"
         },
         "created": {
           "type": [
@@ -511,6 +522,12 @@
             "$ref": "#/definitions/Order"
           }
         },
+        "paymentSystems": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PaymentSystem"
+          }
+        },
         "wallet": {
           "anyOf": [
             {
@@ -552,6 +569,76 @@
             "null"
           ],
           "default": false
+        },
+        "userBlacklist": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/UserBlacklist"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "UserBlacklist": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "blacklistedUserId": {
+          "type": "integer"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "user": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          }
+        },
+        "userId": {
+          "type": "string"
+        }
+      }
+    },
+    "PaymentSystemBlacklist": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "blacklistedUserId": {
+          "type": "integer"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "paymentSystem": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PaymentSystem"
+          }
+        },
+        "paymentSystemId": {
+          "type": "string"
         }
       }
     },
@@ -710,6 +797,12 @@
     },
     "user": {
       "$ref": "#/definitions/User"
+    },
+    "userBlacklist": {
+      "$ref": "#/definitions/UserBlacklist"
+    },
+    "paymentSystemBlacklist": {
+      "$ref": "#/definitions/PaymentSystemBlacklist"
     }
   }
 }
