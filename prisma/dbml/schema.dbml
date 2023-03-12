@@ -103,6 +103,7 @@ Table UserSettings {
   clientMaxEqualSumOrdersOnPeriod Int [default: 0, note: 'Заявки от клиента с одной суммой за период']
   clientMaxEqualSumOrdersTime Int [default: 0, note: 'Период проверки одной суммы от клиента (мин.)']
   clientMaxEqualSumOrdersMode String [not null, default: 'fiatAmount', note: 'fiatAmount | btcAmount']
+  isWork Boolean [default: false, note: 'Готовность обрабатывать трафик']
   broker String [default: '']
   userId String [unique, not null]
   user User [not null]
@@ -117,7 +118,6 @@ Table User {
   paymentSystems PaymentSystem [not null]
   wallet Wallet
   settings UserSettings
-  isWork Boolean [default: false, note: 'Готовность обрабатывать трафик']
   createdAt DateTime [default: `now()`]
   deleted Boolean [default: false]
   userBlacklist UserBlacklist

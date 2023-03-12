@@ -5,13 +5,12 @@ import { HttpException } from '@shared/exceptions';
 import { PaymentSystemEntity } from '@src/core/paymentSystem/entity/paymentSystem.entity';
 import { ROLES } from '@src/core/roles/constants';
 
-import { CreateUserDto, ResultUserDto, UserDto } from '../dto';
+import { CreateUserDto, UserDto, UserWithPasswordDto } from '../dto';
 import { UserEntity, UserSettingsEntity } from '../entity';
 import { IUserRepository } from '../repository';
-import { UserWithoutPassword } from '../types';
 
 export interface IUserService {
-  findByName(name: string): Promise<ResultUserDto | null>;
+  findByName(name: string): Promise<UserWithPasswordDto | null>;
   getUserProfile(): boolean;
   create(user: CreateUserDto): Promise<UserDto>;
   getAll(): Promise<UserDto[]>;
@@ -32,7 +31,7 @@ export class UserService implements IUserService {
     return this.userRepository.findUser({ name });
   }
 
-  async getAll(): Promise<UserWithoutPassword[]> {
+  async getAll(): Promise<UserDto[]> {
     return this.userRepository.findAll();
   }
 
@@ -40,7 +39,7 @@ export class UserService implements IUserService {
     return Boolean(await this.findByName(name));
   }
 
-  async create({ name, password, role }: CreateUserDto): Promise<UserWithoutPassword> {
+  async create({ name, password, role }: CreateUserDto): Promise<UserDto> {
     // req.user.role
     const currentRole = 'admin';
 

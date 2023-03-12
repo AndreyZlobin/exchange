@@ -36,7 +36,7 @@
         "./typings"
       ],
       "types": [
-        "vite/client",
+        "vite/client"
       ]
     },
     "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx",

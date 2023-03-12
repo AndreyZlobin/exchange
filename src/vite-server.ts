@@ -16,10 +16,20 @@ export async function getViteServer({ force } = { force: false }) {
   if (!viteDevServer || force) {
     viteDevServer = await createServer({
       publicDir: resolveClientPath('public'),
-      server: { middlewareMode: true },
+      server: {
+        middlewareMode: true,
+        fs: {
+          allow: ['..'],
+        },
+      },
       appType: 'custom',
+      ssr: {
+        format: 'cjs',
+        noExternal: ['@astral/*'],
+      },
       root: path.resolve(process.cwd() + '/client'),
-      configFile: path.resolve(process.cwd() + '/client/vite.config.ts'),
+      configFile: path.resolve(process.cwd(), 'vite.config.ts'),
+      legacy: { buildSsrCjsExternalHeuristics: true },
     });
   }
 

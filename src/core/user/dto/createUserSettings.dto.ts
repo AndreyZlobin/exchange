@@ -7,6 +7,8 @@ export class CreateUserSettingsDto implements UserSettingsWithExcludedFields {
   @ApiPropertyOptional()
   active: boolean | null;
   @ApiPropertyOptional()
+  isWork: boolean | null;
+  @ApiPropertyOptional()
   broker: string | null;
   @ApiPropertyOptional()
   canFinishOrders: boolean | null;

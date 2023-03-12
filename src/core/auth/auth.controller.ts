@@ -13,12 +13,12 @@ import { ApiBearerAuth, ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@n
 import { Context, UserContext } from '@shared/context';
 import { ApiError } from '@shared/exceptions/api.error';
 import { ValidateInput } from '@shared/validators';
-import { IAuthService } from '@src/core/auth/services';
-import { RolesGuard } from '@src/core/roles';
 import { CreateUserDto } from '@src/core/user/dto';
 import { UserEntity } from '@src/core/user/entity';
 
+import { RolesGuard } from '../roles';
 import { LoginResultDto, UserLoginDto } from './dto';
+import { IAuthService } from './services';
 import { registerSchema } from './validations';
 
 @ApiTags('Auth')

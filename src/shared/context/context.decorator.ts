@@ -4,7 +4,6 @@ import { UserContext } from '@shared/context/user.context';
 interface RequestWithUserData extends Request {
   userContext: {
     userId: UserContext['userId'];
-    username: UserContext['username'];
   };
 }
 

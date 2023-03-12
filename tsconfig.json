@@ -12,6 +12,14 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "jsx": "preserve",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false,
+    "alwaysStrict": true,
     "paths": {
       "@src/*": ["./src/*"],
       "@modules/*": ["./src/app/modules/*"],
@@ -21,14 +29,6 @@
       "@common/*": ["./src/common/*"],
       "@DI/*": ["./src/DI/*"]
     },
-    "incremental": true,
-    "skipLibCheck": true,
-    "strictNullChecks": false,
-    "noImplicitAny": false,
-    "strictBindCallApply": false,
-    "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false,
-    "alwaysStrict": true,
     "typeRoots": ["node_modules/@types", "client/types"]
   }
 }

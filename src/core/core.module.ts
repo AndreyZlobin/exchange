@@ -56,10 +56,9 @@ export class CoreModule implements NestModule {
       { path: 'auth/logout', method: RequestMethod.POST },
       { path: 'auth/refresh', method: RequestMethod.POST },
       // user
-      { path: 'user/all', method: RequestMethod.GET },
-      { path: 'user/edit/*', method: RequestMethod.PUT },
-      { path: 'user/profile', method: RequestMethod.GET },
-      // user
+      { path: 'user/*', method: RequestMethod.ALL },
+      { path: 'settings/*', method: RequestMethod.ALL },
+      // Order
       { path: 'order/*', method: RequestMethod.ALL },
       // Wallet
       { path: 'wallet/*', method: RequestMethod.ALL },

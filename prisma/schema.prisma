@@ -266,6 +266,8 @@ model UserSettings {
   clientMaxEqualSumOrdersTime     Int?           @default(0)
   /// fiatAmount | btcAmount
   clientMaxEqualSumOrdersMode     String         @default("fiatAmount")
+  /// Готовность обрабатывать трафик
+  isWork                          Boolean?       @default(false)
   broker                          String?        @default("")
   userId                          String         @unique @db.ObjectId
   user                            User           @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -280,8 +282,6 @@ model User {
   paymentSystems  PaymentSystem[]
   wallet          Wallet?
   settings        UserSettings?
-  /// Готовность обрабатывать трафик
-  isWork          Boolean?        @default(false)
   createdAt       DateTime?       @default(now())
   deleted         Boolean?        @default(false)
   // blacklist      UserBlacklist?  @relation(fields: [blacklistId], references: [id], onDelete: Cascade, onUpdate: Cascade)
