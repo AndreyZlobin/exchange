@@ -3,7 +3,6 @@ import { Controller, Get, Inject, Injectable, Put, UseGuards } from '@nestjs/com
 import { ApiHeader, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ApiError } from '@shared/exceptions/api.error';
 import { RolesGuard, SelfWithRoleGuard } from '@src/core/roles';
-import { UserEntity } from '@src/core/user/entity';
 import { IUserService } from '@src/core/user/service';
 
 import { UserDto } from './dto';
@@ -15,7 +14,7 @@ export class UserController {
   constructor(@Inject(TYPES.user.UserService) private readonly userService: IUserService) {}
   @Get('/profile')
   @ApiHeader({ name: 'Authorization' })
-  @ApiOkResponse({ type: UserEntity })
+  @ApiOkResponse({ type: UserDto })
   @ApiError.forbidden()
   @ApiError.unauthorized()
   @ApiError.internalServerError()
@@ -39,7 +38,7 @@ export class UserController {
   @ApiOperation({ summary: 'Получение пользователя по ID' })
   @UseGuards(RolesGuard)
   @ApiHeader({ name: 'Authorization' })
-  @ApiOkResponse({ type: [UserEntity] })
+  @ApiOkResponse({ type: [UserDto] })
   @ApiError.forbidden()
   @ApiError.unauthorized()
   @ApiError.internalServerError()
