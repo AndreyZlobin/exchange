@@ -9,7 +9,7 @@ export type UserSettingsWithExcludedFields = Omit<UserSettings, 'id' | 'userId'>
 export type User = ModelUser & { settings: UserSettings };
 export type UserWithExcludedFields = Omit<
   User,
-  'id' | 'deleted' | 'createdAt' | 'settings' | 'isWork' | 'userBlacklistId'
+  'id' | 'deleted' | 'createdAt' | 'settings' | 'userBlacklistId'
 >;
 export type UserWithoutPassword = Omit<User, 'password'>;
 export type UserWithPaymentSetting = UserWithoutPassword & { paymentSystems: PaymentSystem[] };

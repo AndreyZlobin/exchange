@@ -10,11 +10,53 @@ export interface IPrismaService extends PrismaClient, IDataBaseService {
   getSelectedField<T extends object>(fieldsList: Array<keyof T>): Record<keyof T, true>;
 }
 
+type ChangeLogAction = 'update' | 'updateMany' | 'upsert' | 'delete' | 'deleteMany';
+
 @Injectable()
 export class PrismaService extends PrismaClient implements IPrismaService, OnModuleInit {
   constructor(@Inject(TYPES.services.LoggerService) private readonly logger: ILogger) {
     super();
     this.applyMiddleware();
+  }
+  changeLogMiddleware(
+    modelName: Prisma.ModelName,
+    cb: <Value = unknown>(params: {
+      value: Value;
+      modelName: Prisma.ModelName;
+      action: ChangeLogAction;
+      timestamp: Date;
+    }) => Promise<unknown>,
+  ) {
+    const actionsForWrite: ChangeLogAction[] = [
+      'update',
+      'updateMany',
+      'upsert',
+      'delete',
+      'deleteMany',
+    ];
+
+    this.$use(async (params, next) => {
+      const result = await next(params);
+
+      const isCurrentModel = params.model === modelName;
+
+      if (!isCurrentModel || !actionsForWrite.includes(<ChangeLogAction>params.action)) {
+        return result;
+      }
+
+      if (result?.model?.name && result?.action) {
+        const logEntry = {
+          timestamp: new Date(),
+          modelName: result.model.name,
+          action: result.action,
+          value: result,
+        };
+
+        await cb(logEntry);
+      }
+
+      return result;
+    });
   }
 
   applyMiddleware() {

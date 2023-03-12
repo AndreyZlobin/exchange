@@ -28,6 +28,10 @@ export const TYPES = {
     UserRepository: Symbol.for('UserRepository'),
     UserService: Symbol.for('UserService'),
   },
+  userSettings: {
+    UserSettingRepository: Symbol.for('UserSettingRepository'),
+    UserSettingsService: Symbol.for('UserSettingsService'),
+  },
   order: {
     OrderService: Symbol.for('OrderService'),
     OrderRepository: Symbol.for('OrderRepository'),

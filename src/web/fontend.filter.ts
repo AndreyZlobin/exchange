@@ -1,7 +1,3 @@
-import { Request, Response } from 'express';
-import { ViteDevServer } from 'vite';
-
-export const isProduction = process.env.NODE_ENV === 'production';
 import {
   ArgumentsHost,
   Catch,
@@ -11,7 +7,11 @@ import {
 } from '@nestjs/common';
 import { resolveClientPath, resolveDistPath } from '@src/utils';
 import { getViteServer } from '@src/vite-server';
+import { Request, Response } from 'express';
 import { readFileSync } from 'fs';
+import { ViteDevServer } from 'vite';
+
+export const isProduction = process.env.NODE_ENV === 'production';
 
 const TEMPLATE_PLACEHOLDER = '<!--ssr-outlet-->';
 
@@ -56,7 +56,6 @@ export class FrontendRenderFilter implements ExceptionFilter {
          *    from @vitejs/plugin-react
          * */
         template = await vite.transformIndexHtml(url, template);
-
         /**
          * @description
          * 3. Load the server entry. vite.ssrLoadModule automatically transforms
@@ -77,7 +76,10 @@ export class FrontendRenderFilter implements ExceptionFilter {
       const e = error as Error;
 
       vite && vite.ssrFixStacktrace(e);
-      throw new InternalServerErrorException(error);
+      if (isProduction) {
+        return response.status(500).send('Сервер не доступен');
+      }
+      throw new InternalServerErrorException(e);
     }
   }
 }

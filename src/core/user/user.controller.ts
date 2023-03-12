@@ -1,31 +1,16 @@
 import { TYPES } from '@DI/types';
-import { Controller, Delete, Get, Inject, Injectable, Post, Put, UseGuards } from '@nestjs/common';
+import { Controller, Get, Inject, Injectable, Put, UseGuards } from '@nestjs/common';
 import { ApiHeader, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ApiError } from '@shared/exceptions/api.error';
-import { createValidateSchema, ValidateInput } from '@shared/validators';
 import { RolesGuard, SelfWithRoleGuard } from '@src/core/roles';
 import { UserEntity } from '@src/core/user/entity';
 import { IUserService } from '@src/core/user/service';
-import { object, string } from 'yup';
 
 import { UserDto } from './dto';
 
-const t = createValidateSchema({
-  body: object({
-    email: string().email().required('Email is required field'),
-    password: string()
-      .min(6, { min: 'Password must be greater 6 symbols' })
-      .max(24, { max: 'Password must be less 24 symbols' })
-      .required(),
-  }),
-  query: object({
-    test: string().max(1),
-  }),
-});
-
 @Injectable()
 @ApiTags('User')
-@Controller('users')
+@Controller('user')
 export class UserController {
   constructor(@Inject(TYPES.user.UserService) private readonly userService: IUserService) {}
   @Get('/profile')
@@ -34,12 +19,11 @@ export class UserController {
   @ApiError.forbidden()
   @ApiError.unauthorized()
   @ApiError.internalServerError()
-  @ValidateInput(t)
   async getUserProfile() {
     return this.userService.getUserProfile();
   }
 
-  @Get('/')
+  @Get('/all')
   @UseGuards(SelfWithRoleGuard)
   @RolesGuard.Roles(RolesGuard.roles.superadmin, RolesGuard.roles.admin, RolesGuard.roles.provider)
   @ApiOperation({ summary: 'Вывод списка пользователей' })
@@ -52,9 +36,8 @@ export class UserController {
     return this.userService.getAll();
   }
   @Get('/:id')
-  @ApiOperation({ summary: 'Редактирование пользователя' })
+  @ApiOperation({ summary: 'Получение пользователя по ID' })
   @UseGuards(RolesGuard)
-  @RolesGuard.Roles(RolesGuard.roles.superadmin, RolesGuard.roles.admin, RolesGuard.roles.provider)
   @ApiHeader({ name: 'Authorization' })
   @ApiOkResponse({ type: [UserEntity] })
   @ApiError.forbidden()
@@ -196,70 +179,76 @@ export class UserController {
     return true;
   }
 
-  @Post('/settings/requisites')
-  @ApiOperation({ summary: 'Добавление реквизита' })
-  @ApiHeader({ name: 'Authorization' })
-  @ApiError.forbidden()
-  @ApiError.badRequest()
-  @ApiError.unauthorized()
-  @ApiError.internalServerError()
-  async addUserRequisite() {
-    return true;
-  }
-
-  @Put('/settings/requisites')
-  @ApiOperation({ summary: 'Редактирование реквизита' })
-  @ApiHeader({ name: 'Authorization' })
-  @ApiError.forbidden()
-  @ApiError.badRequest()
-  @ApiError.unauthorized()
-  @ApiError.internalServerError()
-  async editUserRequisite() {
-    return true;
-  }
-
-  @Delete('/settings/requisites')
-  @ApiOperation({ summary: 'Удаление реквизита' })
-  @ApiHeader({ name: 'Authorization' })
-  @ApiError.forbidden()
-  @ApiError.unauthorized()
-  @ApiError.internalServerError()
-  async deleteUserRequisite() {
-    return true;
-  }
-
-  @Put('/settings/requisites/reset')
-  @ApiOperation({ summary: 'Сброс реквизита' })
-  @ApiHeader({ name: 'Authorization' })
-  @ApiError.forbidden()
-  @ApiError.badRequest()
-  @ApiError.unauthorized()
-  @ApiError.internalServerError()
-  async resetUserRequisite() {
-    return true;
-  }
-
-  @Put('/settings/mass')
-  @ApiOperation({ summary: 'Массовое изменение' })
-  @ApiHeader({ name: 'Authorization' })
-  @ApiError.forbidden()
-  @ApiError.badRequest()
-  @ApiError.unauthorized()
-  @ApiError.internalServerError()
-  async massEdit() {
-    return true;
-  }
-
-  @Put('/settings/work_status/:work_status')
-  @ApiOperation({ summary: 'Изменение статуса пользователя' })
-  @ApiHeader({ name: 'Authorization' })
-  @ApiError.forbidden()
-  @ApiError.badRequest()
-  @ApiError.unauthorized()
-  @ApiError.internalServerError()
-  async changeUserWorkStatus() {
-    return true;
-  }
+  // @Post('/settings/requisites')
+  // @ApiOperation({ summary: 'Добавление реквизита' })
+  // @ApiHeader({ name: 'Authorization' })
+  // @ApiError.forbidden()
+  // @ApiError.badRequest()
+  // @ApiError.unauthorized()
+  // @ApiError.internalServerError()
+  // async addUserRequisite() {
+  //   return true;
+  // }
+  //
+  // @Put('/settings/requisites')
+  // @ApiOperation({ summary: 'Редактирование реквизита' })
+  // @ApiHeader({ name: 'Authorization' })
+  // @ApiError.forbidden()
+  // @ApiError.badRequest()
+  // @ApiError.unauthorized()
+  // @ApiError.internalServerError()
+  // async editUserRequisite() {
+  //   return true;
+  // }
+  //
+  // @Delete('/settings/requisites')
+  // @ApiOperation({ summary: 'Удаление реквизита' })
+  // @ApiHeader({ name: 'Authorization' })
+  // @ApiError.forbidden()
+  // @ApiError.unauthorized()
+  // @ApiError.internalServerError()
+  // async deleteUserRequisite() {
+  //   return true;
+  // }
+  //
+  // @Put('/settings/requisites/reset')
+  // @ApiOperation({ summary: 'Сброс реквизита' })
+  // @ApiHeader({ name: 'Authorization' })
+  // @ApiError.forbidden()
+  // @ApiError.badRequest()
+  // @ApiError.unauthorized()
+  // @ApiError.internalServerError()
+  // async resetUserRequisite() {
+  //   return true;
+  // }
+  //
+  // @Put('/settings/mass')
+  // @ApiOperation({ summary: 'Массовое изменение' })
+  // @ApiHeader({ name: 'Authorization' })
+  // @ApiError.forbidden()
+  // @ApiError.badRequest()
+  // @ApiError.unauthorized()
+  // @ApiError.internalServerError()
+  // async massEdit() {
+  //   return true;
+  // }
+  //
+  // @Put('/settings/work_status/:work_status')
+  // @UseGuards(SelfWithRoleGuard)
+  // @SelfWithRoleGuard.Roles(SelfWithRoleGuard.roles.superadmin, SelfWithRoleGuard.roles.seller)
+  // @ValidateInput(changeUserWorkStatusSchema)
+  // @ApiOperation({ summary: 'Изменение статуса пользователя' })
+  // @ApiHeader({ name: 'Authorization' })
+  // @ApiError.forbidden()
+  // @ApiError.badRequest()
+  // @ApiError.unauthorized()
+  // @ApiError.internalServerError()
+  // async changeUserWorkStatus(@Body() changeUserSettingsDto: EditUserSettingsDto) {
+  //   const { isWork } = changeUserSettingsDto;
+  //
+  //   console.log(isWork);
+  //   return true;
+  // }
   @Put(':id/limit/edit')
   @ApiOperation({ summary: 'Изменение лимита по закрытию заявок' })
   @ApiHeader({ name: 'Authorization' })

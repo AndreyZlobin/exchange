@@ -1,14 +1,18 @@
 import { TYPES } from '@DI/types';
 import { Inject, Injectable } from '@nestjs/common';
 import { CreatePaymentSystemDto } from '@src/core/paymentSystem/dto';
-import { CreateUserDto, CreateUserSettingsDto, ResultUserDto, UserDto } from '@src/core/user/dto';
+import {
+  CreateUserDto,
+  CreateUserSettingsDto,
+  UserDto,
+  UserWithPasswordDto,
+} from '@src/core/user/dto';
 import { IPrismaService } from '@src/database';
 import { PickPrimitives } from '@src/utils';
 
-import { User } from '../types';
 import { UserWithoutPassword } from '../types';
 
-type UserFieldsToSearch = Partial<PickPrimitives<User>>;
+type UserFieldsToSearch = Partial<PickPrimitives<UserDto>>;
 
 export interface IUserRepository {
   create(
@@ -19,17 +23,15 @@ export interface IUserRepository {
 
   findAll(): Promise<UserDto[]>;
 
-  findUser(searchFiled: UserFieldsToSearch): Promise<ResultUserDto | null>;
+  findUser(searchFiled: UserFieldsToSearch): Promise<UserWithPasswordDto | null>;
 }
 @Injectable()
 export class UserRepository implements IUserRepository {
-  // @inject(TYPES.DB.PrismaService) private readonly prismaService: IPrismaService
   private readonly defaultSelectedFields: Record<keyof UserWithoutPassword, true>;
   constructor(@Inject(TYPES.DB.PrismaService) private readonly prismaService: IPrismaService) {
     this.defaultSelectedFields = this.prismaService.getSelectedField<UserWithoutPassword>([
       'role',
       'name',
-      'isWork',
       'createdAt',
       'userBlacklistId',
       'settings',
@@ -41,7 +43,7 @@ export class UserRepository implements IUserRepository {
     user: CreateUserDto,
     setting: CreateUserSettingsDto,
     paymentSystems: CreatePaymentSystemDto[],
-  ) {
+  ): Promise<UserDto> {
     return this.prismaService.user.create({
       data: {
         ...user,
@@ -52,18 +54,18 @@ export class UserRepository implements IUserRepository {
       select: { ...this.defaultSelectedFields },
     });
   }
-  async findAll() {
+  async findAll(): Promise<UserDto[]> {
     return this.prismaService.user.findMany({ select: { ...this.defaultSelectedFields } });
   }
 
-  async findUser(searchFiled: UserFieldsToSearch): Promise<ResultUserDto | null> {
+  async findUser(searchFiled: UserFieldsToSearch): Promise<UserWithPasswordDto | null> {
     return this.prismaService.user.findFirst({
       where: { ...searchFiled },
       include: { settings: true },
     });
   }
 
-  async findUnique(searchFiled: UserFieldsToSearch): Promise<ResultUserDto | null> {
+  async findUnique(searchFiled: UserFieldsToSearch): Promise<UserWithPasswordDto | null> {
     return this.prismaService.user.findUnique({
       where: { ...searchFiled },
       include: { settings: true },

@@ -480,6 +480,14 @@
           "default": "fiatAmount",
           "description": "fiatAmount | btcAmount"
         },
+        "isWork": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": false,
+          "description": "Готовность обрабатывать трафик"
+        },
         "broker": {
           "type": [
             "string",
@@ -547,14 +555,6 @@
               "type": "null"
             }
           ]
-        },
-        "isWork": {
-          "type": [
-            "boolean",
-            "null"
-          ],
-          "default": false,
-          "description": "Готовность обрабатывать трафик"
         },
         "createdAt": {
           "type": [

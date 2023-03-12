@@ -25,6 +25,8 @@ export class UserSettingsDto implements UserSettings {
   @ApiProperty()
   id: string;
   @ApiProperty()
+  isWork: boolean;
+  @ApiProperty()
   percentMethod: PercentMethod | null;
   @ApiProperty()
   sendTxToBlockchain: boolean | null;

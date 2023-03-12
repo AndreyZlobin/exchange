@@ -12,8 +12,6 @@ export class UserDto implements UserWithoutPassword {
   @ApiProperty()
   deleted: boolean;
   @ApiProperty()
-  isWork: boolean;
-  @ApiProperty()
   name: string;
   @ApiProperty()
   role: Roles;
@@ -21,6 +19,6 @@ export class UserDto implements UserWithoutPassword {
   userBlacklistId: string | null;
   @ApiProperty()
   settings: UserSettingsDto;
-  // поля, которые не входят в модели свагера
+  // поля, которые не входят в модели swagger
   // paymentSystems: PaymentSystemDto;
 }
