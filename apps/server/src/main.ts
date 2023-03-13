@@ -9,12 +9,11 @@ import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 import { ValidationExceptionFilter } from '@shared/exceptions';
 import { AppModule } from '@src/app.module';
 import { IPrismaService, IRedisService } from '@src/database';
-import { mergeDeep } from '@src/utils/mergeDeep';
 import { FrontendRenderFilter, isProduction } from '@src/web';
 import * as compression from 'compression';
 import { readFileSync } from 'fs';
 import helmet from 'helmet';
-const loadDockFileAndUpdateDocument = (
+export const loadDockFileAndUpdateDocument = (
   pathToFile: string,
   document: OpenAPIObject,
 ): OpenAPIObject | null => {
@@ -84,10 +83,7 @@ class Bootstrap {
 
       const document = SwaggerModule.createDocument(this.app, options, {});
 
-      const updatedDoc =
-        loadDockFileAndUpdateDocument('./src/apiDoc/schema/json-schema.json', document) || document;
-
-      SwaggerModule.setup('api/docs', this.app, mergeDeep(updatedDoc, document));
+      SwaggerModule.setup('api/docs', this.app, document);
       this.logger.log(
         `[${SwaggerModule.name}]: Swagger here | http://localhost:${this.port}/api/docs`,
       );

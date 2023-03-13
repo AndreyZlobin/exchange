@@ -1,0 +1,12 @@
+// import {useSelector} from "react-redux";
+// import {settingSelector} from "../../selectors/settings";
+// import axios from "axios";
+// import {API_PREFIX} from "../../constants";
+//
+// const {csrfCookieName, csrfHeaderName} = useSelector(settingSelector);
+//
+// const axiosInstance = axios.create({
+//     xsrfCookieName: csrfCookieName,
+//     xsrfHeaderName: csrfHeaderName,
+//     baseURL: API_PREFIX,
+// });

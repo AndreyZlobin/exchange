@@ -20,6 +20,7 @@
     "client:lint-fix": "npm run lint:fix --prefix apps/client",
     "client:build": "npm run build --prefix apps/client",
     "build": "node build.js",
+    "api-gen": "npm run api-gen --prefix apps/client",
     "build:start": "npm run build & npm run server:start",
     "prisma:init": "npm run prisma:init --prefix apps/server",
     "prisma:drop": "npm run prisma:drop --prefix apps/server",

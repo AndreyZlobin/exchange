@@ -1,8 +1,10 @@
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
+import path from 'path';
 import { defineConfig } from 'vite';
 
 import { dependencies } from './package.json';
+import { alias } from './vite/aliases';
 
 export const reactDeps = Object.keys(dependencies).filter(
   (key) => key === 'react' || key.startsWith('react-'),
@@ -43,9 +45,15 @@ export default defineConfig({
       '/api': {
         target: 'http://localhost:5000',
         changeOrigin: true,
-        rewrite: (path) => path,
+        rewrite: (p) => p,
       },
     },
+  },
+  resolve: {
+    alias: alias.map(({ find, replacement }) => ({
+      find,
+      replacement: path.resolve(__dirname, replacement),
+    })),
   },
   build: {
     minify: true,

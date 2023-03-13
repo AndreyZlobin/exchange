@@ -25,18 +25,39 @@
     "importHelpers": true,
     "outDir": "./dist",
     "baseUrl": ".",
+    "paths": {
+      "@components/*": [
+        "./src/components/*"
+      ],
+      "@utils/*": [
+        "./src/utils/*"
+      ],
+      "@constants/*": [
+        "./src/constants/*"
+      ],
+      "@hooks/*": [
+        "./src/hooks/*"
+      ],
+      "@query/*": [
+        "./src/hooks/query/*"
+      ],
+      "@services/*": [
+        "./src/services/*"
+      ],
+      "@assets/*": [
+        "./src/assets/*"
+      ]
+    },
     "typeRoots": [
       "node",
       "node_modules/@types",
       "./typings"
-    ],
-    "types": [
-      "vite/client"
     ]
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
+    "vite/**/*.ts",
     "./**/*.d.ts",
     "vite.config.ts",
     "vite.config.ssr.ts"
