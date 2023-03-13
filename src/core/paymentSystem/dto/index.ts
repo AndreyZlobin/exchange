@@ -1,2 +1,2 @@
-export * from './createPaymentSystem.dto';
+export * from './createUserPaymentSystem.dto';
 export * from './paymentSystem.dto';

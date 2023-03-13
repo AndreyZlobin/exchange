@@ -1,6 +1,6 @@
 import { TYPES } from '@DI/types';
 import { Inject, Injectable } from '@nestjs/common';
-import { CreatePaymentSystemDto } from '@src/core/paymentSystem/dto';
+import { CreateUserPaymentSystemDto } from '@src/core/paymentSystem/dto';
 import {
   CreateUserDto,
   CreateUserSettingsDto,
@@ -18,7 +18,7 @@ export interface IUserRepository {
   create(
     user: CreateUserDto,
     settings: CreateUserSettingsDto,
-    paymentSystems: CreatePaymentSystemDto[],
+    paymentSystems: CreateUserPaymentSystemDto[],
   ): Promise<UserDto>;
 
   findAll(): Promise<UserDto[]>;
@@ -42,7 +42,7 @@ export class UserRepository implements IUserRepository {
   async create(
     user: CreateUserDto,
     setting: CreateUserSettingsDto,
-    paymentSystems: CreatePaymentSystemDto[],
+    paymentSystems: CreateUserPaymentSystemDto[],
   ): Promise<UserDto> {
     return this.prismaService.user.create({
       data: {

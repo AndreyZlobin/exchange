@@ -1,8 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-import { CreatePaymentSystemDto } from './createPaymentSystem.dto';
+import { CreateUserPaymentSystemDto } from './createUserPaymentSystem.dto';
 
-export class PaymentSystemDto extends CreatePaymentSystemDto {
+export class PaymentSystemDto extends CreateUserPaymentSystemDto {
   @ApiProperty()
   id: string;
   @ApiPropertyOptional()

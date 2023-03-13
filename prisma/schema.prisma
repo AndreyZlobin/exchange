@@ -112,16 +112,16 @@ model Claim {
   urls              Json?
 }
 
-enum SystemEnum {
+enum PaymentSystemEnum {
   card
   sim
   qiwi
   yandex
 }
 
-type System {
+type PaymentSystem {
   /// Все допустимые системы оплаты
-  type             SystemEnum
+  type             PaymentSystemEnum
   /// Минимальные и максимальные суммы заявок по платежным системам
   min              Int
   /// Минимальные и максимальные суммы заявок по платежным системам
@@ -130,26 +130,16 @@ type System {
   brokerCommission Int
   /// Комиссии по платежным системам
   systemCommission Int
-  /// Доступ к созданию заявок по платежным системам
-  isAllow          Boolean    @default(false)
 }
 
-model PaymentSystem {
+model UserPaymentSystem {
   id                       String                  @id @default(auto()) @map("_id") @db.ObjectId
-  name                     SystemEnum
-  /// Все допустимые системы оплаты
-  type                     SystemEnum
-  /// Минимальные и максимальные суммы заявок по платежным системам
-  min                      Int
-  /// Минимальные и максимальные суммы заявок по платежным системам
-  max                      Int
-  /// Комиссии посредника (если таковой имеется)
-  brokerCommission         Int
-  /// Комиссии по платежным системам
-  systemCommission         Int
+  name                     PaymentSystemEnum
+  system                   PaymentSystem
   /// Доступ к созданию заявок по платежным системам
   authToken                String                  @default("Не установлен")
   apiKey                   String                  @default("")
+  /// Доступ к созданию заявок по платежным системам
   isAllow                  Boolean                 @default(false)
   user                     User?                   @relation(fields: [userId], references: [id])
   userId                   String?                 @db.ObjectId
@@ -157,56 +147,83 @@ model PaymentSystem {
   paymentSystemBlacklistId String?                 @db.ObjectId
 }
 
+// type OrderRate {
+//   /// Количество фиатной валюты, которое необходимо купить/продать
+//   fiat   Int?
+//   /// Rоличество криптовалюты, которое необходимо купить/продать
+//   crypto Int?
+// }
+
+// Заказ
 type OrderStatusHistory {
   date   DateTime    @default(now())
   status OrderStatus
 }
 
-type OrderValues {
-  crypto_amount_provider Int
-  crypto_amount_deal     Int
-  profit                 Int
-}
-
 type OrderRate {
-  /// Количество фиатной валюты, которое необходимо купить/продать
-  fiat   Int
-  /// Rоличество криптовалюты, которое необходимо купить/продать
-  crypto Int
+  /// Курс сделки
+  deal     Float?
+  /// Курс поставщика
+  provider Float?
 }
 
 type OrderAmount {
-  deal     Int
-  provider Int
+  fiatAmount         Float?
+  cryptoAmountDeal   Float?
+  cryptoAmountBroker Float?
+  profit             Float?
 }
 
-type Notes {
+type OrderNotes {
   /// Если оплачена
   isPaid    Boolean? @default(false)
   /// Если проблемная
   isProblem Boolean? @default(false)
 }
 
-model Order {
-  id             String               @id @default(auto()) @map("_id") @db.ObjectId
-  provider       String
-  status         OrderStatus          @default(new)
-  amount         OrderRate
-  rate           OrderRate
-  notes          Notes
-  type           String
-  // История статусов заказа
-  statusHistory  OrderStatusHistory[]
-  user           User                 @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId         String               @unique @db.ObjectId
-  created        DateTime?            @default(now())
-  deleted        Boolean?             @default(false)
-  /// Конкретный тип криптовалюты
-  currencyType   Currency             @relation(fields: [currencyTypeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  currencyTypeId String               @db.ObjectId
-  values         OrderValues
+enum OrderRateEnum {
+  fiat
+  crypto
 }
 
+model Order {
+  id            String            @id @default(auto()) @map("_id") @db.ObjectId
+  provider      String
+  status        OrderStatus?      @default(new)
+  amount        OrderAmount
+  paymentSystem PaymentSystemEnum
+
+  cryptoAmountProvider Float?
+  /// Курс
+  rate                 OrderRate
+  /// ???
+  requisites           String?
+  broker               String?
+  clientName           String?
+  /// История статусов заказа
+  statusHistory        OrderStatusHistory[]
+  notes                OrderNotes
+
+  // finishWallet         String?
+  // finishTxAfter        Int?
+  // finishedBy           String?
+  // finishError          String?
+  // cancelReason         String?
+  handler String?   @default("risex")
+  created DateTime? @default(now())
+  updated DateTime? @default(now())
+  /// Пользователь создавший заявку
+  user    User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId  String    @unique @db.ObjectId
+
+  // Тип криптовалюты заказа
+  // cryptoType           CurrencyType
+  /// Конкретный тип криптовалюты
+  currencyType   Currency @relation(fields: [currencyTypeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  currencyTypeId String   @db.ObjectId
+}
+
+// Кошелек пользователя
 model Wallet {
   id                       String    @id @default(auto()) @map("_id") @db.ObjectId
   /// Текущий баланс пользователя
@@ -224,16 +241,10 @@ model Wallet {
 }
 
 type Systems {
-  card   System
-  sim    System
-  qiwi   System
-  yandex System
-}
-
-model PaymentSetting {
-  id      String   @id @default(auto()) @map("_id") @db.ObjectId
-  systems Systems
-  deleted Boolean? @default(false)
+  card   PaymentSystem
+  sim    PaymentSystem
+  qiwi   PaymentSystem
+  yandex PaymentSystem
 }
 
 model Currency {
@@ -274,38 +285,36 @@ model UserSettings {
 }
 
 model User {
-  id              String          @id @default(auto()) @map("_id") @db.ObjectId
+  id              String              @id @default(auto()) @map("_id") @db.ObjectId
   name            String
   password        String
-  role            RoleEnum        @default(broker)
+  role            RoleEnum            @default(broker)
   orders          Order[]
-  paymentSystems  PaymentSystem[]
+  paymentSystems  UserPaymentSystem[]
   wallet          Wallet?
   settings        UserSettings?
-  createdAt       DateTime?       @default(now())
-  deleted         Boolean?        @default(false)
-  // blacklist      UserBlacklist?  @relation(fields: [blacklistId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  // blacklistId    String?         @db.ObjectId
-  userBlacklist   UserBlacklist?  @relation(fields: [userBlacklistId], references: [id])
-  userBlacklistId String?         @db.ObjectId
+  createdAt       DateTime?           @default(now())
+  deleted         Boolean?            @default(false)
+  userBlacklist   UserBlacklist?      @relation(fields: [userBlacklistId], references: [id])
+  userBlacklistId String?             @db.ObjectId
 }
 
 model UserBlacklist {
   id                String   @id @default(auto()) @map("_id") @db.ObjectId
   reason            String?
-  blacklistedUserId Int
+  blacklistedUserId String
   createdAt         DateTime @default(now())
   user              User[]
   userId            String   @db.ObjectId
 }
 
 model PaymentSystemBlacklist {
-  id                String          @id @default(auto()) @map("_id") @db.ObjectId
+  id                String              @id @default(auto()) @map("_id") @db.ObjectId
   reason            String?
   blacklistedUserId Int
-  createdAt         DateTime        @default(now())
-  paymentSystem     PaymentSystem[]
-  paymentSystemId   String          @db.ObjectId
+  createdAt         DateTime            @default(now())
+  paymentSystem     UserPaymentSystem[]
+  paymentSystemId   String              @db.ObjectId
 }
 
 enum CryptocurrencyType {

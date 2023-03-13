@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import { LoadingButton, LoadingButtonProps } from '@mui/lab';
 
 import { useFormContext } from '../hooks';

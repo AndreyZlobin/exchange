@@ -1,7 +1,8 @@
 import { TYPES } from '@DI/types';
 import { Inject, Injectable } from '@nestjs/common';
-import { Order } from '@src/core/order/dto';
 import { IPrismaService } from '@src/database';
+
+import { Order } from '../types';
 
 export interface IOrderRepository {
   findAll(userId?: string): Promise<Order[]>;

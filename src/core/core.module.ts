@@ -59,7 +59,7 @@ export class CoreModule implements NestModule {
       { path: 'user/*', method: RequestMethod.ALL },
       { path: 'settings/*', method: RequestMethod.ALL },
       // Order
-      { path: 'order/*', method: RequestMethod.ALL },
+      { path: 'orders/*', method: RequestMethod.ALL },
       // Wallet
       { path: 'wallet/*', method: RequestMethod.ALL },
     ];

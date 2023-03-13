@@ -14,7 +14,7 @@ export class ApiError {
     return ApiForbiddenResponse({ description: 'Forbidden', type: ErrorResponseDto });
   }
   static unauthorized() {
-    return ApiUnauthorizedResponse({ description: 'unauthorized', type: ErrorResponseDto });
+    return ApiUnauthorizedResponse({ description: 'Unauthorized', type: ErrorResponseDto });
   }
   static badRequest() {
     return ApiBadRequestResponse({ description: 'Bad request', type: ErrorResponseDto });

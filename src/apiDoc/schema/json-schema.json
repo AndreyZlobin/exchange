@@ -152,7 +152,7 @@
         }
       }
     },
-    "PaymentSystem": {
+    "UserPaymentSystem": {
       "type": "object",
       "properties": {
         "id": {
@@ -167,31 +167,8 @@
             "yandex"
           ]
         },
-        "type": {
-          "type": "string",
-          "enum": [
-            "card",
-            "sim",
-            "qiwi",
-            "yandex"
-          ],
-          "description": "Все допустимые системы оплаты"
-        },
-        "min": {
-          "type": "integer",
-          "description": "Минимальные и максимальные суммы заявок по платежным системам"
-        },
-        "max": {
-          "type": "integer",
-          "description": "Минимальные и максимальные суммы заявок по платежным системам"
-        },
-        "brokerCommission": {
-          "type": "integer",
-          "description": "Комиссии посредника (если таковой имеется)"
-        },
-        "systemCommission": {
-          "type": "integer",
-          "description": "Комиссии по платежным системам"
+        "system": {
+          "$ref": "#/definitions/PaymentSystem"
         },
         "authToken": {
           "type": "string",
@@ -204,7 +181,8 @@
         },
         "isAllow": {
           "type": "boolean",
-          "default": false
+          "default": false,
+          "description": "Доступ к созданию заявок по платежным системам"
         },
         "user": {
           "anyOf": [
@@ -238,7 +216,10 @@
           "type": "string"
         },
         "status": {
-          "type": "string",
+          "type": [
+            "string",
+            "null"
+          ],
           "default": "new",
           "enum": [
             "new",
@@ -254,25 +235,61 @@
           ]
         },
         "amount": {
-          "$ref": "#/definitions/OrderRate"
+          "$ref": "#/definitions/OrderAmount"
+        },
+        "paymentSystem": {
+          "type": "string",
+          "enum": [
+            "card",
+            "sim",
+            "qiwi",
+            "yandex"
+          ]
+        },
+        "cryptoAmountProvider": {
+          "type": [
+            "number",
+            "null"
+          ]
         },
         "rate": {
           "$ref": "#/definitions/OrderRate"
         },
-        "notes": {
-          "$ref": "#/definitions/Notes"
+        "requisites": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "???"
         },
-        "type": {
-          "type": "string"
+        "broker": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "clientName": {
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "statusHistory": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/OrderStatusHistory"
-          }
+          },
+          "description": "История статусов заказа"
         },
-        "user": {
-          "$ref": "#/definitions/User"
+        "notes": {
+          "$ref": "#/definitions/OrderNotes"
+        },
+        "handler": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": "risex"
         },
         "created": {
           "type": [
@@ -281,18 +298,18 @@
           ],
           "format": "date-time"
         },
-        "deleted": {
+        "updated": {
           "type": [
-            "boolean",
+            "string",
             "null"
           ],
-          "default": false
+          "format": "date-time"
+        },
+        "user": {
+          "$ref": "#/definitions/User"
         },
         "currencyType": {
           "$ref": "#/definitions/Currency"
-        },
-        "values": {
-          "$ref": "#/definitions/OrderValues"
         }
       }
     },
@@ -338,24 +355,6 @@
             "null"
           ],
           "format": "date-time"
-        }
-      }
-    },
-    "PaymentSetting": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "systems": {
-          "$ref": "#/definitions/Systems"
-        },
-        "deleted": {
-          "type": [
-            "boolean",
-            "null"
-          ],
-          "default": false
         }
       }
     },
@@ -533,7 +532,7 @@
         "paymentSystems": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/PaymentSystem"
+            "$ref": "#/definitions/UserPaymentSystem"
           }
         },
         "wallet": {
@@ -595,7 +594,7 @@
           ]
         },
         "blacklistedUserId": {
-          "type": "integer"
+          "type": "string"
         },
         "createdAt": {
           "type": "string",
@@ -634,7 +633,7 @@
         "paymentSystem": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/PaymentSystem"
+            "$ref": "#/definitions/UserPaymentSystem"
           }
         },
         "paymentSystemId": {
@@ -642,7 +641,7 @@
         }
       }
     },
-    "System": {
+    "PaymentSystem": {
       "type": "object",
       "properties": {
         "type": {
@@ -665,10 +664,6 @@
         },
         "systemCommission": {
           "type": "integer"
-        },
-        "isAllow": {
-          "type": "boolean",
-          "default": false
         }
       }
     },
@@ -696,43 +691,53 @@
         }
       }
     },
-    "OrderValues": {
-      "type": "object",
-      "properties": {
-        "crypto_amount_provider": {
-          "type": "integer"
-        },
-        "crypto_amount_deal": {
-          "type": "integer"
-        },
-        "profit": {
-          "type": "integer"
-        }
-      }
-    },
     "OrderRate": {
       "type": "object",
       "properties": {
-        "fiat": {
-          "type": "integer"
+        "deal": {
+          "type": [
+            "number",
+            "null"
+          ]
         },
-        "crypto": {
-          "type": "integer"
+        "provider": {
+          "type": [
+            "number",
+            "null"
+          ]
         }
       }
     },
     "OrderAmount": {
       "type": "object",
       "properties": {
-        "deal": {
-          "type": "integer"
+        "fiatAmount": {
+          "type": [
+            "number",
+            "null"
+          ]
         },
-        "provider": {
-          "type": "integer"
+        "cryptoAmountDeal": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "cryptoAmountBroker": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "profit": {
+          "type": [
+            "number",
+            "null"
+          ]
         }
       }
     },
-    "Notes": {
+    "OrderNotes": {
       "type": "object",
       "properties": {
         "isPaid": {
@@ -755,16 +760,16 @@
       "type": "object",
       "properties": {
         "card": {
-          "$ref": "#/definitions/System"
+          "$ref": "#/definitions/PaymentSystem"
         },
         "sim": {
-          "$ref": "#/definitions/System"
+          "$ref": "#/definitions/PaymentSystem"
         },
         "qiwi": {
-          "$ref": "#/definitions/System"
+          "$ref": "#/definitions/PaymentSystem"
         },
         "yandex": {
-          "$ref": "#/definitions/System"
+          "$ref": "#/definitions/PaymentSystem"
         }
       }
     }
@@ -777,17 +782,14 @@
     "claim": {
       "$ref": "#/definitions/Claim"
     },
-    "paymentSystem": {
-      "$ref": "#/definitions/PaymentSystem"
+    "userPaymentSystem": {
+      "$ref": "#/definitions/UserPaymentSystem"
     },
     "order": {
       "$ref": "#/definitions/Order"
     },
     "wallet": {
       "$ref": "#/definitions/Wallet"
-    },
-    "paymentSetting": {
-      "$ref": "#/definitions/PaymentSetting"
     },
     "currency": {
       "$ref": "#/definitions/Currency"

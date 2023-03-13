@@ -30,17 +30,13 @@ Table Claim {
   urls Json
 }
 
-Table PaymentSystem {
+Table UserPaymentSystem {
   id String [pk]
-  name SystemEnum [not null]
-  type SystemEnum [not null, note: 'Все допустимые системы оплаты']
-  min Int [not null, note: 'Минимальные и максимальные суммы заявок по платежным системам']
-  max Int [not null, note: 'Минимальные и максимальные суммы заявок по платежным системам']
-  brokerCommission Int [not null, note: 'Комиссии посредника (если таковой имеется)']
-  systemCommission Int [not null, note: 'Комиссии по платежным системам']
+  name PaymentSystemEnum [not null]
+  system PaymentSystem [not null]
   authToken String [not null, default: 'Не установлен', note: 'Доступ к созданию заявок по платежным системам']
   apiKey String [not null, default: '']
-  isAllow Boolean [not null, default: false]
+  isAllow Boolean [not null, default: false, note: 'Доступ к созданию заявок по платежным системам']
   user User
   userId String
   paymentSystemBlacklist PaymentSystemBlacklist
@@ -50,19 +46,23 @@ Table PaymentSystem {
 Table Order {
   id String [pk]
   provider String [not null]
-  status OrderStatus [not null, default: 'new']
-  amount OrderRate [not null]
-  rate OrderRate [not null]
-  notes Notes [not null]
-  type String [not null]
-  statusHistory OrderStatusHistory[] [not null]
-  user User [not null]
-  userId String [unique, not null]
+  status OrderStatus [default: 'new']
+  amount OrderAmount [not null]
+  paymentSystem PaymentSystemEnum [not null]
+  cryptoAmountProvider Float
+  rate OrderRate [not null, note: 'Курс']
+  requisites String [note: '???']
+  broker String
+  clientName String
+  statusHistory OrderStatusHistory[] [not null, note: 'История статусов заказа']
+  notes OrderNotes [not null]
+  handler String [default: 'risex']
   created DateTime [default: `now()`]
-  deleted Boolean [default: false]
+  updated DateTime [default: `now()`]
+  user User [not null, note: 'Пользователь создавший заявку']
+  userId String [unique, not null]
   currencyType Currency [not null, note: 'Конкретный тип криптовалюты']
   currencyTypeId String [not null]
-  values OrderValues [not null]
 }
 
 Table Wallet {
@@ -75,12 +75,6 @@ Table Wallet {
   user User [not null]
   deleted Boolean [default: false]
   createdAt DateTime [default: `now()`]
-}
-
-Table PaymentSetting {
-  id String [pk]
-  systems Systems [not null]
-  deleted Boolean [default: false]
 }
 
 Table Currency {
@@ -115,7 +109,7 @@ Table User {
   password String [not null]
   role RoleEnum [not null, default: 'broker']
   orders Order [not null]
-  paymentSystems PaymentSystem [not null]
+  paymentSystems UserPaymentSystem [not null]
   wallet Wallet
   settings UserSettings
   createdAt DateTime [default: `now()`]
@@ -127,7 +121,7 @@ Table User {
 Table UserBlacklist {
   id String [pk]
   reason String
-  blacklistedUserId Int [not null]
+  blacklistedUserId String [not null]
   createdAt DateTime [default: `now()`, not null]
   user User [not null]
   userId String [not null]
@@ -138,15 +132,20 @@ Table PaymentSystemBlacklist {
   reason String
   blacklistedUserId Int [not null]
   createdAt DateTime [default: `now()`, not null]
-  paymentSystem PaymentSystem [not null]
+  paymentSystem UserPaymentSystem [not null]
   paymentSystemId String [not null]
 }
 
-Enum SystemEnum {
+Enum PaymentSystemEnum {
   card
   sim
   qiwi
   yandex
+}
+
+Enum OrderRateEnum {
+  fiat
+  crypto
 }
 
 Enum CryptocurrencyType {
@@ -186,9 +185,9 @@ Enum OrderStatus {
   renew
 }
 
-Ref: PaymentSystem.userId > User.id
+Ref: UserPaymentSystem.userId > User.id
 
-Ref: PaymentSystem.paymentSystemBlacklistId > PaymentSystemBlacklist.id [delete: Cascade]
+Ref: UserPaymentSystem.paymentSystemBlacklistId > PaymentSystemBlacklist.id [delete: Cascade]
 
 Ref: Order.userId > User.id [delete: Cascade]
 
