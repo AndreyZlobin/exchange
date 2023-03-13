@@ -11,7 +11,7 @@ import { Request, Response } from 'express';
 import { readFileSync } from 'fs';
 import { ViteDevServer } from 'vite';
 
-export const isProduction = process.env.NODE_ENV === 'production';
+export const isProduction = process.env.NODE_ENV !== 'production';
 
 const TEMPLATE_PLACEHOLDER = '<!--ssr-outlet-->';
 

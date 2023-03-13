@@ -9,9 +9,7 @@ import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 import { ValidationExceptionFilter } from '@shared/exceptions';
 import { AppModule } from '@src/app.module';
 import { IPrismaService, IRedisService } from '@src/database';
-import { resolveDistPath } from '@src/utils';
 import { mergeDeep } from '@src/utils/mergeDeep';
-import { getViteServer } from '@src/vite-server';
 import { FrontendRenderFilter, isProduction } from '@src/web';
 import * as compression from 'compression';
 import { readFileSync } from 'fs';
@@ -38,7 +36,6 @@ const loadDockFileAndUpdateDocument = (
 
 class Bootstrap {
   private app: NestExpressApplication;
-
   get config() {
     return this.app.get<ConfigServiceWithEnv>(TYPES.services.ConfigService);
   }
@@ -53,12 +50,8 @@ class Bootstrap {
 
   async ssrInit() {
     if (isProduction) {
-      this.app.useStaticAssets(resolveDistPath(), { index: false });
+      //   this.app.useStaticAssets(resolveDistPath(), { index: false });
       this.app.use(compression());
-    } else {
-      const vite = await getViteServer();
-
-      this.app.use(vite.middlewares);
     }
 
     this.app.enableCors({
@@ -155,7 +148,6 @@ class Bootstrap {
       console.log({ profit });
       console.log({ btc: user.getQuantityOfCurrency(btcPrice, 100_000, 3) });
       console.log({ usd: user.getQuantityOfCurrency(usdtPrice, 300, 1) });*/
-      await this.ssrInit();
       this.swaggerInit();
       await this.app.listen(this.port);
       this.logger.log(

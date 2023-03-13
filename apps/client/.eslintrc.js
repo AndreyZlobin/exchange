@@ -1,6 +1,6 @@
 module.exports = {
   env: { node: true, browser: true, es2021: true },
-  extends: ['airbnb-typescript', 'plugin:react-hooks/recommended', '../.eslintrc.base.js'],
+  extends: ['airbnb-typescript', 'plugin:react-hooks/recommended', '../../.eslintrc.base.js'],
   ignorePatterns: ['.eslintrc.js'],
   parserOptions: {
     project: ['./tsconfig.json'],

@@ -1,4 +1,4 @@
-/// <reference types="@self-kit/ui/declarations" />
+/// <reference types="@astral/ui/declarations" />
 
 declare module '*.svg?component' {
   const src: string;
