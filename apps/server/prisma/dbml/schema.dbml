@@ -1,0 +1,200 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table Log {
+  id String [pk]
+  action String
+  source String
+  data Json
+  created DateTime [default: `now()`]
+}
+
+Table Claim {
+  id String [pk]
+  uuid String [not null]
+  order_id Int
+  order_status String
+  deal_id Int
+  fiat_amount Float
+  fiat_amount_order Float
+  status String
+  error String
+  provider String
+  client_name String
+  handler String
+  payment_system String
+  created DateTime
+  images Json
+  savedImages Json
+  urls Json
+}
+
+Table UserPaymentSystem {
+  id String [pk]
+  name PaymentSystemEnum [not null]
+  system PaymentSystem [not null]
+  authToken String [not null, default: 'Не установлен', note: 'Доступ к созданию заявок по платежным системам']
+  apiKey String [not null, default: '']
+  isAllow Boolean [not null, default: false, note: 'Доступ к созданию заявок по платежным системам']
+  user User
+  userId String
+  paymentSystemBlacklist PaymentSystemBlacklist
+  paymentSystemBlacklistId String
+}
+
+Table Order {
+  id String [pk]
+  provider String [not null]
+  status OrderStatus [default: 'new']
+  amount OrderAmount [not null]
+  paymentSystem PaymentSystemEnum [not null]
+  cryptoAmountProvider Float
+  rate OrderRate [not null, note: 'Курс']
+  requisites String [note: '???']
+  broker String
+  clientName String
+  statusHistory OrderStatusHistory[] [not null, note: 'История статусов заказа']
+  notes OrderNotes [not null]
+  handler String [default: 'risex']
+  created DateTime [default: `now()`]
+  updated DateTime [default: `now()`]
+  user User [not null, note: 'Пользователь создавший заявку']
+  userId String [unique, not null]
+  currencyType Currency [not null, note: 'Конкретный тип криптовалюты']
+  currencyTypeId String [not null]
+}
+
+Table Wallet {
+  id String [pk]
+  balance Float [not null, default: 0, note: 'Текущий баланс пользователя']
+  balanceDep Float [not null, default: 0, note: 'Активный баланс пользователя']
+  address String [not null, default: '', note: 'Адрес кошелька для системы автосписания депозитов']
+  walletDepositCheckAmount Int [not null, default: 0, note: 'Сумма проверки для системы автосписания депозитов']
+  userId String [unique, not null]
+  user User [not null]
+  deleted Boolean [default: false]
+  createdAt DateTime [default: `now()`]
+}
+
+Table Currency {
+  id String [pk]
+  name CurrencyType [not null]
+  title String [not null]
+  type CryptocurrencyType [not null]
+  order Order [not null]
+}
+
+Table UserSettings {
+  id String [pk]
+  active Boolean [default: true, note: 'Активен ли аккаунт, если нет, то нет доступ ко всему функционалу запрещен']
+  cryptoType CurrencyType [default: 'BTC']
+  percentMethod PercentMethod [default: 'hd', note: 'Метод рассчета']
+  canFinishOrders Boolean [default: false, note: 'Может ли завершать заявки,  доверенные пользователи с ролью \'provider\' способны сами закрывать свои заявки по мере надобности']
+  canOpenOrdersViaPanel Boolean [default: false, note: 'Может добавлять заявки с панели']
+  canViewDirectBalance Boolean [default: false, note: '????']
+  sendTxToBlockchain Boolean [default: false, note: 'Отправлять транзакцию в сеть по завершении']
+  clientMaxEqualSumOrdersOnPeriod Int [default: 0, note: 'Заявки от клиента с одной суммой за период']
+  clientMaxEqualSumOrdersTime Int [default: 0, note: 'Период проверки одной суммы от клиента (мин.)']
+  clientMaxEqualSumOrdersMode String [not null, default: 'fiatAmount', note: 'fiatAmount | btcAmount']
+  isWork Boolean [default: false, note: 'Готовность обрабатывать трафик']
+  broker String [default: '']
+  userId String [unique, not null]
+  user User [not null]
+}
+
+Table User {
+  id String [pk]
+  name String [not null]
+  password String [not null]
+  role RoleEnum [not null, default: 'broker']
+  orders Order [not null]
+  paymentSystems UserPaymentSystem [not null]
+  wallet Wallet
+  settings UserSettings
+  createdAt DateTime [default: `now()`]
+  deleted Boolean [default: false]
+  userBlacklist UserBlacklist
+  userBlacklistId String
+}
+
+Table UserBlacklist {
+  id String [pk]
+  reason String
+  blacklistedUserId String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  user User [not null]
+  userId String [not null]
+}
+
+Table PaymentSystemBlacklist {
+  id String [pk]
+  reason String
+  blacklistedUserId Int [not null]
+  createdAt DateTime [default: `now()`, not null]
+  paymentSystem UserPaymentSystem [not null]
+  paymentSystemId String [not null]
+}
+
+Enum PaymentSystemEnum {
+  card
+  sim
+  qiwi
+  yandex
+}
+
+Enum OrderRateEnum {
+  fiat
+  crypto
+}
+
+Enum CryptocurrencyType {
+  Cryptocurrency
+  Fiat
+}
+
+Enum CurrencyType {
+  Tether
+  BTC
+}
+
+Enum PercentMethod {
+  hd
+  binance
+}
+
+Enum RoleEnum {
+  superadmin
+  admin
+  broker
+  provider
+  seller
+  support
+}
+
+Enum OrderStatus {
+  new
+  dealAdded
+  requisiteAdded
+  dealCanceled
+  markedPaid
+  dealCanceledMarkedPaid
+  finished
+  canceled
+  claim
+  renew
+}
+
+Ref: UserPaymentSystem.userId > User.id
+
+Ref: UserPaymentSystem.paymentSystemBlacklistId > PaymentSystemBlacklist.id [delete: Cascade]
+
+Ref: Order.userId > User.id [delete: Cascade]
+
+Ref: Order.currencyTypeId > Currency.id [delete: Cascade]
+
+Ref: Wallet.userId - User.id [delete: Cascade]
+
+Ref: UserSettings.userId - User.id [delete: Cascade]
+
+Ref: User.userBlacklistId > UserBlacklist.id

@@ -1,4 +1,7 @@
 module.exports = {
-  './**/*.ts': ['npm run lint:fix', 'git add'],
-  './client/**/*.{js,.jsx,.ts,.tsx}': ['npm run lint:fix-client', 'git add'],
+  "./apps/server/**/*.ts": ["npm run server:lint-fix", "git add"],
+  "./apps/client/**/*.{js,.jsx,.ts,.tsx}": [
+    "npm run client:lint-fix",
+    "git add",
+  ],
 };

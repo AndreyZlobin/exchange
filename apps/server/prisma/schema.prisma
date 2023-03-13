@@ -1,0 +1,355 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// https://www.npmjs.com/package/prisma-dbml-generator
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
+// see https://www.npmjs.com/package/prisma-json-schema-generator
+generator jsonSchema {
+  provider = "prisma-json-schema-generator"
+  output   = "../src/apiDoc/schema"
+}
+
+model Log {
+  id      String    @id @default(auto()) @map("_id") @db.ObjectId
+  action  String?
+  source  String?
+  data    Json?
+  created DateTime? @default(now())
+}
+
+// model BalanceChanges {
+//   id                  String    @id @default(auto()) @map("_id") @db.ObjectId
+//   order_id            Int?
+//   claim_id            Int?
+//   username            String?
+//   balance             Float?
+//   balance_dep         Float?
+//   balance_current     Float?
+//   balance_dep_current Float?
+//   stage               String?
+//   created             DateTime? @default(now())
+//   height              Int?
+//   tx_id               String?
+// }
+
+// model BlackList {
+//   id      String    @id @default(auto()) @map("_id") @db.ObjectId
+//   type    String?
+//   value   String?
+//   note    String?
+//   created DateTime?
+// }
+
+// model ChatsQueue {
+//   id         String    @id @default(auto()) @map("_id") @db.ObjectId
+//   type       String?
+//   market     String?
+//   partner    String?
+//   message    String?
+//   status     String?
+//   attempts   Int       @default(0)
+//   send_after DateTime?
+//   is_service Boolean   @default(false)
+// }
+
+// model Requisite {
+//   id             String  @id @default(auto()) @map("_id") @db.ObjectId
+//   username       String
+//   payment_system String?
+//   requisite      String?
+//   filled         Int     @default(0)
+//   limit          Int     @default(0)
+//   crypto_type    String?
+//   active         Boolean @default(false)
+// }
+
+// model Settings {
+//   id     String   @id @default(auto()) @map("_id") @db.ObjectId
+//   market String
+//   name   String
+//   value  Json
+//   global Boolean?
+// }
+
+// model Deposit {
+//   id             String   @id @default(auto()) @map("_id") @db.ObjectId
+//   username       String?
+//   wallet         String?
+//   height         Int?
+//   btc_amount     Float?
+//   need_to_handle Boolean? @default(false)
+//   handled        Boolean? @default(false)
+//   confirmed      Int?
+//   created        Int?
+// }
+
+model Claim {
+  id                String    @id @default(auto()) @map("_id") @db.ObjectId
+  uuid              String    @default(uuid())
+  order_id          Int?
+  order_status      String?
+  deal_id           Int?
+  fiat_amount       Float?
+  fiat_amount_order Float?
+  status            String?
+  error             String?
+  provider          String?
+  client_name       String?
+  handler           String?
+  payment_system    String?
+  created           DateTime?
+  images            Json?
+  savedImages       Json?
+  urls              Json?
+}
+
+enum PaymentSystemEnum {
+  card
+  sim
+  qiwi
+  yandex
+}
+
+type PaymentSystem {
+  /// Все допустимые системы оплаты
+  type             PaymentSystemEnum
+  /// Минимальные и максимальные суммы заявок по платежным системам
+  min              Int
+  /// Минимальные и максимальные суммы заявок по платежным системам
+  max              Int
+  /// Комиссии посредника (если таковой имеется)
+  brokerCommission Int
+  /// Комиссии по платежным системам
+  systemCommission Int
+}
+
+model UserPaymentSystem {
+  id                       String                  @id @default(auto()) @map("_id") @db.ObjectId
+  name                     PaymentSystemEnum
+  system                   PaymentSystem
+  /// Доступ к созданию заявок по платежным системам
+  authToken                String                  @default("Не установлен")
+  apiKey                   String                  @default("")
+  /// Доступ к созданию заявок по платежным системам
+  isAllow                  Boolean                 @default(false)
+  user                     User?                   @relation(fields: [userId], references: [id])
+  userId                   String?                 @db.ObjectId
+  paymentSystemBlacklist   PaymentSystemBlacklist? @relation(fields: [paymentSystemBlacklistId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  paymentSystemBlacklistId String?                 @db.ObjectId
+}
+
+// type OrderRate {
+//   /// Количество фиатной валюты, которое необходимо купить/продать
+//   fiat   Int?
+//   /// Rоличество криптовалюты, которое необходимо купить/продать
+//   crypto Int?
+// }
+
+// Заказ
+type OrderStatusHistory {
+  date   DateTime    @default(now())
+  status OrderStatus
+}
+
+type OrderRate {
+  /// Курс сделки
+  deal     Float?
+  /// Курс поставщика
+  provider Float?
+}
+
+type OrderAmount {
+  fiatAmount         Float?
+  cryptoAmountDeal   Float?
+  cryptoAmountBroker Float?
+  profit             Float?
+}
+
+type OrderNotes {
+  /// Если оплачена
+  isPaid    Boolean? @default(false)
+  /// Если проблемная
+  isProblem Boolean? @default(false)
+}
+
+enum OrderRateEnum {
+  fiat
+  crypto
+}
+
+model Order {
+  id            String            @id @default(auto()) @map("_id") @db.ObjectId
+  provider      String
+  status        OrderStatus?      @default(new)
+  amount        OrderAmount
+  paymentSystem PaymentSystemEnum
+
+  cryptoAmountProvider Float?
+  /// Курс
+  rate                 OrderRate
+  /// ???
+  requisites           String?
+  broker               String?
+  clientName           String?
+  /// История статусов заказа
+  statusHistory        OrderStatusHistory[]
+  notes                OrderNotes
+
+  // finishWallet         String?
+  // finishTxAfter        Int?
+  // finishedBy           String?
+  // finishError          String?
+  // cancelReason         String?
+  handler String?   @default("risex")
+  created DateTime? @default(now())
+  updated DateTime? @default(now())
+  /// Пользователь создавший заявку
+  user    User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId  String    @unique @db.ObjectId
+
+  // Тип криптовалюты заказа
+  // cryptoType           CurrencyType
+  /// Конкретный тип криптовалюты
+  currencyType   Currency @relation(fields: [currencyTypeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  currencyTypeId String   @db.ObjectId
+}
+
+// Кошелек пользователя
+model Wallet {
+  id                       String    @id @default(auto()) @map("_id") @db.ObjectId
+  /// Текущий баланс пользователя
+  balance                  Float     @default(0)
+  /// Активный баланс пользователя
+  balanceDep               Float     @default(0)
+  /// Адрес кошелька для системы автосписания депозитов
+  address                  String    @default("")
+  /// Сумма проверки для системы автосписания депозитов
+  walletDepositCheckAmount Int       @default(0)
+  userId                   String    @unique @db.ObjectId
+  user                     User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  deleted                  Boolean?  @default(false)
+  createdAt                DateTime? @default(now())
+}
+
+type Systems {
+  card   PaymentSystem
+  sim    PaymentSystem
+  qiwi   PaymentSystem
+  yandex PaymentSystem
+}
+
+model Currency {
+  id    String             @id @default(auto()) @map("_id") @db.ObjectId
+  name  CurrencyType
+  title String
+  type  CryptocurrencyType
+  order Order[]
+}
+
+// type UserSettings {
+model UserSettings {
+  id                              String         @id @default(auto()) @map("_id") @db.ObjectId
+  /// Активен ли аккаунт, если нет, то нет доступ ко всему функционалу запрещен
+  active                          Boolean?       @default(true)
+  cryptoType                      CurrencyType?  @default(BTC)
+  /// Метод рассчета
+  percentMethod                   PercentMethod? @default(hd)
+  /// Может ли завершать заявки,  доверенные пользователи с ролью 'provider' способны сами закрывать свои заявки по мере надобности
+  canFinishOrders                 Boolean?       @default(false)
+  /// Может добавлять заявки с панели
+  canOpenOrdersViaPanel           Boolean?       @default(false)
+  /// ????
+  canViewDirectBalance            Boolean?       @default(false)
+  /// Отправлять транзакцию в сеть по завершении
+  sendTxToBlockchain              Boolean?       @default(false)
+  /// Заявки от клиента с одной суммой за период
+  clientMaxEqualSumOrdersOnPeriod Int?           @default(0)
+  /// Период проверки одной суммы от клиента (мин.)
+  clientMaxEqualSumOrdersTime     Int?           @default(0)
+  /// fiatAmount | btcAmount
+  clientMaxEqualSumOrdersMode     String         @default("fiatAmount")
+  /// Готовность обрабатывать трафик
+  isWork                          Boolean?       @default(false)
+  broker                          String?        @default("")
+  userId                          String         @unique @db.ObjectId
+  user                            User           @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model User {
+  id              String              @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  password        String
+  role            RoleEnum            @default(broker)
+  orders          Order[]
+  paymentSystems  UserPaymentSystem[]
+  wallet          Wallet?
+  settings        UserSettings?
+  createdAt       DateTime?           @default(now())
+  deleted         Boolean?            @default(false)
+  userBlacklist   UserBlacklist?      @relation(fields: [userBlacklistId], references: [id])
+  userBlacklistId String?             @db.ObjectId
+}
+
+model UserBlacklist {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  reason            String?
+  blacklistedUserId String
+  createdAt         DateTime @default(now())
+  user              User[]
+  userId            String   @db.ObjectId
+}
+
+model PaymentSystemBlacklist {
+  id                String              @id @default(auto()) @map("_id") @db.ObjectId
+  reason            String?
+  blacklistedUserId Int
+  createdAt         DateTime            @default(now())
+  paymentSystem     UserPaymentSystem[]
+  paymentSystemId   String              @db.ObjectId
+}
+
+enum CryptocurrencyType {
+  Cryptocurrency
+  Fiat
+}
+
+enum CurrencyType {
+  Tether
+  BTC
+}
+
+enum PercentMethod {
+  hd
+  binance
+}
+
+enum RoleEnum {
+  superadmin
+  admin
+  broker
+  provider
+  seller
+  support
+}
+
+enum OrderStatus {
+  new
+  dealAdded
+  requisiteAdded
+  dealCanceled
+  markedPaid
+  dealCanceledMarkedPaid
+  finished
+  canceled
+  claim
+  renew
+}

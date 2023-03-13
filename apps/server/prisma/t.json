@@ -1,0 +1,40 @@
+{
+  "0": {
+    "notes": {
+      "paid": true,
+      "problem": false
+    },
+    "handler": "usertrader",
+    "fiat_amount": 5000,
+    "payment_system": "ccard",
+    "provider": "test_user", 
+    "rate_provider": 2147830,
+    "crypto_amount_provider": 0.00232793,
+    "crypto_type": "btc",
+    "status": "renew",
+    "requisites": "123",
+    "rate_deal": 2061916,
+    "crypto_amount_deal": 0.00242493,
+    "profit": 0.000097,
+    "status_history": [
+      {
+        "status": "requisite_added",
+        "time": 1678270436330
+      },
+      {
+        "status": "canceled",
+        "time": 1678271260691
+      },
+      {
+        "status": "renew",
+        "time": 1678271302802
+      }
+    ],
+    "created": "08.03.2023 13:13:56",
+    "id": 5,
+    "updated": "12.03.2023 17:16:12",
+    "callback_urls": {},
+    "cancel_reason": "Отменено пользователем",
+    "finished_by": "usertrader"
+  }
+}
