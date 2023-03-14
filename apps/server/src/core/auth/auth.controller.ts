@@ -9,7 +9,14 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiHeader,
+  ApiOkResponse,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Context, UserContext } from '@shared/context';
 import { ApiError } from '@shared/exceptions/api.error';
 import { ValidateInput } from '@shared/validators';
@@ -17,7 +24,7 @@ import { CreateUserDto } from '@src/core/user/dto';
 import { UserEntity } from '@src/core/user/entity';
 
 import { RolesGuard } from '../roles';
-import { LoginResultDto, UserLoginDto } from './dto';
+import { LoginResultDto, MakeRefreshDto, RefreshDto, UserLoginDto } from './dto';
 import { IAuthService } from './services';
 import { registerSchema } from './validations';
 
@@ -75,10 +82,11 @@ export class AuthController {
   @Post('/refresh')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'обновление токена' })
+  @ApiOkResponse({ type: RefreshDto })
   @ApiError.badRequest()
   @ApiError.unauthorized()
   @ApiError.internalServerError()
-  async refresh(@Body() { refreshToken }: { refreshToken: string }) {
+  async refresh(@Body() { refreshToken }: MakeRefreshDto) {
     return await this.authService.refresh(refreshToken);
   }
 }

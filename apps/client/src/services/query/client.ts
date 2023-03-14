@@ -1,9 +1,15 @@
+import { ApiError } from '@services/http';
 import { QueryClient } from '@tanstack/react-query';
+import { errorHandler } from '@utils/errorHandler';
 
-const onError = async () => {
-  // const onError = async (error: unknown) => {
-  // @todo some error handler
-  // console.log(error);
+const onError = async (error: unknown) => {
+  const err = error as ApiError | Error;
+
+  try {
+    return errorHandler(err);
+  } catch (e) {
+    return errorHandler(e);
+  }
 };
 
 export const queryClient = new QueryClient({
@@ -18,4 +24,3 @@ export const queryClient = new QueryClient({
     mutations: { onError },
   },
 });
-queryClient.getQueriesData(['profile']);

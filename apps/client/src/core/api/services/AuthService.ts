@@ -3,6 +3,8 @@
 /* eslint-disable */
 import type { CreateUserDto } from '../models/CreateUserDto';
 import type { LoginResultDto } from '../models/LoginResultDto';
+import type { MakeRefreshDto } from '../models/MakeRefreshDto';
+import type { RefreshDto } from '../models/RefreshDto';
 import type { UserEntity } from '../models/UserEntity';
 import type { UserLoginDto } from '../models/UserLoginDto';
 
@@ -105,13 +107,19 @@ requestBody: CreateUserDto,
 
     /**
      * обновление токена
-     * @returns void 
+     * @returns RefreshDto 
      * @throws ApiError
      */
-    public authControllerRefresh(): CancelablePromise<void> {
+    public authControllerRefresh({
+requestBody,
+}: {
+requestBody: MakeRefreshDto,
+}): CancelablePromise<RefreshDto> {
         return this.httpRequest.request({
             method: 'POST',
             url: '/api/v1/auth/refresh',
+            body: requestBody,
+            mediaType: 'application/json',
             errors: {
                 400: `Bad request`,
                 401: `Unauthorized`,

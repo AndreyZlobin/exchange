@@ -10,6 +10,10 @@ export class ApiClient {
   get auth() {
     return this.client.auth;
   }
+
+  get wallet() {
+    return this.client.wallet;
+  }
 }
 
 export const apiClient = new ApiClient(window.origin);

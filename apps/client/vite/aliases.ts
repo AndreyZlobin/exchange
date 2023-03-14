@@ -1,6 +1,6 @@
 export const alias = [
   {
-    find: '@',
+    find: '@src',
     replacement: './src',
   },
   {
@@ -18,6 +18,10 @@ export const alias = [
   {
     find: '@services',
     replacement: './src/services',
+  },
+  {
+    find: '@modules',
+    replacement: './src/core/modules',
   },
   {
     find: '@hooks',

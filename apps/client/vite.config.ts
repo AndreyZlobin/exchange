@@ -2,6 +2,7 @@ import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 import path from 'path';
 import { defineConfig } from 'vite';
+import svgrPlugin from 'vite-plugin-svgr';
 
 import { dependencies } from './package.json';
 import { alias } from './vite/aliases';
@@ -39,7 +40,7 @@ export const vendor = [
 // eslint-disable-next-line import/no-default-export
 export default defineConfig({
   publicDir: resolve(__dirname, 'public'),
-  plugins: [react()],
+  plugins: [react(), svgrPlugin({ svgrOptions: { icon: true } })],
   server: {
     proxy: {
       '/api': {

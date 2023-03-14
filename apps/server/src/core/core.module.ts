@@ -54,7 +54,6 @@ export class CoreModule implements NestModule {
       // auth
       { path: 'auth/reset_password', method: RequestMethod.POST },
       { path: 'auth/logout', method: RequestMethod.POST },
-      { path: 'auth/refresh', method: RequestMethod.POST },
       // user
       { path: 'user/*', method: RequestMethod.ALL },
       { path: 'settings/*', method: RequestMethod.ALL },

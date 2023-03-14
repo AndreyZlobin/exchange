@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react';
 
-import { DoubleSideContainer, PageContent, PageLeft, PageRight } from './components';
+import { DoubleSideContainer, PageContent, PageHeader, PageLeft, PageRight } from './components';
 import { PageContainer, SecondStretchedPageContainer } from './styles';
 
 type PageProps = {
@@ -15,6 +15,7 @@ const Page = ({ isSecondElementStretched, ...props }: PropsWithChildren<PageProp
   );
 
 Page.content = PageContent;
+Page.header = PageHeader;
 Page.right = PageRight;
 Page.left = PageLeft;
 Page.doubleSideContainer = DoubleSideContainer;

@@ -1,5 +1,6 @@
 import { ThemeProvider } from '@astral/ui';
 import { ErrorBoundary } from '@components/ErrorFallback/Boundary';
+import { AuthContextProvider } from '@modules/Auth/components/AuthContext';
 import { QueryProvider } from '@services/query';
 import { PropsWithChildren } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -10,7 +11,9 @@ export const AppProvider = ({ children }: PropsWithChildren<object>) => {
     <ErrorBoundary>
       <ThemeProvider theme={theme}>
         <QueryProvider>
-          <Router>{children}</Router>
+          <Router>
+            <AuthContextProvider>{children}</AuthContextProvider>
+          </Router>
         </QueryProvider>
       </ThemeProvider>
     </ErrorBoundary>

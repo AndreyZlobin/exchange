@@ -10,9 +10,9 @@ export type UseMutateOptions<
 
 export const useMutate = <TData, TArguments = unknown, TError = unknown, TContext = unknown>(
   mutationFn: (args: TArguments) => Promise<TData>,
-  options: UseMutateOptions<TData, TError, TArguments, TContext>,
+  options?: UseMutateOptions<TData, TError, TArguments, TContext>,
 ) => {
-  const result = useMutation({ mutationFn, ...options });
+  const result = useMutation({ mutationFn, ...(options || {}) });
 
   const { error } = result;
 

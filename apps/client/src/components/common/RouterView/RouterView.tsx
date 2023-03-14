@@ -1,12 +1,13 @@
 import { ContentState } from '@components/ui/ContentState';
 import { PageLoader } from '@components/ui/PageLoader';
-import { Suspense } from 'react';
-
-import { useRouts } from '../../../router';
-import { FORBIDDEN_ROUTES } from '../../../router/roles/constants';
+import { AuthContext } from '@modules/Auth/components/AuthContext';
+import { useRouts } from '@src/router';
+import { FORBIDDEN_ROUTES } from '@src/router/roles/constants';
+import { Suspense, useContext } from 'react';
 
 export const RouterView = () => {
-  const Routes = useRouts(FORBIDDEN_ROUTES, true, []);
+  const { isLoggedIn } = useContext(AuthContext);
+  const Routes = useRouts(FORBIDDEN_ROUTES, isLoggedIn, []);
 
   return (
     <ContentState isLoading={false}>

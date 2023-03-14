@@ -1,8 +1,7 @@
+import { Forbidden } from '@src/pages/Forbidden';
+import { Unauthorized } from '@src/pages/Unauthorized';
 import { PropsWithChildren } from 'react';
 import { Outlet } from 'react-router-dom';
-
-import { Forbidden } from '../../../pages/Forbidden';
-import { Unauthorized } from '../../../pages/Unauthorized';
 
 interface ProtectedRouteProps {
   isAllowed: boolean;

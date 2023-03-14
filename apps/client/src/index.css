@@ -1,0 +1,21 @@
+/**
+@todo убрать, заменив MenuItems в StyledSelect на обновленный Select компонент из ui-kit
+ * */
+.MuiMenu-list {
+    height: auto;
+    max-height: var(--max-menu-height);
+    overflow-y: auto;
+}
+
+#menu-form .MuiMenu-list {
+    height: auto;
+    max-height: inherit;
+}
+
+body {
+    /*новое свойство, хорошо отрабатывает для хром движков, на ios такой проблемы в принципе нет*/
+    overflow: overlay;
+    --header-height: 56px;
+    --pagination-height: 64px;
+    --max-menu-height: 200px;
+}

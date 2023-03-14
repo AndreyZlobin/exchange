@@ -40,18 +40,18 @@ export class AuthenticationMiddleware implements NestMiddleware {
       const cache = await this.authCacheService.getTokenFromCache(
         this.authCacheService.getTokenCacheName('access', decodedToken.data),
       );
-      const userContext = new UserContext();
 
-      if (token === cache) {
-        const user = await this.prismaService.user.findUnique({ where: { id: decodedToken.data } });
-
-        userContext.setUserId(user.id);
-        userContext.setUser(user);
-        req.userContext = userContext;
-        return next();
+      if (token !== cache) {
+        throw new HttpException('Ошибка авторизации, требуется токен', HttpStatus.UNAUTHORIZED);
       }
+      const userContext = new UserContext();
+      const user = await this.prismaService.user.findUnique({ where: { id: decodedToken.data } });
 
-      next();
+      userContext.setUserId(user.id);
+      userContext.setUser(user);
+      req.userContext = userContext;
+      return next();
+      // next();
     } catch (e) {
       if (e instanceof HttpException) {
         throw new HttpException(e.message, HttpStatus.UNAUTHORIZED);

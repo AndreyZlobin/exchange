@@ -1,3 +1,4 @@
+import { AUTH_ROUTES } from '@modules/Auth/router';
 import { RouteData } from '@utils/router/createRoute';
 import { useMemo } from 'react';
 import { useRoutes } from 'react-router-dom';
@@ -12,10 +13,13 @@ export const useRouts = (
   isAuthorized: boolean,
   currentUserRoles: readonly Role[],
 ) => {
-  const routes: RouteData[] = useMemo(() => [mainRoutes, notFoundRoutes], []);
+  const routes: RouteData[] = useMemo(
+    () => [mainRoutes, AUTH_ROUTES(isAuthorized), notFoundRoutes],
+    [],
+  );
 
   const protectedRoutes = useMemo(
-    () => createProtectedRoutes(routes, forbiddenRoutes, isAuthorized, currentUserRoles),
+    () => createProtectedRoutes(routes, forbiddenRoutes, true, currentUserRoles),
     [currentUserRoles, forbiddenRoutes, isAuthorized, routes],
   );
 
