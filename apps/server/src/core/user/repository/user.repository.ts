@@ -4,6 +4,7 @@ import { CreateUserPaymentSystemDto } from '@src/core/paymentSystem/dto';
 import {
   CreateUserDto,
   CreateUserSettingsDto,
+  FullUserDto,
   UserDto,
   UserWithPasswordDto,
 } from '@src/core/user/dto';
@@ -22,7 +23,7 @@ export interface IUserRepository {
   ): Promise<UserDto>;
 
   findAll(): Promise<UserDto[]>;
-
+  findById(userId: string): Promise<FullUserDto | null>;
   findUser(searchFiled: UserFieldsToSearch): Promise<UserWithPasswordDto | null>;
 }
 @Injectable()
@@ -30,6 +31,7 @@ export class UserRepository implements IUserRepository {
   private readonly defaultSelectedFields: Record<keyof UserWithoutPassword, true>;
   constructor(@Inject(TYPES.DB.PrismaService) private readonly prismaService: IPrismaService) {
     this.defaultSelectedFields = this.prismaService.getSelectedField<UserWithoutPassword>([
+      'id',
       'role',
       'name',
       'createdAt',
@@ -69,6 +71,15 @@ export class UserRepository implements IUserRepository {
     return this.prismaService.user.findUnique({
       where: { ...searchFiled },
       include: { settings: true },
+    });
+  }
+
+  async findById(id: string): Promise<FullUserDto | null> {
+    const allowedFields = { ...this.defaultSelectedFields, wallet: true, paymentSystems: true };
+
+    return this.prismaService.user.findUnique({
+      where: { id },
+      select: allowedFields,
     });
   }
 }

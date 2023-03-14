@@ -1,4 +1,7 @@
 import {
+  QueryObserverResult,
+  RefetchOptions,
+  RefetchQueryFilters,
   useQuery as useOriginQuery,
   UseQueryOptions as UseOriginQueryOptions,
 } from '@tanstack/react-query';
@@ -17,6 +20,9 @@ export const useQuery = <TData, TError = unknown>(
   isError: boolean;
   error: TError | null;
   data: TData | undefined;
+  refetch: <TPageData>(
+    options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined,
+  ) => Promise<QueryObserverResult<TData, TError>>;
 } => {
   const result = useOriginQuery<TData, TError>({
     queryKey: key,
@@ -24,10 +30,10 @@ export const useQuery = <TData, TError = unknown>(
     ...options,
   });
 
-  const { isLoading: isOriginLoading, error, data, isFetching } = result;
+  const { isLoading: isOriginLoading, error, data, isFetching, refetch } = result;
 
   const isError = useMemo(() => error !== null, [error]);
   const isLoading = useMemo(() => isOriginLoading || isFetching, [isOriginLoading, isFetching]);
 
-  return { isError, isLoading, data, error };
+  return { isError, isLoading, data, error, refetch };
 };

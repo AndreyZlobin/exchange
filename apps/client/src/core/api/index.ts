@@ -9,14 +9,17 @@ export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
+export type { CreatePaymentSystemDto } from './models/CreatePaymentSystemDto';
 export type { CreateUserDto } from './models/CreateUserDto';
 export type { EditUserSettingsDto } from './models/EditUserSettingsDto';
 export { ErrorResponseDto } from './models/ErrorResponseDto';
+export type { FullUserDto } from './models/FullUserDto';
 export type { LoginResultDto } from './models/LoginResultDto';
 export type { MakeRefreshDto } from './models/MakeRefreshDto';
 export type { OrderAmountDto } from './models/OrderAmountDto';
 export type { OrderDto } from './models/OrderDto';
 export type { OrderNotesDto } from './models/OrderNotesDto';
+export type { PaymentSystemDto } from './models/PaymentSystemDto';
 export type { RefreshDto } from './models/RefreshDto';
 export type { UserDto } from './models/UserDto';
 export type { UserEntity } from './models/UserEntity';

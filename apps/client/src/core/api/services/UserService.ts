@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { FullUserDto } from '../models/FullUserDto';
 import type { UserDto } from '../models/UserDto';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -59,17 +60,22 @@ authorization?: string,
 
     /**
      * Получение пользователя по ID
-     * @returns UserDto 
+     * @returns FullUserDto 
      * @throws ApiError
      */
     public userControllerGetOne({
+id,
 authorization,
 }: {
+id: string,
 authorization?: string,
-}): CancelablePromise<Array<UserDto>> {
+}): CancelablePromise<FullUserDto> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/api/v1/user/{id}',
+            path: {
+                'id': id,
+            },
             headers: {
                 'Authorization': authorization,
             },

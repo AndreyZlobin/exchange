@@ -1,11 +1,11 @@
 import { TYPES } from '@DI/types';
-import { Controller, Get, Inject, Injectable, Put, UseGuards } from '@nestjs/common';
+import { Controller, Get, Inject, Injectable, Param, Put, UseGuards } from '@nestjs/common';
 import { ApiHeader, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ApiError } from '@shared/exceptions/api.error';
 import { RolesGuard, SelfWithRoleGuard } from '@src/core/roles';
 import { IUserService } from '@src/core/user/service';
 
-import { UserDto } from './dto';
+import { FullUserDto, UserDto } from './dto';
 
 @Injectable()
 @ApiTags('User')
@@ -38,12 +38,12 @@ export class UserController {
   @ApiOperation({ summary: 'Получение пользователя по ID' })
   @UseGuards(RolesGuard)
   @ApiHeader({ name: 'Authorization' })
-  @ApiOkResponse({ type: [UserDto] })
+  @ApiOkResponse({ type: FullUserDto })
   @ApiError.forbidden()
   @ApiError.unauthorized()
   @ApiError.internalServerError()
-  async getOne() {
-    return true;
+  async getOne(@Param('id') userId: string) {
+    return this.userService.getById(userId);
   }
 
   @Get('/balance')
